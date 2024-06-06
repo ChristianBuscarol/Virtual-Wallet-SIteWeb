@@ -29,7 +29,8 @@ export default {
       userId: "",
       userName: "",
       dateValidation: true,
-      entryAttempts: 0
+      entryAttempts: 0,
+      localStorageRegister: false
     }
   },
   methods: {
@@ -75,6 +76,7 @@ export default {
             this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
             this.userId = "",
             this.userName = ""
+            this.localStorageUserLogin();
           }
         }
       }while(this.entryAttempts < 3)
@@ -91,6 +93,25 @@ export default {
       }
       else{
         return this.dateValidation = false;
+      }
+    },
+    localStorageUserLogin(){
+      this.checkingLocalStorageRegister();
+
+      if (this.localStorageRegister != false){
+        localStorage.setItem('userName', this.userName);
+        localStorage.setItem('userId', this.userId);
+      }
+    },
+    checkingLocalStorageRegister(){
+      let localStorageName = localStorage.getItem('userName');
+      let localStorageID = localStorage.getItem('userId');
+
+      if (this.localStorageName != null && this.localStorageID != null){
+        this.localStorageRegister = true;
+      }
+      else{
+        this.localStorageRegister = false;
       }
     }
   },
@@ -116,6 +137,9 @@ export default {
     attemptIncremented(){
       return this.entryAttempts;
     }
+  },
+  mounted(){
+    
   }
 }
 </script>
