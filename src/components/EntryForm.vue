@@ -81,8 +81,36 @@ export default {
         }
       }while(this.entryAttempts < 3)
     },
-    btnEntryValidation(){
-      window.location.href = '/CoinCatalogueView';
+    jsonObject(){
+      const userData = {
+        userName: this.userName,
+        userId: this.userId
+      }
+    },
+    localStorageUserLogin(){
+
+    },
+    checkingLocalStorageRegister(){
+      this.localStorageGettingItems()
+
+      if (this.userRegister != null){
+        this.localStorageRegister = true;
+      }
+      else{
+        this.localStorageRegister = false;
+      }
+    },
+    localStorageSettingItems(){
+      this.jsonObject();
+      localStorage.setItem('userData', JSON.stringify(userData))
+
+      console.log('Nombre ingresado del usuario: ' + this.userData.userName)
+      console.log('ID ingresado del usuario: ' + this.userData.userId)
+    },
+    localStorageGettingItems(){
+      this.jsonObject();
+
+      const userRegister = [JSON.parse(localStorage.getItem('userData'))]
     },
     attemptIncrement(){
       this.entryAttempts++;
@@ -95,24 +123,8 @@ export default {
         return this.dateValidation = false;
       }
     },
-    localStorageUserLogin(){
-      this.checkingLocalStorageRegister();
-
-      if (this.localStorageRegister != false){
-        localStorage.setItem('userName', this.userName);
-        localStorage.setItem('userId', this.userId);
-      }
-    },
-    checkingLocalStorageRegister(){
-      let localStorageName = localStorage.getItem('userName');
-      let localStorageID = localStorage.getItem('userId');
-
-      if (this.localStorageName != null && this.localStorageID != null){
-        this.localStorageRegister = true;
-      }
-      else{
-        this.localStorageRegister = false;
-      }
+    btnEntryValidation(){
+      window.location.href = '/CoinCatalogueView';
     }
   },
   computed: {
