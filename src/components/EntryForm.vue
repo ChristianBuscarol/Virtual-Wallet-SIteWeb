@@ -29,8 +29,7 @@ export default {
       userId: "",
       userName: "",
       dateValidation: true,
-      entryAttempts: 0,
-      localStorageRegister: false
+      entryAttempts: 0
     }
   },
   methods: {
@@ -54,63 +53,38 @@ export default {
       this.nameValidation();
       this.IDValidation();
 
-      do{
-        if(this.userId == "" || this.userName == ""){
-          this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite...",
+      if(this.userId == "" || this.userName == ""){
+        this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite...",
+        this.attemptIncrement()
+      }
+      else{
+        if (this.nameNumbers > 0 || this.nameLetters < 3){
+          this.stateMessage= "El 'Nombre' ingresado es incorrecto, el dato requiere de un mínimo de 3 letras y no se permite números en el...";
+          this.attemptIncrement()
+        }
+        else if (this.idLetters < 5 || this.idNumbers == 0){
+          this.stateMessage= "El 'ID' está flojo de papeles, se requiere de un mínimo de 3 letras y al menos 1 número, intente de nuevo...";
+          this.attemptIncrement()
+        }
+        else if (this.nameNumbers >= 1 || this.nameLetters < 3 && this.idLetters < 5 || this.idNumbers < 1){
+          this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo..."
           this.attemptIncrement()
         }
         else{
-          if (this.nameNumbers > 0 || this.nameLetters < 3){
-            this.stateMessage= "El 'Nombre' ingresado es incorrecto, el dato requiere de un mínimo de 3 letras y no se permite números en el...";
-            this.attemptIncrement()
-          }
-          else if (this.idLetters < 5 || this.nameNumbers >= 1){
-            this.stateMessage= "El 'ID' está flojo de papeles, se requiere de un mínimo de 3 letras y al menos 1 número, intente de nuevo...";
-            this.attemptIncrement()
-          }
-          else if (this.nameNumbers >= 1 || this.nameLetters < 3 && this.idLetters < 5 || this.idNumbers > 1){
-            this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo..."
-            this.attemptIncrement()
-          }
-          else{
-            this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
-            this.userId = "",
-            this.userName = ""
-            this.localStorageUserLogin();
-          }
+          this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
+          this.userId = "",
+          this.userName = "",
+          this.localStorageSettingItems();
         }
-      }while(this.entryAttempts < 3)
+      }
     },
-    jsonObject(){
+    localStorageSettingItems(){
       const userData = {
         userName: this.userName,
         userId: this.userId
       }
-    },
-    localStorageUserLogin(){
 
-    },
-    checkingLocalStorageRegister(){
-      this.localStorageGettingItems()
-
-      if (this.userRegister != null){
-        this.localStorageRegister = true;
-      }
-      else{
-        this.localStorageRegister = false;
-      }
-    },
-    localStorageSettingItems(){
-      this.jsonObject();
       localStorage.setItem('userData', JSON.stringify(userData))
-
-      console.log('Nombre ingresado del usuario: ' + this.userData.userName)
-      console.log('ID ingresado del usuario: ' + this.userData.userId)
-    },
-    localStorageGettingItems(){
-      this.jsonObject();
-
-      const userRegister = [JSON.parse(localStorage.getItem('userData'))]
     },
     attemptIncrement(){
       this.entryAttempts++;
@@ -151,7 +125,7 @@ export default {
     }
   },
   mounted(){
-    
+    this.localStorageSettingItems();
   }
 }
 </script>
