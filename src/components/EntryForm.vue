@@ -29,7 +29,12 @@ export default {
       userId: "",
       userName: "",
       dateValidation: true,
-      entryAttempts: 0
+      entryAttempts: 0,
+      userObectCheck: null,
+      userData : {
+        userNameRegister: "",
+        userIdRegister: ""
+      }
     }
   },
   methods: {
@@ -78,13 +83,24 @@ export default {
         }
       }
     },
-    localStorageSettingItems(){
-      const userData = {
-        userName: this.userName,
-        userId: this.userId
-      }
+    userObjectConstructor(){
+      this.nameValidation();
+      this.IDValidation();
 
-      localStorage.setItem('userData', JSON.stringify(userData))
+      if(this.userName != null && this.userId != null){
+        this.userData.push({userNameRegister: this.userName, userIdRegister: this.userId})
+      }
+    },
+    localStorageSettingItems(){
+      this.userObjectConstructor();
+      this.userObectCheck = this.userData.find(userData => userData.userNameRegister === this.userName && userData.userIdRegister === this.userId);
+
+      if(this.userObectCheck != null){
+        localStorage.setItem('userData', JSON.stringify(this.userData))
+      }
+      
+      console.log('Nombre del usuario en Local Storage: ' + this.userData.userNameRegister)
+      console.log('ID del usuario en Local Storage: ' + this.userData.userIdRegister)
     },
     attemptIncrement(){
       this.entryAttempts++;
@@ -124,9 +140,11 @@ export default {
       return this.entryAttempts;
     }
   },
-  mounted(){
-    this.localStorageSettingItems();
-  }
+  /*
+    mounted(){
+      this.localStorageSettingItems();
+    }
+  */
 }
 </script>
 
