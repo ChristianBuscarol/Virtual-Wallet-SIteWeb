@@ -29,7 +29,12 @@ export default {
       userId: "",
       userName: "",
       dateValidation: true,
-      entryAttempts: 0
+      entryAttempts: 0,
+      userObectCheck: null,
+      userData : {
+        userNameRegister: "",
+        userIdRegister: ""
+      }
     }
   },
   methods: {
@@ -52,14 +57,13 @@ export default {
       }
     },
     btnDateValidation(){
-      debugger
       this.nameValidation();
       this.IDValidation();
       
       if(this.userId == "" || this.userName == ""){
-          this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite...",
-          this.attemptIncrement()
-        }
+        this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite...",
+        this.attemptIncrement()
+      }
       else{
         if (this.nameNumbers > 0 || this.nameLetters < 3){
           this.stateMessage= "El 'Nombre' ingresado es incorrecto, el dato requiere de un mínimo de 3 letras y no se permite números en el...";
@@ -75,13 +79,23 @@ export default {
         }
         else{
           this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
+          this.localStorageSettingItems();
           this.userId = "",
           this.userName = ""
         }
       }
     },
-    btnEntryValidation(){
-      window.location.href = '/CoinCatalogueView';
+    userObjectConstructor(){
+      this.userData.userNameRegister = this.userName;
+      this.userData.userIdRegister = this.userId;
+    },
+    localStorageSettingItems(){
+      this.userObjectConstructor();
+      
+      localStorage.setItem('userData', JSON.stringify(this.userData))
+
+      console.log('Nombre del usuario en Local Storage: ' + this.userData.userNameRegister)
+      console.log('ID del usuario en Local Storage: ' + this.userData.userIdRegister)
     },
     attemptIncrement(){
       this.entryAttempts++;
@@ -93,6 +107,9 @@ export default {
       else{
         this.dateValidation = false;
       }
+    },
+    btnEntryValidation(){
+      window.location.href = '/CoinCatalogueView';
     }
   },
   computed: {
@@ -117,7 +134,12 @@ export default {
     attemptIncremented(){
       return this.entryAttempts;
     }
-  }
+  },
+  /*
+    mounted(){
+      this.localStorageSettingItems();
+    }
+  */
 }
 </script>
 
