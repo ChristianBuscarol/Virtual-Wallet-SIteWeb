@@ -77,28 +77,21 @@ export default {
         }
         else{
           this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
-          this.userId = "",
-          this.userName = "",
           this.localStorageSettingItems();
+          this.userId = "",
+          this.userName = ""
         }
       }
     },
     userObjectConstructor(){
-      this.nameValidation();
-      this.IDValidation();
-
-      if(this.userName != null && this.userId != null){
-        this.userData.push({userNameRegister: this.userName, userIdRegister: this.userId})
-      }
+      this.userData.userNameRegister = this.userName;
+      this.userData.userIdRegister = this.userId;
     },
     localStorageSettingItems(){
       this.userObjectConstructor();
-      this.userObectCheck = this.userData.find(userData => userData.userNameRegister === this.userName && userData.userIdRegister === this.userId);
-
-      if(this.userObectCheck != null){
-        localStorage.setItem('userData', JSON.stringify(this.userData))
-      }
       
+      localStorage.setItem('userData', JSON.stringify(this.userData))
+
       console.log('Nombre del usuario en Local Storage: ' + this.userData.userNameRegister)
       console.log('ID del usuario en Local Storage: ' + this.userData.userIdRegister)
     },
