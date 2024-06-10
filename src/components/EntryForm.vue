@@ -6,9 +6,9 @@
     <input type="text" v-model="userId" id="registroId" name="ingresoID" placeholder="Ingresar ID aquí..."><br><br>
     <button type="button" @click="btnDateValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Validar Datos...</button>
     <div class="Casilla-Loggin">
-      <p><strong>Estado de entrada: '{{ stateMessage }}'<br><br>
-        Elementos del ingreso del 'ID': Cant. de carácteres '°{{idLetters}}' & Cant. de números '°{{ idNumbers }}'
-      </strong></p><br><br>
+      <p><strong>Estado de entrada: '{{ stateMessage }}'
+        <br>Elementos del ingreso del 'ID': Cant. de carácteres '°{{idLetters}}' & Cant. de números '°{{ idNumbers }}'
+      </strong></p><br>
       <p>Intentos realizados: °{{ attemptIncremented }} --- Cantidad máxima de intentos: °3</p>
       <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       <button type="button" @click="btnEntryValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Puede continuar por aquí...</button>
@@ -39,25 +39,27 @@ export default {
   },
   methods: {
     nameValidation() {
+      debugger
       for (let i = 0; i < this.userName.length; i++){
-        const charName = this.userName[i]
+        let charName = this.userName[i]
 
-        if(!isNaN(Number(charName))){this.nameNumbers += 1}
-        else if(/[a-zA-Z]/.test(charName)){this.nameLetters += 1}
+        if(!isNaN(Number(charName))){this.nameNumbers++}
+        else if(/[a-zA-Z]/.test(charName)){this.nameLetters++}
       }
     },
     IDValidation() {
+      debugger
       for (let i = 0; i < this.userId.length; i++){
-        const charId = this.userId[i]
+        let charId = this.userId[i]
 
-        if(!isNaN(Number(charId))){this.idNumbers += 1}
-        else if(/[a-zA-Z]/.test(charId)){this.idLetters += 1}
+        if(!isNaN(Number(charId))){this.idNumbers++}
+        else if(/[a-zA-Z]/.test(charId)){this.idLetters++}
       }
     },
     btnDateValidation(){
       this.nameValidation();
       this.IDValidation();
-
+      
       if(this.userId == "" || this.userName == ""){
         this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite...",
         this.attemptIncrement()
@@ -71,7 +73,7 @@ export default {
           this.stateMessage= "El 'ID' está flojo de papeles, se requiere de un mínimo de 3 letras y al menos 1 número, intente de nuevo...";
           this.attemptIncrement()
         }
-        else if (this.nameNumbers >= 1 || this.nameLetters < 3 && this.idLetters < 5 || this.idNumbers < 1){
+        else if (this.nameNumbers >= 1 || this.nameLetters <= 2 && this.idLetters <= 4 || this.idNumbers < 1){
           this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo..."
           this.attemptIncrement()
         }
@@ -100,10 +102,10 @@ export default {
     },
     entryAttemptsFalied(){
       if (this.entryAttempts == 3){
-        return this.dateValidation = true;
+        this.dateValidation = true;
       }
       else{
-        return this.dateValidation = false;
+        this.dateValidation = false;
       }
     },
     btnEntryValidation(){
