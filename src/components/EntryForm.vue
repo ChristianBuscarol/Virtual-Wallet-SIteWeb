@@ -134,9 +134,6 @@ export default {
     attemptIncremented(){
       return this.entryAttempts;
     }
-  },
-  mounted(){
-    this.localStorageSettingItems();
   }
 }
 </script>
