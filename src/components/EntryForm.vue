@@ -135,11 +135,9 @@ export default {
       return this.entryAttempts;
     }
   },
-  /*
-    mounted(){
-      this.localStorageSettingItems();
-    }
-  */
+  mounted(){
+    this.localStorageSettingItems();
+  }
 }
 </script>
 
