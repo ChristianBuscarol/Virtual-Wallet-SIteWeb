@@ -1,18 +1,34 @@
 <template>
   <div class="EntryFormCss">
-    <label for="ingresoNombre">Nombre: </label>
-    <input type="text" v-model="userName" id="registroNombre" name="ingresoNombre" placeholder="Ingresar Nombre aquí..."><br><br>
-    <label for="ingresoID">'ID': </label>
-    <input type="text" v-model="userId" id="registroId" name="ingresoID" placeholder="Ingresar ID aquí..."><br><br>
-    <button type="button" @click="btnDateValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Validar Datos...</button>
-    <div class="Casilla-Loggin">
-      <p><strong>Estado de entrada: '{{ stateMessage }}'
-        <br>Elementos del ingreso del 'ID': Cant. de carácteres '°{{idLetters}}' & Cant. de números '°{{ idNumbers }}'
-      </strong></p><br>
-      <p>Intentos realizados: °{{ attemptIncremented }} --- Cantidad máxima de intentos: °3</p>
-      <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
-      <button type="button" @click="btnEntryValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Puede continuar por aquí...</button>
-    </div>
+    <header>
+      <h1>Trinance Interactive Corp.</h1>
+    </header>
+    <body>
+      <label for="ingresoNombre">Nombre: </label>
+      <input type="text" v-model="userName" id="registroNombre" name="ingresoNombre" placeholder="Ingresar Nombre aquí..."><br><br>
+      <label for="ingresoID">'ID': </label>
+      <input type="text" v-model="userId" id="registroId" name="ingresoID" placeholder="Ingresar ID aquí..."><br><br>
+      <button type="button" @click="btnDateValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Validar Datos...</button>
+      <div class="Casilla-Loggin">
+        <p><strong>Estado de entrada: '{{ stateMessage }}'
+          <br>Elementos del ingreso del 'ID': Cant. de carácteres '°{{idLetters}}' & Cant. de números '°{{ idNumbers }}'
+        </strong></p><br>
+        <p>Intentos realizados: °{{ attemptIncremented }} --- Cantidad máxima de intentos: °3</p>
+        <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
+        <button type="button" @click="btnEntryValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Puede continuar por aquí...</button>
+      </div>
+    </body>
+    <footer>
+      <img src="../assets/CoinRainGif.gif" alt="Lluvia de criptos °1..." id="CoinRainGif">
+      <ul>
+        <li>Ingrese los 2 únicos Datos necesarios para poder continuar por la plataforma...</li>
+        <li>Una vez ingresado evalúe las pocas pero diferentes monedas virtuales en busca del mejor precio...</li>
+        <li>Compre y venda en el momento adecuado para generar ganancias...</li>
+        <li>Analice, interactúe y disfruta del proceso...</li>
+      </ul>
+      <img src="../assets/PenguinCheckingMoney.webp" alt="A cute penguin checking and counting his money">
+      <p>For educational purpose i made this proyect for a university final... So, i deserve the rights to eat onions while you travel whit a racoon...</p>
+    </footer>
   </div>
 </template>
 
