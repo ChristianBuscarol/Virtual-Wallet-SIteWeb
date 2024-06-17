@@ -1,33 +1,43 @@
 <template>
   <div class="EntryFormCss">
-    <header>
-      <h1>Trinance Interactive Corp.</h1>
+    <header >
+      <div class="Header-Box">
+        <h1>Trinance Interactive Corp.</h1>
+      </div>
     </header>
     <body>
+      <!--Sector de ingreso de Datos (Nombre y ID) aquí abajo-->
       <label for="ingresoNombre">Nombre: </label>
       <input type="text" v-model="userName" id="registroNombre" name="ingresoNombre" placeholder="Ingresar Nombre aquí..."><br><br>
       <label for="ingresoID">'ID': </label>
       <input type="text" v-model="userId" id="registroId" name="ingresoID" placeholder="Ingresar ID aquí..."><br><br>
-      <button type="button" @click="btnDateValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Validar Datos...</button>
-      <div class="Casilla-Loggin">
-        <p><strong>Estado de entrada: '{{ stateMessage }}'
-          <br>Elementos del ingreso del 'ID': Cant. de carácteres '°{{idLetters}}' & Cant. de números '°{{ idNumbers }}'
-        </strong></p><br>
+      
+      <!--Sector de botones aquí abajo-->
+      <div class="Loggin-Box">
+        <button type="button" @click="btnDateValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Validar Datos...</button><br><br>
+        <button type="button" @click="btnEntryValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Puede continuar por aquí...</button>
+      </div>
+
+      <!--Sector de información para el usuario aquí abajo-->
+      <div class="Info-Box">
+        <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
+        <p><strong>Nombre: Cant. de carácteres '°{{idLetters}}' & Cant. de números '°{{ idNumbers }}'</strong></p><br><br>
         <p>Intentos realizados: °{{ attemptIncremented }} --- Cantidad máxima de intentos: °3</p>
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
-        <button type="button" @click="btnEntryValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Puede continuar por aquí...</button>
       </div>
     </body>
     <footer>
-      <img src="../assets/CoinRainGif.gif" alt="Lluvia de criptos °1..." id="CoinRainGif">
-      <ul>
-        <li>Ingrese los 2 únicos Datos necesarios para poder continuar por la plataforma...</li>
-        <li>Una vez ingresado evalúe las pocas pero diferentes monedas virtuales en busca del mejor precio...</li>
-        <li>Compre y venda en el momento adecuado para generar ganancias...</li>
-        <li>Analice, interactúe y disfruta del proceso...</li>
-      </ul>
-      <img src="../assets/PenguinCheckingMoney.webp" alt="A cute penguin checking and counting his money">
-      <p>For educational purpose i made this proyect for a university final... So, i deserve the rights to eat onions while you travel whit a racoon...</p>
+      <div class="Footer-Box">
+        <img src="../assets/CoinRainGif.gif" alt="Coin Rain..." id="EntryFormGifs">
+        <ul>
+          <li>Ingrese los 2 únicos Datos necesarios para poder continuar por la plataforma...</li>
+          <li>Una vez ingresado evalúe las pocas pero diferentes monedas virtuales en busca del mejor precio...</li>
+          <li>Compre y venda en el momento adecuado para generar ganancias...</li>
+          <li>Analice, interactúe y disfruta del proceso...</li>
+        </ul>
+        <img src="../assets/PenguinCheckingMoney.webp" alt="A cute penguin checking and counting his money" id="EntryFormGifs">
+        <p>For educational purpose i made this proyect for a university final... So, i deserve the rights to eat onions while you travel whit a racoon...</p>
+      </div>
     </footer>
   </div>
 </template>
@@ -92,7 +102,8 @@ export default {
         else{
           this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
           this.userId = "",
-          this.userName = ""
+          this.userName = "",
+          this.attemptIncrement()
         }
       }
     },
@@ -138,5 +149,10 @@ export default {
 </script>
 
 <style scoped>
+#EntryFormGifs{
+  width: 125px;
+  height: 125px;
+}
+
 
 </style>
