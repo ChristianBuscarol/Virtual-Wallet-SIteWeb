@@ -14,15 +14,15 @@
       
       <!--Sector de botones aquí abajo-->
       <div class="Loggin-Box">
-        <button type="button" @click="btnDateValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Validar Datos...</button><br><br>
-        <button type="button" @click="btnEntryValidation()" :disabled="entryAttemptsFalied()" id="btnValidarIngreso">Puede continuar por aquí...</button>
+        <button type="button" @click="btnDateValidation()" :disabled="!dateValidation" id="btnValidarIngreso">Validar Datos...</button><br><br>
+        <button type="button" @click="btnEntryValidation()" :disabled="dateValidation" id="btnValidarIngreso">Puede continuar por aquí...</button>
       </div>
 
       <!--Sector de información para el usuario aquí abajo-->
       <div class="Info-Box">
         <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
         <p><strong>Nombre: Cant. de carácteres '°{{idLetters}}' & Cant. de números '°{{ idNumbers }}'</strong></p><br><br>
-        <p>Intentos realizados: °{{ attemptIncremented }} --- Cantidad máxima de intentos: °3</p>
+        <p>Intentos realizados: °{{ this.entryAttempts }} --- Cantidad máxima de intentos: °3</p>
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       </div>
     </body>
@@ -65,7 +65,6 @@ export default {
   },
   methods: {
     nameValidation() {
-      debugger
       for (let i = 0; i < this.userName.length; i++){
         let charName = this.userName[i]
 
@@ -74,7 +73,6 @@ export default {
       }
     },
     IDValidation() {
-      debugger
       for (let i = 0; i < this.userId.length; i++){
         let charId = this.userId[i]
 
@@ -87,28 +85,28 @@ export default {
       this.IDValidation();
       
       if(this.userId == "" || this.userName == ""){
-        this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite...",
         this.attemptIncrement()
+        this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite..."
       }
       else{
         if (this.nameNumbers > 0 || this.nameLetters < 3){
-          this.stateMessage= "El 'Nombre' ingresado es incorrecto, el dato requiere de un mínimo de 3 letras y no se permite números en el...";
           this.attemptIncrement()
+          this.stateMessage= "El 'Nombre' ingresado es incorrecto, el dato requiere de un mínimo de 3 letras y no se permite números en el...";
         }
         else if (this.idLetters < 5 || this.idNumbers == 0){
-          this.stateMessage= "El 'ID' está flojo de papeles, se requiere de un mínimo de 3 letras y al menos 1 número, intente de nuevo...";
           this.attemptIncrement()
+          this.stateMessage= "El 'ID' está flojo de papeles, se requiere de un mínimo de 3 letras y al menos 1 número, intente de nuevo..."
         }
         else if (this.nameNumbers >= 1 || this.nameLetters <= 2 && this.idLetters <= 4 || this.idNumbers < 1){
-          this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo..."
           this.attemptIncrement()
+          this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo...";
         }
         else{
           this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
+          this.attemptIncrement();
           this.localStorageSettingItems();
           this.userId = "",
-          this.userName = "",
-          this.attemptIncrement()
+          this.userName = ""
         }
       }
     },
@@ -120,9 +118,6 @@ export default {
       this.userObjectConstructor();
       
       localStorage.setItem('userData', JSON.stringify(this.userData))
-
-      console.log('Nombre del usuario en Local Storage: ' + this.userData.userNameRegister)
-      console.log('ID del usuario en Local Storage: ' + this.userData.userIdRegister)
     },
     attemptIncrement(){
       this.entryAttempts++;
@@ -157,9 +152,6 @@ export default {
       else{
         return false;
       }
-    },
-    attemptIncremented(){
-      return this.entryAttempts;
     }
   }
 }
