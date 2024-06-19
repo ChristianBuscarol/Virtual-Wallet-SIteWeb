@@ -1,17 +1,17 @@
 <template>
   <div class="EntryForm">
-    <EntryForm/>
+    <EntryFormComponent/>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import EntryForm from '@/components/EntryForm.vue'
+import EntryFormComponent from '@/components/EntryFormComponent.vue';
 
 export default {
   name: 'IndexView',
   components: {
-    EntryForm
+    EntryFormComponent
   }
 }
 </script>
