@@ -14,14 +14,14 @@
       
       <!--Sector de botones aquí abajo-->
       <div class="Loggin-Box">
-        <button type="button" @click="btnDateValidation()" :disabled="!dateValidation" id="btnValidarIngreso">Validar Datos...</button><br><br>
-        <button type="button" @click="btnEntryValidation()" :disabled="dateValidation" id="btnValidarIngreso">Puede continuar por aquí...</button>
+        <button type="button" @click="btnDateValidation()" v-show="vShowButton" :disabled="!dateValidation" id="btnValidarIngreso">Validar Datos...</button><br><br>
+        <button type="button" @click="btnEntryValidation()" v-show="!vShowButton" :disabled="dateValidation" id="btnValidarIngreso">Puede continuar por aquí...</button>
       </div>
 
       <!--Sector de información para el usuario aquí abajo-->
       <div class="Info-Box">
         <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
-        <p><strong>Nombre: Cant. de carácteres '°{{idLetters}}' & Cant. de números '°{{ idNumbers }}'</strong></p><br><br>
+        <p><strong>Nombre: Cant. de carácteres '°{{ this.idLetters}}' & Cant. de números '°{{ this.idNumbers }}'</strong></p><br><br>
         <p>Intentos realizados: °{{ this.entryAttempts }} --- Cantidad máxima de intentos: °3</p>
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       </div>
@@ -56,7 +56,6 @@ export default {
       userName: "",
       dateValidation: true,
       entryAttempts: 0,
-      userObectCheck: null,
       userData : {
         userNameRegister: "",
         userIdRegister: ""
@@ -106,7 +105,8 @@ export default {
           this.attemptIncrement();
           this.localStorageSettingItems();
           this.userId = "",
-          this.userName = ""
+          this.userName = "",
+          this.dateValidation = false
         }
       }
     },
@@ -143,15 +143,11 @@ export default {
         return false;
       }
     },
-    siteContinuation(){
-      this.entryAttemptsFalied();
-
-      if (this.dateValidation == false){
+    vShowButton(){
+      while(this.entryAttempts <= 3 && this.dateValidation == true){
         return true;
       }
-      else{
-        return false;
-      }
+      return false;
     }
   }
 }
