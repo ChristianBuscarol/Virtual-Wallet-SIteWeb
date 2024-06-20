@@ -1,10 +1,5 @@
 <template>
-  <div class="EntryFormCss">
-    <header >
-      <div class="Header-Box">
-        <h1>Trinance Interactive Corp.</h1>
-      </div>
-    </header>
+  <div class="EntryForm">
     <body>
       <!--Sector de ingreso de Datos (Nombre y ID) aquí abajo-->
       <label for="ingresoNombre">Nombre: </label>
@@ -26,19 +21,6 @@
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       </div>
     </body>
-    <footer>
-      <div class="Footer-Box">
-        <img src="../assets/CoinRainGif.gif" alt="Coin Rain..." id="EntryFormGifs">
-        <ul>
-          <li>Ingrese los 2 únicos Datos necesarios para poder continuar por la plataforma...</li>
-          <li>Una vez ingresado evalúe las pocas pero diferentes monedas virtuales en busca del mejor precio...</li>
-          <li>Compre y venda en el momento adecuado para generar ganancias...</li>
-          <li>Analice, interactúe y disfruta del proceso...</li>
-        </ul>
-        <img src="../assets/PenguinCheckingMoney.webp" alt="A cute penguin checking and counting his money" id="EntryFormGifs">
-        <p>For educational purpose i made this proyect for a university final... So, i deserve the rights to eat onions while you travel whit a racoon...</p>
-      </div>
-    </footer>
   </div>
 </template>
 
@@ -154,10 +136,5 @@ export default {
 </script>
 
 <style scoped>
-#EntryFormGifs{
-  width: 125px;
-  height: 125px;
-}
-
 
 </style>
