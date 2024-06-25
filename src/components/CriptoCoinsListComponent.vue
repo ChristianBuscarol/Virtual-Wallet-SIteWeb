@@ -1,7 +1,14 @@
 <template>
   <div class="CriptoCoinsList">
     <body>
-      <img>
+      <div>
+        <img>
+        <h3>Coin: </h3><p><strong>{{  }}</strong></p>
+        <h3>Price: </h3><p><strong>{{  }}</strong></p>
+      </div>
+      <div>
+        
+      </div>
     </body>
   </div>
 </template>
