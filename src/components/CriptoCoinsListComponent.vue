@@ -1,14 +1,17 @@
 <template>
   <div class="CriptoCoinsList">
     <body>
-      <div>
-        <img>
+      <div class="CriptoInfoBox">
+        <img src="" alt="">
         <h3>Coin: </h3><p><strong>{{  }}</strong></p>
         <h3>Price: </h3><p><strong>{{  }}</strong></p>
+
+        <div class="">
+          <button type="button" id="btnValidatePurchase">Buy...</button>
+          <button type="button" id="btnValidateSale">Sell</button>
+        </div>
       </div>
-      <div>
-        
-      </div>
+      <div v-for="Coin in Coins" :key="Coin.id" class="Coin-Circle" @mouseover="showActualImageOver(Coin.image)" :style="{backgroundImage: Coins.image}"></div>
     </body>
   </div>
 </template>
@@ -24,8 +27,8 @@
             title: "Bitecoin",
             price: 0,
             image: '../assets/BitcoinGif.gif',
-            consultaPrecio: 0,
             url: 'https://criptoya.com/api/satoshitango/btc/ars',
+            consultaPrecio: 0
           },
           {
             id: 2,
@@ -69,10 +72,22 @@
           }
         ]
       }
+    },
+    methods: {
+      showActualImageOver(CoinImage){
+        this.image = CoinImage;
+      }
     }
   }
 </script>
 
 <style scoped>
-
+  .Coin-Circle{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border-style: inherit black;
+    border: 1.5px;
+    margin-top: 5px;
+  }
 </style>
