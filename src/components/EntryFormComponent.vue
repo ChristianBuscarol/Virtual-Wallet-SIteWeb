@@ -2,13 +2,15 @@
   <div class="EntryForm">
     <body>
       <!--Sector de ingreso de Datos (Nombre y ID) aquí abajo-->
-      <label for="ingresoNombre">Nombre: </label>
-      <input type="text" v-model="userName" id="registroNombre" name="ingresoNombre" placeholder="Ingresar Nombre aquí..."><br><br>
-      <label for="ingresoID">'ID': </label>
-      <input type="text" v-model="userId" id="registroId" name="ingresoID" placeholder="Ingresar ID aquí..."><br><br>
+      <div class="Loggin-Inputs-Box">
+        <label for="ingresoNombre">Nombre: </label>
+        <input type="text" v-model="userName" id="registroNombre" name="ingresoNombre" placeholder="Ingresar Nombre aquí..."><br><br>
+        <label for="ingresoID">'ID': </label>
+        <input type="text" v-model="userId" id="registroId" name="ingresoID" placeholder="Ingresar ID aquí..."><br><br>
+      </div>
       
       <!--Sector de botones aquí abajo-->
-      <div class="Loggin-Box">
+      <div class="Loggin-Buttons-Box">
         <button type="button" @click="btnDateValidation()" v-show="vShowButton" :disabled="!dateValidation" id="btnValidarIngreso">Validar Datos...</button><br><br>
         <button type="button" @click="btnEntryValidation()" v-show="!vShowButton" :disabled="dateValidation" id="btnValidarIngreso">Puede continuar por aquí...</button>
       </div>
