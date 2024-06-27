@@ -2,16 +2,21 @@
   <div class="CriptoCoinsList">
     <body>
       <div class="CriptoInfoBox">
-        <img src="" alt="">
-        <h3>Coin: </h3><p><strong>{{  }}</strong></p>
-        <h3>Price: </h3><p><strong>{{  }}</strong></p>
+        <!--Sector de muestra de información sobre la moneda seleccionada en la lista de miniaturas aquí abajo-->
+        <div class="imageSelectedDisplay">{{ showCoinTitleSelected }}</div>
+        <h3>Coin: </h3><p><strong>{{ showCoinImageSelected }}</strong></p>
+        <h3>Price: </h3><p><strong>{{ this.Coins.price }}</strong></p>
 
+        <!--Sector de botones para la compra y venta de monedas aquí abajo-->
         <div class="">
-          <button type="button" id="btnValidatePurchase">Buy...</button>
+          <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
           <button type="button" id="btnValidateSale">Sell</button>
         </div>
+
+        <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
+        <div v-for="(Coin, index) in Coins" :key="Coin.id" class="Coin-Circle" @mouseover="actualCoinSelected(index)" :style="{backgroundImage: this.Coins[index].image}">{{ Coin.image }}</div>
+        <!---->
       </div>
-      <div v-for="Coin in Coins" :key="Coin.id" class="Coin-Circle" @mouseover="showActualImageOver(Coin.image)" :style="{backgroundImage: Coins.image}"></div>
     </body>
   </div>
 </template>
@@ -21,61 +26,69 @@
     name: 'CriptoCoinsListComponent',
     data(){
       return{
+        selectedCoin: 0,
         Coins: [
           {
             id: 1,
             title: "Bitecoin",
             price: 0,
             image: '../assets/BitcoinGif.gif',
-            url: 'https://criptoya.com/api/satoshitango/btc/ars',
-            consultaPrecio: 0
+            url: 'https://criptoya.com/api/satoshitango/btc/ars'
           },
           {
             id: 2,
             title: "Dogecoin",
             price: 0,
             image: '../assets/DogecoinGif.gif',
-            url: 'https://criptoya.com/api/satoshitango/doge/ars',
-            consultaPrecio: 1
+            url: 'https://criptoya.com/api/satoshitango/doge/ars'
           },
           {
             id: 3,
             title: 'Ethereum',
             price: 0,
             image: '../assets/EthereumGif.gif',
-            url: 'https://criptoya.com/api/satoshitango/eth/ars',
-            consultaPrecio: 2
+            url: 'https://criptoya.com/api/satoshitango/eth/ars'
           },
           {
             id: 4,
             title: "Litecoin",
             price: 0,
             image: '../assets/LitecoinGif.gif',
-            url: 'https://criptoya.com/api/satoshitango/ltc/ars',
-            consultaPrecio: 3
+            url: 'https://criptoya.com/api/satoshitango/ltc/ars'
           },
           {
             id: 5,
             title: "Solana",
             price: 0,
             image: '../assets/SolanaCoinGif.webp',
-            url: 'https://criptoya.com/api/satoshitango/sol/ars',
-            consultaPrecio: 4
+            url: 'https://criptoya.com/api/satoshitango/sol/ars'
           },
           {
             id: 6,
             title: "USDC",
             price: 0,
             image: "../assets/USDCgif.gif",
-            url: 'https://criptoya.com/api/satoshitango/usdc/ars',
-            consultaPrecio: 5
+            url: 'https://criptoya.com/api/satoshitango/usdc/ars'
           }
         ]
       }
     },
+    async created() {
+      const response = await fetch(this.Coins[this.selectedCoin].url);
+      const json = await response.json();
+      this.Coins[this.selectedCoin].price = json.totalAsk;
+    },
     methods: {
-      showActualImageOver(CoinImage){
-        this.image = CoinImage;
+      actualCoinSelected(index){
+        this.selectedCoin = index;
+      }
+    },
+    computed: {
+      showCoinTitleSelected(){
+        return this.Coins[this.selectedCoin].title
+      },
+      showCoinImageSelected(){
+        return this.Coins[this.selectedCoin].image
       }
     }
   }
