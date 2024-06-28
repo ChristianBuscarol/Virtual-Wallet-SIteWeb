@@ -14,7 +14,7 @@
         </div>
 
         <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
-        <div v-for="(Coin, index) in Coins" :key="Coin.id" class="Coin-Circle" @mouseover="actualCoinSelected(index)" :style="{backgroundImage: this.Coins[index].image}">{{ Coin.image }}</div>
+        <div v-for="(Coin, index) in Coins" :key="Coin.id" class="Coin-Circle" @mouseover="actualCoinSelected(index)" :style="{backgroundImage: `url(${Coin.image})`}"></div>
         <!---->
       </div>
     </body>
@@ -32,42 +32,42 @@
             id: 1,
             title: "Bitecoin",
             price: 0,
-            image: '../assets/BitcoinGif.gif',
+            image: './assets/BitcoinGif.gif',
             url: 'https://criptoya.com/api/satoshitango/btc/ars'
           },
           {
             id: 2,
             title: "Dogecoin",
             price: 0,
-            image: '../assets/DogecoinGif.gif',
+            image: '@/assets/DogecoinGif.gif',
             url: 'https://criptoya.com/api/satoshitango/doge/ars'
           },
           {
             id: 3,
             title: 'Ethereum',
             price: 0,
-            image: '../assets/EthereumGif.gif',
+            image: '@/assets/EthereumGif.gif',
             url: 'https://criptoya.com/api/satoshitango/eth/ars'
           },
           {
             id: 4,
             title: "Litecoin",
             price: 0,
-            image: '../assets/LitecoinGif.gif',
+            image: '@/assets/LitecoinGif.gif',
             url: 'https://criptoya.com/api/satoshitango/ltc/ars'
           },
           {
             id: 5,
             title: "Solana",
             price: 0,
-            image: '../assets/SolanaCoinGif.webp',
+            image: '@/assets/SolanaCoinGif.webp',
             url: 'https://criptoya.com/api/satoshitango/sol/ars'
           },
           {
             id: 6,
             title: "USDC",
             price: 0,
-            image: "../assets/USDCgif.gif",
+            image: "@/assets/USDCgif.gif",
             url: 'https://criptoya.com/api/satoshitango/usdc/ars'
           }
         ]
@@ -102,5 +102,9 @@
     border-style: inherit black;
     border: 1.5px;
     margin-top: 5px;
+    margin: 10px;
+    background-position: center;
+    background-size: cover;
+    display: inline-block;
   }
 </style>
