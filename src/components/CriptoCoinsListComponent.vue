@@ -14,8 +14,12 @@
         </div>
 
         <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
-        <div v-for="(Coin, index) in Coins" :key="Coin.id" class="Coin-Circle" @mouseover="actualCoinSelected(index)" :style="{backgroundImage: `url(${Coin.image})`}"></div>
-        <!---->
+        <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)">
+          <img :src="Coin.image" class="Coin-Circle" alt="GifCoinListPart">
+        </div>
+        <!--
+          :style="{backgroundImage: `image(${Coins.image})`}"
+        -->
       </div>
     </body>
   </div>
@@ -32,42 +36,42 @@
             id: 1,
             title: "Bitecoin",
             price: 0,
-            image: './assets/BitcoinGif.gif',
+            image: require('@/assets/BitecoinGif.gif'),
             url: 'https://criptoya.com/api/satoshitango/btc/ars'
           },
           {
             id: 2,
             title: "Dogecoin",
             price: 0,
-            image: '@/assets/DogecoinGif.gif',
+            image: require('@/assets/DogecoinGif.gif'),
             url: 'https://criptoya.com/api/satoshitango/doge/ars'
           },
           {
             id: 3,
             title: 'Ethereum',
             price: 0,
-            image: '@/assets/EthereumGif.gif',
+            image: require('@/assets/EthereumGif.gif'),
             url: 'https://criptoya.com/api/satoshitango/eth/ars'
           },
           {
             id: 4,
             title: "Litecoin",
             price: 0,
-            image: '@/assets/LitecoinGif.gif',
+            image: require('@/assets/LitecoinGif.gif'),
             url: 'https://criptoya.com/api/satoshitango/ltc/ars'
           },
           {
             id: 5,
             title: "Solana",
             price: 0,
-            image: '@/assets/SolanaCoinGif.webp',
+            image: require('@/assets/SolanaCoinGif.webp'),
             url: 'https://criptoya.com/api/satoshitango/sol/ars'
           },
           {
             id: 6,
             title: "USDC",
             price: 0,
-            image: "@/assets/USDCgif.gif",
+            image: require("@/assets/USDCgif.gif"),
             url: 'https://criptoya.com/api/satoshitango/usdc/ars'
           }
         ]
@@ -106,5 +110,11 @@
     background-position: center;
     background-size: cover;
     display: inline-block;
+  }
+
+  #GifCoinListPart{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
   }
 </style>
