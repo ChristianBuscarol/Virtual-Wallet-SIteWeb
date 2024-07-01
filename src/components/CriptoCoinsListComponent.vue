@@ -3,23 +3,22 @@
     <body>
       <div class="CriptoInfoBox">
         <!--Sector de muestra de información sobre la moneda seleccionada en la lista de miniaturas aquí abajo-->
-        <div class="imageSelectedDisplay">{{ showCoinTitleSelected }}</div>
-        <h3>Coin: </h3><p><strong>{{ showCoinImageSelected }}</strong></p>
-        <h3>Price: </h3><p><strong>{{ this.Coins.price }}</strong></p>
+        <div class="Selected-Coin-Box">
+          <img :src="showCoinImageSelected" alt="GifSelectedCoin" class="Coin-Circle">
+          <h3>Coin: </h3><p><strong>{{ showCoinTitleSelected }}</strong></p>
+          <h3>Price: </h3><p><strong>{{ this.Coins.price }}</strong></p>
 
-        <!--Sector de botones para la compra y venta de monedas aquí abajo-->
-        <div class="">
-          <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
-          <button type="button" id="btnValidateSale">Sell</button>
+          <!--Sector de botones para la compra y venta de monedas aquí abajo-->
+          <div class="Transactions-Buttons-Box">
+            <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
+            <button type="button" id="btnValidateSale">Sell</button>
+          </div>
         </div>
 
         <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
-        <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)">
+        <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)" class="List-Display-Box">
           <img :src="Coin.image" class="Coin-Circle" alt="GifCoinListPart">
         </div>
-        <!--
-          :style="{backgroundImage: `image(${Coins.image})`}"
-        -->
       </div>
     </body>
   </div>
@@ -98,8 +97,8 @@
   }
 </script>
 
-<style scoped>
-  .Coin-Circle{
+<!--
+.Coin-Circle{
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -110,6 +109,15 @@
     background-position: center;
     background-size: cover;
     display: inline-block;
+  }-->
+
+<style scoped>
+  .Coin-Circle{
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border-style: groove;
+    border-color: black;
   }
 
   #GifCoinListPart{
