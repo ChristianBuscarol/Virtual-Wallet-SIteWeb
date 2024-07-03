@@ -3,21 +3,26 @@
     <body>
       <div class="CriptoInfoBox">
         <!--Sector de muestra de información sobre la moneda seleccionada en la lista de miniaturas aquí abajo-->
-        <div class="Selected-Coin-Box">
-          <img :src="showCoinImageSelected" alt="GifSelectedCoin" class="Coin-Circle">
-          <h3>Coin: </h3><p><strong>{{ showCoinTitleSelected }}</strong></p>
-          <h3>Price: </h3><p><strong>{{ this.Coins.price }}</strong></p>
+        <div class="SelectedCoinBox">
+          <div class="InfoSelectedCoinBox">
+            <h3>Selected Coin: <p><strong>{{ showCoinTitleSelected }}</strong></p></h3>
+            <h3>Image of the Coin:</h3>
+            <img :src="showCoinImageSelected" alt="GifSelectedCoin" class="Coin-Circle">
+            <h3>Price: </h3><p><strong>{{ this.Coins[selectedCoin].price }}</strong></p>
+          </div>
 
           <!--Sector de botones para la compra y venta de monedas aquí abajo-->
-          <div class="Transactions-Buttons-Box">
+          <div class="TransactionsButtonsBox">
             <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
-            <button type="button" id="btnValidateSale">Sell</button>
+            <button type="button" id="btnValidateSale">Sell...</button>
           </div>
         </div>
 
         <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
-        <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)" class="List-Display-Box">
-          <img :src="Coin.image" class="Coin-Circle" alt="GifCoinListPart">
+        <div class="ListDisplayBox">
+          <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)">
+            <img :src="Coin.image" class="Coin-Circle" alt="GifCoinListPart">
+          </div>
         </div>
       </div>
     </body>
@@ -25,6 +30,8 @@
 </template>
 
 <script>
+  import axios from 'axios';
+
   export default{
     name: 'CriptoCoinsListComponent',
     data(){
@@ -76,11 +83,6 @@
         ]
       }
     },
-    async created() {
-      const response = await fetch(this.Coins[this.selectedCoin].url);
-      const json = await response.json();
-      this.Coins[this.selectedCoin].price = json.totalAsk;
-    },
     methods: {
       actualCoinSelected(index){
         this.selectedCoin = index;
@@ -93,12 +95,16 @@
       showCoinImageSelected(){
         return this.Coins[this.selectedCoin].image
       }
+    },
+    async created() {
+      let response = await axios.get(this.Coins[this.selectedCoin].url);
+      this.Coins[this.selectedCoin].price = response.data.totalAsk;
     }
   }
 </script>
 
 <!--
-.Coin-Circle{
+  .Coin-Circle{
     width: 100px;
     height: 100px;
     border-radius: 50%;
@@ -109,20 +115,62 @@
     background-position: center;
     background-size: cover;
     display: inline-block;
-  }-->
+  }
+-->
 
 <style scoped>
   .Coin-Circle{
     width: 100px;
     height: 100px;
     border-radius: 50%;
+    border: 2px;
     border-style: groove;
     border-color: black;
   }
 
-  #GifCoinListPart{
+  body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightgreen;
+  }
+
+  .CriptoInfoBox{
+    display: grid;
+    grid-template-columns: auto auto;
+    margin: 0 auto;
+    justify-content: space-around;
+  }
+
+  .InfoSelectedCoinBox{
+    grid-column: 1/2;
+  }
+
+  .TransactionsButtonsBox{
+    grid-column: 2/2;
     width: 100px;
     height: 100px;
-    border-radius: 50%;
+    text-align: center;
+  }
+
+  .SelectedCoinBox{
+    display: grid;
+    grid-template-columns: auto auto;
+    max-width: 250px;
+    max-height: 250px;
+    grid-column: 1/2;
+    width: 90%;
+    border: 2px solid black;
+  }
+
+  .ListDisplayBox{
+    grid-column: 2/2;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 300px;
+    max-height: 300px;
+    margin: 0 auto;
+    width: 90%;
+    border: 2px solid black;
   }
 </style>
