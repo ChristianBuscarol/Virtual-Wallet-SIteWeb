@@ -14,7 +14,8 @@
           <!--Sector de botones para la compra y venta de monedas aquí abajo-->
           <div class="TransactionsButtonsBox">
             <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
-            <button type="button" id="btnValidateSale">Sell...</button>
+            <button type="button" id="btnValidateSale">Sell...</button><br><br>
+            <button type="button" @click="obtainPrice()" id="btnRefreshPrices">Refresh Prices...</button>
           </div>
         </div>
 
@@ -86,6 +87,13 @@
     methods: {
       actualCoinSelected(index){
         this.selectedCoin = index;
+      },
+      async obtainPrice(){
+        for(let i = 0; i < this.Coins.length; i++){
+          let response = await axios.get(this.Coins[i].url);
+          this.Coins[i].price = response.data.totalAsk;
+        }
+        console.log('Hola a todos!');
       }
     },
     computed: {
@@ -97,8 +105,7 @@
       }
     },
     async created() {
-      let response = await axios.get(this.Coins[this.selectedCoin].url);
-      this.Coins[this.selectedCoin].price = response.data.totalAsk;
+      this.obtainPrice();
     }
   }
 </script>
