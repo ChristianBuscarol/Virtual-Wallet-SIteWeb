@@ -1,5 +1,5 @@
 <template>
-  <header >
+  <header class="IndexHeaderBox">
     <div class="Header-Box">
       <h1>Trinance Interactive Corp.</h1>
     </div>
@@ -7,7 +7,7 @@
   <div class="EntryForm">
     <EntryFormComponent/>
   </div>
-  <footer>
+  <footer class="IndexFooterBox">
       <div class="Footer-Box">
         <img src="../assets/CoinRainGif.gif" alt="Coin Rain..." id="EntryFormGifs">
         <ul>
@@ -23,15 +23,15 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import EntryFormComponent from '@/components/EntryFormComponent.vue';
+  // @ is an alias to /src
+  import EntryFormComponent from '@/components/EntryFormComponent.vue';
 
-export default {
-  name: 'IndexView',
-  components: {
-    EntryFormComponent
+  export default {
+    name: 'IndexView',
+    components: {
+      EntryFormComponent
+    }
   }
-}
 </script>
 
 <style scoped>
