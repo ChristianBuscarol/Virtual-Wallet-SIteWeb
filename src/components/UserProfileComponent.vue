@@ -11,9 +11,18 @@
     name: 'UserProfileComponent',
     data(){
       return{
-        userName: '',
-        userId: '',
-        userWallet: 0
+        dataUserProfile: {
+          userName: '',
+          userId: '',
+          userWallet: 0,
+
+        },
+        dataTransaction: {
+          userName: '',
+          userId: '',
+          actionMade: '',
+          spentMoney: 0
+        }
       }
     }
   }
