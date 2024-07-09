@@ -1,21 +1,15 @@
 import axios from "axios";
 
 const apiClient = axios.create({
-	baseURL: 'https://laboratorio3-5459.restdb.io/rest/',
-	headers: {'x-apikey': '64a57c2b86d8c50fe6ed8fa5'}
+	baseURL: 'https://laboratorio3-f36a.restdb.io/rest/transactions',
+	headers: {'x-apikey': '64bdbb6f86d8c5e18ded91e3'}
 });
 
 export default{
-  getUserInfo(){
-    return apiClient.get('/userData')
-  },
-  postNewUser(){
-    
-  },
   getTransactionInfo(){
-
+    return apiClient.get('/dataTransaction')
   },
   postNewTransaction(){
-
+    return apiClient.post('/dataTransaction')
   }
 }
