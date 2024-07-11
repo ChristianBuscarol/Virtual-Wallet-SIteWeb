@@ -2,6 +2,7 @@
   <header class="IndexHeaderBox">
     <div class="Header-Box">
       <h1>Trinance Interactive Corp.</h1>
+      <UserProfileComponent @user-register="userCheck"/>
     </div>
   </header>
   <div class="EntryForm">
@@ -25,11 +26,13 @@
 <script>
   // @ is an alias to /src
   import EntryFormComponent from '@/components/EntryFormComponent.vue';
+  import UserProfileComponent from '@/components/UserProfileComponent.vue';
 
   export default {
     name: 'IndexView',
     components: {
-      EntryFormComponent
+      EntryFormComponent,
+      UserProfileComponent
     }
   }
 </script>
