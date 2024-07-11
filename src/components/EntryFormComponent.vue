@@ -88,11 +88,15 @@ export default {
           this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
           this.attemptIncrement();
           this.localStorageSettingItems();
+          this.userRegister;
           this.userId = "",
           this.userName = "",
           this.dateValidation = false
         }
       }
+    },
+    userRegister(){
+      this.$emit('user-register')
     },
     userObjectConstructor(){
       this.userData.userNameRegister = this.userName;

@@ -15,7 +15,7 @@
           <div class="TransactionsButtonsBox">
             <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
             <button type="button" id="btnValidateSale">Sell...</button><br><br>
-            <button type="button" @click="obtainPrice()" id="btnRefreshPrices">Refresh Prices...</button>
+            <!--<button type="button" @click="obtainPrice()" id="btnRefreshPrices">Refresh Prices...</button>-->
           </div>
         </div>
 
@@ -93,6 +93,7 @@
           let response = await axios.get(this.Coins[i].url);
           this.Coins[i].price = response.data.totalAsk;
         }
+        
         console.log('Hola a todos!');
       }
     },
@@ -105,7 +106,9 @@
       }
     },
     async created() {
-      this.obtainPrice();
+      this.obtainPrice()
+
+      setInterval(() => {this.obtainPrice();}, 15000);
     }
   }
 </script>
