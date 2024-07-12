@@ -27,118 +27,129 @@
 </template>
 
 <script>
-export default {
-  name: 'EntryFormComponent',
-  data() {
-    return{
-      stateMessage: "Se requiere del formulario completo para continuar por el sitio web...",
-      idLetters: 0,
-      idNumbers: 0,
-      nameLetters: 0,
-      nameNumbers: 0,
-      userId: "",
-      userName: "",
-      dateValidation: true,
-      entryAttempts: 0,
-      userData : {
-        userNameRegister: "",
-        userIdRegister: ""
-      }
-    }
-  },
-  methods: {
-    nameValidation() {
-      for (let i = 0; i < this.userName.length; i++){
-        let charName = this.userName[i]
+  import ApiCallService from '@/services/ApiCallService';
 
-        if(!isNaN(Number(charName))){this.nameNumbers++}
-        else if(/[a-zA-Z]/.test(charName)){this.nameLetters++}
+  export default {
+    name: 'EntryFormComponent',
+    data() {
+      return{
+        stateMessage: "Se requiere del formulario completo para continuar por el sitio web...",
+        idLetters: 0,
+        idNumbers: 0,
+        nameLetters: 0,
+        nameNumbers: 0,
+        userId: "",
+        userName: "",
+        dateValidation: true,
+        entryAttempts: 0,
+        userData : {
+          userNameRegister: "",
+          userIdRegister: ""
+        },
+        busquedaID: null
       }
     },
-    IDValidation() {
-      for (let i = 0; i < this.userId.length; i++){
-        let charId = this.userId[i]
+    methods: {
+      nameValidation() {
+        for (let i = 0; i < this.userName.length; i++){
+          let charName = this.userName[i]
 
-        if(!isNaN(Number(charId))){this.idNumbers++}
-        else if(/[a-zA-Z]/.test(charId)){this.idLetters++}
-      }
-    },
-    btnDateValidation(){
-      this.nameValidation();
-      this.IDValidation();
-      
-      if(this.userId == "" || this.userName == ""){
-        this.attemptIncrement()
-        this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite..."
-      }
-      else{
-        if (this.nameNumbers > 0 || this.nameLetters < 3){
-          this.attemptIncrement()
-          this.stateMessage= "El 'Nombre' ingresado es incorrecto, el dato requiere de un mínimo de 3 letras y no se permite números en el...";
+          if(!isNaN(Number(charName))){this.nameNumbers++}
+          else if(/[a-zA-Z]/.test(charName)){this.nameLetters++}
         }
-        else if (this.idLetters < 5 || this.idNumbers == 0){
-          this.attemptIncrement()
-          this.stateMessage= "El 'ID' está flojo de papeles, se requiere de un mínimo de 3 letras y al menos 1 número, intente de nuevo..."
+      },
+      IDValidation() {
+        for (let i = 0; i < this.userId.length; i++){
+          let charId = this.userId[i]
+
+          if(!isNaN(Number(charId))){this.idNumbers++}
+          else if(/[a-zA-Z]/.test(charId)){this.idLetters++}
         }
-        else if (this.nameNumbers >= 1 || this.nameLetters <= 2 && this.idLetters <= 4 || this.idNumbers < 1){
+      },
+      btnDateValidation(){
+        this.nameValidation();
+        this.IDValidation();
+        
+        if(this.userId == "" || this.userName == ""){
           this.attemptIncrement()
-          this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo...";
+          this.stateMessage= "Uno o todos los campos de la entrada de datos a quedado vacío, por favor, revise e ingrese cada dato que se solicite..."
         }
         else{
-          this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
-          this.attemptIncrement();
-          this.localStorageSettingItems();
-          this.userRegister;
-          this.userId = "",
-          this.userName = "",
-          this.dateValidation = false
+          if (this.nameNumbers > 0 || this.nameLetters < 3){
+            this.attemptIncrement()
+            this.stateMessage= "El 'Nombre' ingresado es incorrecto, el dato requiere de un mínimo de 3 letras y no se permite números en el...";
+          }
+          else if (this.idLetters < 5 || this.idNumbers == 0){
+            this.attemptIncrement()
+            this.stateMessage= "El 'ID' está flojo de papeles, se requiere de un mínimo de 3 letras y al menos 1 número, intente de nuevo..."
+          }
+          else if (this.nameNumbers >= 1 || this.nameLetters <= 2 && this.idLetters <= 4 || this.idNumbers < 1){
+            this.attemptIncrement()
+            this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo...";
+          }
+          else{
+            this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
+            this.attemptIncrement();
+            this.userRegisterValidation();
+            this.userId = "",
+            this.userName = "",
+            this.dateValidation = false
+          }
         }
+      },
+      userRegisterValidation(){
+        if(this.userId != this.busquedaID){
+          console.log();
+        }else{
+          console.log();
+        }
+      },
+      userRegister(){
+        this.$emit('user-register')
+      },
+      userObjectConstructor(){
+        this.userData.userNameRegister = this.userName;
+        this.userData.userIdRegister = this.userId;
+      },
+      localStorageSettingItems(){
+        this.userObjectConstructor();
+        
+        localStorage.setItem('userData', JSON.stringify(this.userData))
+      },
+      attemptIncrement(){
+        this.entryAttempts++;
+      },
+      entryAttemptsFalied(){
+        if (this.entryAttempts == 3){
+          this.dateValidation = true;
+        }
+        else{
+          this.dateValidation = false;
+        }
+      },
+      btnEntryValidation(){
+        window.location.href = '/CoinCatalogueView';
       }
     },
-    userRegister(){
-      this.$emit('user-register')
-    },
-    userObjectConstructor(){
-      this.userData.userNameRegister = this.userName;
-      this.userData.userIdRegister = this.userId;
-    },
-    localStorageSettingItems(){
-      this.userObjectConstructor();
-      
-      localStorage.setItem('userData', JSON.stringify(this.userData))
-    },
-    attemptIncrement(){
-      this.entryAttempts++;
-    },
-    entryAttemptsFalied(){
-      if (this.entryAttempts == 3){
-        this.dateValidation = true;
-      }
-      else{
-        this.dateValidation = false;
-      }
-    },
-    btnEntryValidation(){
-      window.location.href = '/CoinCatalogueView';
-    }
-  },
-  computed: {
-    vShowMessage(){
-      if (this.entryAttempts == 3){
-        return true;
-      }
-      else{
+    computed: {
+      vShowMessage(){
+        if (this.entryAttempts == 3){
+          return true;
+        }
+        else{
+          return false;
+        }
+      },
+      vShowButton(){
+        while(this.entryAttempts < 3 && this.dateValidation == true){
+          return true;
+        }
         return false;
       }
     },
-    vShowButton(){
-      while(this.entryAttempts < 3 && this.dateValidation == true){
-        return true;
-      }
-      return false;
+    mounted(){
     }
   }
-}
 </script>
 
 <style scoped>

@@ -44,7 +44,6 @@
     },
     methods: {
       userCheck() {
-        console.log(JSON.parse(localStorage.getItem('userData.userIdRegister')));
       }
     }
   }
