@@ -97,21 +97,11 @@
           }
         }
       },
-      obtainingApiUserID(){
-        try{
-          ApiCallService.getTransactionInfo(this.userId).then(response => {
-            this.busquedaID = response.data
-          })
-        } catch (error){
-          console.error('Error al intentar consultar a la Api: ', error);
-        }
-      },
       userRegisterValidation(){
         if(this.userId != this.busquedaID){
-          console.log('El usuario recién registrado es nuevo en la plataforma');
-          console.log('El Id registrado en la última sesión es: ', this.busquedaID)
+          console.log();
         }else{
-          console.log('El usuario recién registrado ya estuvo en la plataforma anteriormente');
+          console.log();
         }
       },
       userRegister(){
@@ -157,8 +147,7 @@
         return false;
       }
     },
-    created(){
-      this.obtainingApiUserID();
+    mounted(){
     }
   }
 </script>
