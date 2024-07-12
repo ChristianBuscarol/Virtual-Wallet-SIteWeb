@@ -6,10 +6,10 @@ const apiClient = axios.create({
 });
 
 export default{
-  getTransactionInfo(){
-    return apiClient.get('/dataTransaction')
+  getTransactionInfo(userId){
+    return apiClient.get(userId)
   },
   postNewTransaction(){
-    return apiClient.post('/dataTransaction')
+    return apiClient.post()
   }
 }
