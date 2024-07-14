@@ -27,8 +27,6 @@
 </template>
 
 <script>
-  import ApiCallService from '@/services/ApiCallService';
-
   export default {
     name: 'EntryFormComponent',
     data() {
@@ -97,15 +95,8 @@
           }
         }
       },
-      userRegisterValidation(){
-        if(this.userId != this.busquedaID){
-          console.log();
-        }else{
-          console.log();
-        }
-      },
-      userRegister(){
-        this.$emit('user-register')
+      localStorageGettingItems(){
+        this.userData = JSON.parse(localStorage.getItem('userData'));
       },
       userObjectConstructor(){
         this.userData.userNameRegister = this.userName;
@@ -115,6 +106,21 @@
         this.userObjectConstructor();
         
         localStorage.setItem('userData', JSON.stringify(this.userData))
+      },
+      userRegister(){
+        this.$emit('user-register')
+      },
+      userRegisterValidation(){
+        this.localStorageGettingItems()
+
+        if(this.userId != this.userData.userIdRegister){
+          this.localStorageSettingItems();
+        }
+        else if (this.userName != this.userData.userNameRegister){
+          this.localStorageSettingItems();
+        }
+
+        this.userRegister();
       },
       attemptIncrement(){
         this.entryAttempts++;
@@ -148,6 +154,7 @@
       }
     },
     mounted(){
+      this.localStorageGettingItems();
     }
   }
 </script>
