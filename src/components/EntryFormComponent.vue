@@ -89,6 +89,7 @@
             this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
             this.attemptIncrement();
             this.userRegisterValidation();
+            this.userRegister();
             this.userId = "",
             this.userName = "",
             this.dateValidation = false
@@ -107,9 +108,6 @@
         
         localStorage.setItem('userData', JSON.stringify(this.userData))
       },
-      userRegister(){
-        this.$emit('user-register')
-      },
       userRegisterValidation(){
         this.localStorageGettingItems()
 
@@ -119,8 +117,9 @@
         else if (this.userName != this.userData.userNameRegister){
           this.localStorageSettingItems();
         }
-
-        this.userRegister();
+      },
+      userRegister(){
+        this.$emit('user-register')
       },
       attemptIncrement(){
         this.entryAttempts++;
