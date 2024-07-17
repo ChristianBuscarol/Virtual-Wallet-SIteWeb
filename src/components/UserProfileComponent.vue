@@ -14,6 +14,7 @@
     data(){
       return{
         dataUserProfile: {
+          gettingUserData: ['', ''],
           userName: '',
           userId: '',
           userWallet: 0,
@@ -44,34 +45,34 @@
     },
     methods: {
       userCheck() {
-        this.localStorageGettingUserInfo();
-      },
-      localStorageGettingUserInfo(){
         this.localStorageGetUserName();
         this.localStorageGetUserID();
+
+        this.dataUserProfile.userName = this.dataUserProfile.gettingUserData[0];
+        this.dataUserProfile.userId = this.dataUserProfile.gettingUserData[1];
       },
       localStorageGetUserName(){
-        this.dataUserProfile.userName = JSON.parse(localStorage.getItem('userData.userNameRegister'));
+        this.dataUserProfile.gettingUserData[0] = JSON.parse(localStorage.getItem('userData.userNameRegister'));
         console.log('El Nombre del usuario de la última conexión es: ', localStorage.getItem('userData.userNameRegister'))
-        console.log(this.userName);
+        console.log(this.dataUserProfile.gettingUserData[0]);
       },
       localStorageGetUserID(){
-        this.dataUserProfile.userId = JSON.parse(localStorage.getItem('userData.userIdRegister'));
+        this.dataUserProfile.gettingUserData[1] = JSON.parse(localStorage.getItem('userData.userIdRegister'));
         console.log('El ID del usuario de la última conexión es: ', localStorage.getItem('userData.userIdRegister'))
-        console.log(this.userId);
+        console.log(this.dataUserProfile.gettingUserData[1]);
       }
     },
     computed: {
       vShowUserName(){
         if(this.dataUserProfile.userName != ''){
-          return this.userName;
+          return this.dataUserProfile.userName;
         } else {
           return 'Esperando el ingreso de Datos para verificación...';
         }
       },
       vShowMoneyUser(){
         if(this.dataUserProfile.userWallet != 0){
-          return this.userWallet;
+          return this.dataUserProfile.userWallet;
         } else {
           return 'Esperando el ingreso de Datos para consultar a la Api...';
         }
