@@ -13,8 +13,8 @@
     name: 'UserProfileComponent',
     data(){
       return{
+        userDataProp: ['', ''],
         dataUserProfile: {
-          gettingUserData: ['', ''],
           userName: '',
           userId: '',
           userWallet: 0,
@@ -48,18 +48,18 @@
         this.localStorageGetUserName();
         this.localStorageGetUserID();
 
-        this.dataUserProfile.userName = this.dataUserProfile.gettingUserData[0];
-        this.dataUserProfile.userId = this.dataUserProfile.gettingUserData[1];
+        this.dataUserProfile.userName = this.userDataProp[0];
+        this.dataUserProfile.userId = this.userDataProp[1];
       },
       localStorageGetUserName(){
-        this.dataUserProfile.gettingUserData[0] = JSON.parse(localStorage.getItem('userData.userNameRegister'));
+        this.userDataProp[0] = JSON.parse(localStorage.getItem('userData.userNameRegister'));
         console.log('El Nombre del usuario de la última conexión es: ', localStorage.getItem('userData.userNameRegister'))
-        console.log(this.dataUserProfile.gettingUserData[0]);
+        console.log(this.userDataProp[0]);
       },
       localStorageGetUserID(){
-        this.dataUserProfile.gettingUserData[1] = JSON.parse(localStorage.getItem('userData.userIdRegister'));
+        this.userDataProp[1] = JSON.parse(localStorage.getItem('userData.userIdRegister'));
         console.log('El ID del usuario de la última conexión es: ', localStorage.getItem('userData.userIdRegister'))
-        console.log(this.dataUserProfile.gettingUserData[1]);
+        console.log(this.userData[1]);
       }
     },
     computed: {

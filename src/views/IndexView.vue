@@ -2,7 +2,7 @@
   <header class="IndexHeaderBox">
     <div class="Header-Box">
       <h1>Trinance Interactive Corp.</h1>
-      <UserProfileComponent @user-register="userCheck"/>
+      <UserProfileComponent :user-Data="userData" @user-register="userCheck"/>
     </div>
   </header>
   <div class="EntryForm">

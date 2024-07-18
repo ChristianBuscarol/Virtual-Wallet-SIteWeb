@@ -29,6 +29,12 @@
 <script>
   export default {
     name: 'EntryFormComponent',
+    props: {
+      userDataProp: {
+        type: Array,
+        required: true
+      }
+    },
     data() {
       return{
         stateMessage: "Se requiere del formulario completo para continuar por el sitio web...",
@@ -88,7 +94,6 @@
           else{
             this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
             this.attemptIncrement();
-            this.userRegisterValidation();
             this.userRegister();
             this.userId = "",
             this.userName = "",
@@ -119,7 +124,9 @@
         }
       },
       userRegister(){
-        this.$emit('user-register')
+        this.userRegisterValidation();
+
+        this.$emit('user-register', );
       },
       attemptIncrement(){
         this.entryAttempts++;
