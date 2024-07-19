@@ -13,7 +13,6 @@
     name: 'UserProfileComponent',
     data(){
       return{
-        userDataProp: ['', ''],
         dataUserProfile: {
           userName: '',
           userId: '',
@@ -44,22 +43,11 @@
       }
     },
     methods: {
-      userCheck() {
-        this.localStorageGetUserName();
-        this.localStorageGetUserID();
+      receivedUser(){
+        this.dataUserProfile.userName = JSON.parse(localStorage.getItem('userData.userNameRegister'));
+        this.dataUserProfile.userId = JSON.parse(localStorage.getItem('userData.userIdRegister'));
 
-        this.dataUserProfile.userName = this.userDataProp[0];
-        this.dataUserProfile.userId = this.userDataProp[1];
-      },
-      localStorageGetUserName(){
-        this.userDataProp[0] = JSON.parse(localStorage.getItem('userData.userNameRegister'));
-        console.log('El Nombre del usuario de la última conexión es: ', localStorage.getItem('userData.userNameRegister'))
-        console.log(this.userDataProp[0]);
-      },
-      localStorageGetUserID(){
-        this.userDataProp[1] = JSON.parse(localStorage.getItem('userData.userIdRegister'));
-        console.log('El ID del usuario de la última conexión es: ', localStorage.getItem('userData.userIdRegister'))
-        console.log(this.userData[1]);
+        console.log(this.dataUserProfile.userId);
       }
     },
     computed: {
