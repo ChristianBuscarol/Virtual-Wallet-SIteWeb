@@ -2,8 +2,9 @@
   <div class="UserProfile">
     <header>
       <h4>Actual usuary acount:</h4>
-      <p><strong>Name: {{ dataUserProfile.userName }}</strong></p>
-      <p><strong>Available money: {{ dataUserProfile.userWallet }}</strong></p>
+      <p><strong>Name: {{ vShowUserName }}</strong></p>
+      <p><strong>Id: {{ vShowUserId }}</strong></p>
+      <p><strong>Available money: {{ vShowMoneyUser }}</strong></p>
     </header>
   </div>
 </template>
@@ -11,6 +12,12 @@
 <script>
   export default{
     name: 'UserProfileComponent',
+    props: {
+      receivedData: {
+        type: Object,
+        default: null
+      }
+    },
     data(){
       return{
         dataUserProfile: {
@@ -43,7 +50,39 @@
       }
     },
     methods: {
-      userCheck() {
+    },
+    computed: {
+      vShowUserName(){
+        if(this.dataUserProfile.userName != ''){
+          return this.dataUserProfile.userName;
+        } else {
+          return 'Esperando el ingreso de Datos para verificación...';
+        }
+      },
+      vShowUserId(){
+        if(this.dataUserProfile.userId != ''){
+          return this.dataUserProfile.userId;
+        } else {
+          return 'Esperando el ingreso de Datos para verificación...';
+        }
+      },
+      vShowMoneyUser(){
+        if(this.dataUserProfile.userWallet != 0){
+          return this.dataUserProfile.userWallet;
+        } else {
+          return 'Esperando el ingreso de Datos para consultar a la Api...';
+        }
+      }
+    },
+    watch: {
+      receivedData: {
+        handler(newVal) {
+          if(newVal){
+            this.dataUserProfile.userName = newVal.userNameRegister;
+            this.dataUserProfile.userId = newVal.userIdRegister;
+          }
+        },
+        inmediate: true
       }
     }
   }

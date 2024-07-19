@@ -2,11 +2,11 @@
   <header class="IndexHeaderBox">
     <div class="Header-Box">
       <h1>Trinance Interactive Corp.</h1>
-      <UserProfileComponent @user-register="userCheck"/>
+      <UserProfileComponent :receivedData="emitUserDataReceived"/>
     </div>
   </header>
   <div class="EntryForm">
-    <EntryFormComponent/>
+    <EntryFormComponent @user-register="userCheck"/>
   </div>
   <footer class="IndexFooterBox">
       <div class="Footer-Box">
@@ -33,6 +33,19 @@
     components: {
       EntryFormComponent,
       UserProfileComponent
+    },
+    data(){
+      return{
+        emitUserDataReceived: {}
+      }
+    },
+    methods: {
+      userCheck(userData){
+        this.emitUserDataReceived = userData;
+
+        console.log(userData)
+        console.log(this.emitUserDataReceived)
+      }
     }
   }
 </script>

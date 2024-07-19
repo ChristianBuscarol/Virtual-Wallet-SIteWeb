@@ -27,8 +27,6 @@
 </template>
 
 <script>
-  import ApiCallService from '@/services/ApiCallService';
-
   export default {
     name: 'EntryFormComponent',
     data() {
@@ -45,8 +43,7 @@
         userData : {
           userNameRegister: "",
           userIdRegister: ""
-        },
-        busquedaID: null
+        }
       }
     },
     methods: {
@@ -91,21 +88,15 @@
             this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
             this.attemptIncrement();
             this.userRegisterValidation();
+            this.userRegister();
             this.userId = "",
             this.userName = "",
             this.dateValidation = false
           }
         }
       },
-      userRegisterValidation(){
-        if(this.userId != this.busquedaID){
-          console.log();
-        }else{
-          console.log();
-        }
-      },
-      userRegister(){
-        this.$emit('user-register')
+      localStorageGettingItems(){
+        this.userData = JSON.parse(localStorage.getItem('userData'));
       },
       userObjectConstructor(){
         this.userData.userNameRegister = this.userName;
@@ -115,6 +106,19 @@
         this.userObjectConstructor();
         
         localStorage.setItem('userData', JSON.stringify(this.userData))
+      },
+      userRegisterValidation(){
+        this.localStorageGettingItems()
+
+        if(this.userId != this.userData.userIdRegister){
+          this.localStorageSettingItems();
+        }
+        else if (this.userName != this.userData.userNameRegister){
+          this.localStorageSettingItems();
+        }
+      },
+      userRegister(){
+        this.$emit('user-register', this.userData);
       },
       attemptIncrement(){
         this.entryAttempts++;
@@ -148,6 +152,7 @@
       }
     },
     mounted(){
+      this.localStorageGettingItems();
     }
   }
 </script>
