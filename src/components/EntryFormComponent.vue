@@ -118,7 +118,7 @@
         }
       },
       userRegister(){
-        this.$emit('user-register');
+        this.$emit('user-register', this.userData);
       },
       attemptIncrement(){
         this.entryAttempts++;
