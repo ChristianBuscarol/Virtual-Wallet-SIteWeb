@@ -2,7 +2,7 @@
   <header class="IndexHeaderBox">
     <div class="Header-Box">
       <h1>Trinance Interactive Corp.</h1>
-      <UserProfileComponent @emit-user-register="receivedUser"/>
+      <UserProfileComponent :receivedData="emitUserDataReceived"/>
     </div>
   </header>
   <div class="EntryForm">
@@ -34,9 +34,17 @@
       EntryFormComponent,
       UserProfileComponent
     },
+    data(){
+      return{
+        emitUserDataReceived: {}
+      }
+    },
     methods: {
-      userCheck(){
-        this.$emit('emit-user-register');
+      userCheck(userData){
+        this.emitUserDataReceived = userData;
+
+        console.log(userData)
+        console.log(this.emitUserDataReceived)
       }
     }
   }
