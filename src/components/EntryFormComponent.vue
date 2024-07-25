@@ -27,6 +27,8 @@
 </template>
 
 <script>
+  import ApiCallService from '@/services/ApiCallService';
+
   export default {
     name: 'EntryFormComponent',
     data() {
@@ -159,6 +161,10 @@
         }
         return false;
       }
+    },
+    async created(){
+      let response = await ApiCallService.getTransactionInfo();
+      console.log(response.data);
     },
     mounted(){
       this.localStorageGettingItems();
