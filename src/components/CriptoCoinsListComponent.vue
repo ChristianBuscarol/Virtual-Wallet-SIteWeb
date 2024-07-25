@@ -31,8 +31,7 @@
 </template>
 
 <script>
-  import ApiCallService from '@/services/ApiCallService';
-  import axios from 'axios';
+  import axios from "axios";
 
   export default{
     name: 'CriptoCoinsListComponent',
@@ -96,10 +95,6 @@
         }
         
         console.log('Hola a todos!');
-      },
-      async getHistoryMoves(){
-        let response = await ApiCallService.getTransactionInfo();
-        console.log(response.data);
       }
     },
     computed: {
@@ -114,9 +109,6 @@
       this.obtainPrice()
 
       setInterval(() => {this.obtainPrice();}, 15000);
-    },
-    mounted() {
-      this.getHistoryMoves();
     }
   }
 </script>
