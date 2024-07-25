@@ -27,6 +27,8 @@
 </template>
 
 <script>
+  import ApiCallService from '@/services/ApiCallService';
+
   export default {
     name: 'EntryFormComponent',
     data() {
@@ -96,7 +98,12 @@
         }
       },
       localStorageGettingItems(){
-        this.userData = JSON.parse(localStorage.getItem('userData'));
+        let saveusuarydata = JSON.parse(localStorage.getItem('userData'));
+        console.log(saveusuarydata);
+        if(this.saveusuarydata != null){
+          this.userData.userNameRegister = this.saveusuarydata.userNameRegister;
+          this.userData.userIdRegister = this.saveusuarydata.userIdRegister;
+        }
       },
       userObjectConstructor(){
         this.userData.userNameRegister = this.userName;
@@ -110,10 +117,14 @@
       userRegisterValidation(){
         this.localStorageGettingItems()
 
-        if(this.userId != this.userData.userIdRegister){
-          this.localStorageSettingItems();
-        }
-        else if (this.userName != this.userData.userNameRegister){
+        if(this.userData != null){
+          if(this.userId != this.userData.userIdRegister){
+            this.localStorageSettingItems();
+          }
+          else if (this.userName != this.userData.userNameRegister){
+            this.localStorageSettingItems();
+          }
+        } else{
           this.localStorageSettingItems();
         }
       },
@@ -150,6 +161,10 @@
         }
         return false;
       }
+    },
+    async created(){
+      let response = await ApiCallService.getTransactionInfo();
+      console.log(response.data);
     },
     mounted(){
       this.localStorageGettingItems();
