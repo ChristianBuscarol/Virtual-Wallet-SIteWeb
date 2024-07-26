@@ -42,7 +42,7 @@
         userName: "",
         dateValidation: true,
         entryAttempts: 0,
-        userData : {
+        userData: {
           userNameRegister: "",
           userIdRegister: ""
         },
@@ -171,8 +171,8 @@
       }
     },
     async created(){
-      let response = await ApiCallService.getTransactionInfo();
-      console.log(response.data);
+      this.userDataDB = await ApiCallService.getTransactionInfo();
+      console.log(this.userDataDB.data);
     },
     mounted(){
       this.localStorageGettingItems();
