@@ -42,9 +42,6 @@
     methods: {
       userCheck(userData){
         this.emitUserDataReceived = userData;
-
-        console.log(userData)
-        console.log(this.emitUserDataReceived)
       }
     }
   }
