@@ -27,8 +27,6 @@
 </template>
 
 <script>
-  import ApiCallService from '@/services/ApiCallService';
-
   export default {
     name: 'EntryFormComponent',
     data() {
@@ -169,10 +167,6 @@
         }
         return false;
       }
-    },
-    async created(){
-      this.userDataDB = await ApiCallService.getTransactionInfo();
-      console.log(this.userDataDB.data);
     },
     mounted(){
       this.localStorageGettingItems();
