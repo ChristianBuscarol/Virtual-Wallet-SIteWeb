@@ -45,7 +45,8 @@
         userData : {
           userNameRegister: "",
           userIdRegister: ""
-        }
+        },
+        localStorageComparison: 0
       }
     },
     methods: {
@@ -98,37 +99,44 @@
         }
       },
       localStorageGettingItems(){
-        let saveusuarydata = JSON.parse(localStorage.getItem('userData'));
-        console.log(saveusuarydata);
-        if(this.saveusuarydata != null){
-          this.userData.userNameRegister = this.saveusuarydata.userNameRegister;
-          this.userData.userIdRegister = this.saveusuarydata.userIdRegister;
+        // Se pregunta a Local Storage si tiene datos referidos al usuario (Nombre y ID), si es afirmativo llenará el objeto 'userData' con los datos obtenidos.
+        if(JSON.parse(localStorage.getItem('userData')) != null){
+          this.userData.userNameRegister = JSON.parse(localStorage.getItem('userData.userNameRegister'));
+          this.userData.userIdRegister = JSON.parse(localStorage.getItem('userData.userIdRegister'));
         }
       },
       userObjectConstructor(){
+        // Se llenará el objeto 'userData' con el Nombre y ID recién ingresados por el usuario una vez todo esté en orden para continuar.
         this.userData.userNameRegister = this.userName;
         this.userData.userIdRegister = this.userId;
       },
       localStorageSettingItems(){
+        //Se llamará al método que está justo arriba para preparar e igualar el objeto 'userData' con los datos ingresados por el usuario.
         this.userObjectConstructor();
         
+        // Una vez listo nuestro 'userData' se empuja dicho objeto al Local Storage.
         localStorage.setItem('userData', JSON.stringify(this.userData))
       },
       userRegisterValidation(){
+        // Se llama al método de consulta del Local Storage para su posterior evaluación en el mismo método.
         this.localStorageGettingItems()
 
         if(this.userData != null){
           if(this.userId != this.userData.userIdRegister){
+            this.localStorageComparison = 1;
             this.localStorageSettingItems();
           }
           else if (this.userName != this.userData.userNameRegister){
+            this.localStorageComparison = 2;
             this.localStorageSettingItems();
           }
-        } else{
+        } else {
+          this.localStorageComparison = 3;
           this.localStorageSettingItems();
         }
       },
       userRegister(){
+        // Se emite el evento 'user-register' para que la vista Index lo escuche y realice las operaciones necesarias.
         this.$emit('user-register', this.userData);
       },
       attemptIncrement(){
