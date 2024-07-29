@@ -18,7 +18,8 @@
       <!--Sector de información para el usuario aquí abajo-->
       <div class="Info-Box">
         <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
-        <p><strong>Nombre: Cant. de carácteres '°{{ this.idLetters}}' & Cant. de números '°{{ this.idNumbers }}'</strong></p><br><br>
+        <p v-if="localStorageComparison == 1 || localStorageComparison == 3">Sea bienvenido usted, '{{ this.userData.userNameRegister }}', a la plataforma virtual de transacciones de criptomonedas...</p>
+        <p v-else-if="localStorageComparison == 2">Bienvenido de nuevo '{{ this.userData.userNameRegister }}'!...</p><br><br>
         <p>Intentos realizados: °{{ this.entryAttempts }} --- Cantidad máxima de intentos: °3</p>
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       </div>
