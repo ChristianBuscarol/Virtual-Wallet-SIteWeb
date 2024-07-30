@@ -46,7 +46,8 @@
           criptoCoinAmount: '',
           spentMoney: 0,
           dateTime: null
-        }
+        },
+        userDataReceived: false
       }
     },
     methods: {
