@@ -51,6 +51,9 @@
       }
     },
     methods: {
+      userDataLoading(){
+        this.$emit('user-data-loading');
+      }
     },
     computed: {
       vShowUserName(){
@@ -81,6 +84,7 @@
           if(newVal){
             this.dataUserProfile.userName = newVal.userNameRegister;
             this.dataUserProfile.userId = newVal.userIdRegister;
+            this.userDataLoading();
           }
         },
         inmediate: true
