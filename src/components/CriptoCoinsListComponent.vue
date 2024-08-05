@@ -10,12 +10,11 @@
             <img :src="showCoinImageSelected" alt="GifSelectedCoin" class="Coin-Circle">
             <h3>Price: </h3><p><strong>{{ this.Coins[selectedCoin].price }}</strong></p>
           </div>
-
           <!--Sector de botones para la compra y venta de monedas aquí abajo-->
           <div class="TransactionsButtonsBox">
             <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
             <button type="button" id="btnValidateSale">Sell...</button><br><br>
-            <!--<button type="button" @click="obtainPrice()" id="btnRefreshPrices">Refresh Prices...</button>-->
+            <button type="button" @click="btnHistoryEntry()" id="btnGoToTransactionHistory">Trasaction History...</button>
           </div>
         </div>
 
@@ -93,8 +92,9 @@
           let response = await axios.get(this.Coins[i].url);
           this.Coins[i].price = response.data.totalAsk;
         }
-        
-        console.log('Hola a todos!');
+      },
+      btnHistoryEntry(){
+        window.location.href = '/UsuaryHistoryView';
       }
     },
     computed: {
@@ -108,7 +108,7 @@
     async created() {
       this.obtainPrice()
 
-      setInterval(() => {this.obtainPrice();}, 15000);
+      setInterval(() => {this.obtainPrice();}, 10000);
     }
   }
 </script>
