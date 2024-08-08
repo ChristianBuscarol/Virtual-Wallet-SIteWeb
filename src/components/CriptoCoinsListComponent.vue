@@ -12,7 +12,7 @@
           </div>
           <!--Sector de botones para la compra y venta de monedas aquí abajo-->
           <div class="TransactionsButtonsBox">
-            <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
+            <button type="button" @click="openTransactionModal()" id="btnValidatePurchase">Buy...</button><br><br>
             <button type="button" id="btnValidateSale">Sell...</button><br><br>
             <button type="button" @click="btnHistoryEntry()" id="btnGoToTransactionHistory">Trasaction History...</button>
           </div>
@@ -31,6 +31,7 @@
 
 <script>
   import axios from "axios";
+  import { eventBus } from "@/utility/eventBusUtility";
 
   export default{
     name: 'CriptoCoinsListComponent',
@@ -92,6 +93,9 @@
           let response = await axios.get(this.Coins[i].url);
           this.Coins[i].price = response.data.totalAsk;
         }
+      },
+      openTransactionModal(){
+        eventBus.$emit('open-transaction-modal')
       },
       btnHistoryEntry(){
         window.location.href = '/UsuaryHistoryView';
