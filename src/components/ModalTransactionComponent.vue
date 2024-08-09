@@ -6,19 +6,25 @@
       <h3>Coin image display:</h3>
       <img src="" alt="GifSelectedCoin" class="Coin-Circle">
       <h3>Price</h3>
-      <button type="button" @click="closeModalTransaction()" id="btnValidateSale">Cancel and close this transaction window.</button>
+      <button type="button" @click="closeModalTransaction()" id="btnValidateSale">Cancel.</button>
     </div>
   </body>
 </template>
 
 <script>
-  import { eventBus } from '@/utility/eventBusUtility';
-
   export default{
     name: 'ModalTransactionComponent',
+    props: {
+      receivedSelectedCoinInfo: {
+        type: Object,
+        default: null,
+        required: true
+      }
+    },
     data(){
       return{
-        modalVisibility: false
+        modalVisibility: false,
+        infoSelectedCoinReceived: {}
       }
     },
     methods: {
@@ -27,13 +33,21 @@
       },
       closeModalTransaction(){
         this.modalVisibility = false;
+      },
+      transactionDataLoading(newVal){
+        this.infoSelectedCoinReceived = newVal;
+        console.log(this.infoSelectedCoinReceived);
       }
     },
-    mounted(){
-      eventBus.$on('open-transaction-modal', this.showModalTransaction);
-    },
-    beforeDestroy(){
-      eventBus.$off('open-transaction-modal', this.showModalTransaction);
+    watch: {
+      receivedData: {
+        handler(newVal) {
+          if(newVal){
+            this.transactionDataLoading(newVal);
+          }
+        },
+        inmediate: true
+      }
     }
   }
 </script>
@@ -46,5 +60,9 @@
     border: 2px;
     border-style: groove;
     border-color: black;
+  }
+
+  .ModalRendering{
+    display: flex;
   }
 </style>
