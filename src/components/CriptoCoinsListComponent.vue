@@ -31,7 +31,6 @@
 
 <script>
   import axios from "axios";
-  import { eventBus } from "@/utility/eventBusUtility";
 
   export default{
     name: 'CriptoCoinsListComponent',
@@ -81,7 +80,8 @@
             image: require("@/assets/USDCgif.gif"),
             url: 'https://criptoya.com/api/satoshitango/usdc/ars'
           }
-        ]
+        ],
+        infoSelectedCoin: {}
       }
     },
     methods: {
@@ -94,8 +94,13 @@
           this.Coins[i].price = response.data.totalAsk;
         }
       },
+      capturingInfoSelectedCoin(){
+        this.infoSelectedCoin = this.Coins[this.selectedCoin];
+      },
       openTransactionModal(){
-        eventBus.$emit('open-transaction-modal')
+        this.capturingInfoSelectedCoin();
+
+        this.$emit('open-transaction-modal', this.infoSelectedCoin)
       },
       btnHistoryEntry(){
         window.location.href = '/UsuaryHistoryView';
