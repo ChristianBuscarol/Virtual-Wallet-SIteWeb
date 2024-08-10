@@ -12,8 +12,8 @@
           </div>
           <!--Sector de botones para la compra y venta de monedas aquí abajo-->
           <div class="TransactionsButtonsBox">
-            <button type="button" @click="openTransactionModal()" id="btnValidatePurchase">Buy...</button><br><br>
-            <button type="button" id="btnValidateSale">Sell...</button><br><br>
+            <button type="button" @click="openTransactionModal(this.functionParameterEvent = 1)" id="btnValidatePurchase">Buy...</button><br><br>
+            <button type="button" @click="openTransactionModal(this.functionParameterEvent = 2)" id="btnValidateSale">Sell...</button><br><br>
             <button type="button" @click="btnHistoryEntry()" id="btnGoToTransactionHistory">Trasaction History...</button>
           </div>
         </div>
@@ -37,6 +37,7 @@
     data(){
       return{
         selectedCoin: 0,
+        functionParameterEvent: 0,
         Coins: [
           {
             id: 1,
@@ -81,7 +82,12 @@
             url: 'https://criptoya.com/api/satoshitango/usdc/ars'
           }
         ],
-        infoSelectedCoin: {}
+        infoSelectedCoin: {
+          coinTittle: '',
+          coinPrice: 0,
+          coinImage: '',
+          typeTransaction: ''
+        }
       }
     },
     methods: {
@@ -95,11 +101,18 @@
         }
       },
       capturingInfoSelectedCoin(){
-        this.infoSelectedCoin = this.Coins[this.selectedCoin];
+        this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
+        this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
+        this.infoSelectedCoin.coinImage = this.Coins[this.selectedCoin].image;
+        if(this.functionParameterEvent == 1){
+          this.infoSelectedCoin.typeTransaction = 'purchase'
+        } else if (this.functionParameterEvent == 2){
+          this.infoSelectedCoin.typeTransaction = 'sell'
+        }
       },
-      openTransactionModal(){
-        this.capturingInfoSelectedCoin();
-
+      openTransactionModal(functionParameterEvent){
+        this.capturingInfoSelectedCoin(functionParameterEvent);
+        
         this.$emit('open-transaction-modal', this.infoSelectedCoin)
       },
       btnHistoryEntry(){
