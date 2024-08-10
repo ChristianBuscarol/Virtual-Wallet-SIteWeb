@@ -40,7 +40,6 @@
     methods: {
       openTransactionModal(infoSelectedCoin){
         this.preparingSelectedCoinInfo = infoSelectedCoin;
-        console.log(this.preparingSelectedCoinInfo)
       }
     }
   }
