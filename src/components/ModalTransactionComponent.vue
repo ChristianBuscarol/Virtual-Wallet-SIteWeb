@@ -3,11 +3,11 @@
     <div v-if="modalVisibility == true" class="ModalRendering">
       <div class="ModalContent" @click.stop>
         <h3>Coin selected for the transaction: {{ this.infoSelectedCoinReceived.coinTittle }}</h3>
-        <h3>Type of transaction: </h3>
+        <h3>Type of transaction: {{ this.infoSelectedCoinReceived.typeTransaction }}</h3>
         <h3>Coin image display:</h3>
-        <img src="" alt="GifSelectedCoin" class="Coin-Circle">
-        <h3>Price</h3>
-        <button type="button" @click="closeModalTransaction()" id="btnValidateSale">Cancel.</button>
+        <img :src="this.infoSelectedCoinReceived.coinImage" alt="GifSelectedCoin" class="Coin-Circle">
+        <h3>Price: {{ this.infoSelectedCoinReceived.coinPrice }}</h3>
+        <button type="button" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
       </div>
     </div>
   </body>
@@ -19,7 +19,6 @@
     props: {
       receivedSelectedCoinInfo: {
         type: Object,
-        default: null,
         required: true
       }
     },
@@ -30,28 +29,46 @@
       }
     },
     methods: {
-      showModalTransaction(){
+      changingVisibilityVariableOnTrue(){
         this.modalVisibility = true;
         console.log(this.modalVisibility)
+
+        this.showModalTransaction();
+      },
+      changingVisibilityVariableOnFalse(){
+        this.modalVisibility = false;
+        console.log(this.modalVisibility)
+
+        this.closeModalTransaction();
+      },
+      showModalTransaction(){
+        this.$nextTick(() => {
+          if(this.$refs.ModalRendering && this.$refs.ModalContent){
+            this.$refs.ModalRendering.classList.add('show');
+            this.$refs.ModalContent.classList.add('show');
+          }
+        });
       },
       closeModalTransaction(){
-        this.modalVisibility = false;
+        if(this.$refs.ModalRendering && this.$refs.modalOverlay){
+          this.$refs.ModalContent.classList.remove('show');
+          setTimeout(() => {this.$refs.ModalRendering.classList.remove('show');}, 1000);
+        }
       },
       transactionDataLoading(newVal){
         this.infoSelectedCoinReceived = newVal;
         console.log(this.infoSelectedCoinReceived);
-
-        this.showModalTransaction();
+        this.changingVisibilityVariableOnTrue();
       }
     },
     watch: {
       receivedSelectedCoinInfo: {
+        inmediate: true,
         handler(newVal) {
-          if(newVal){
+          if(newVal && Object.keys(newVal).length > 0){
             this.transactionDataLoading(newVal);
           }
-        },
-        inmediate: true
+        }
       }
     }
   }
@@ -80,9 +97,6 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-  }
-
-  .ModalRendering.show{
     opacity: 1;
     visibility: visible;
   }
@@ -95,9 +109,6 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transform: scale(1);
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  }
-
-  .ModalContent.show{
     transform: scale(1); /* Se expande a tamaño completo */
   }
 </style>
