@@ -8,6 +8,10 @@
         <h3>Coin image display:</h3>
         <img :src="this.infoSelectedCoinReceived.coinImage" alt="GifSelectedCoin" class="Coin-Circle">
         <h3>Price: {{ this.infoSelectedCoinReceived.coinPrice }}</h3>
+        <h3>Transaction cost: </h3>
+        <label for="coinAmountEntry">Coin amount to buy: </label>
+        <input type="number" v-model="coinPartToBuy" name="coinAmountEntry" step="0.00001" min="0.00001" max="100" id="coinRecordAmount" placeholder="Enter coin amount here...">
+        <button type="button" class="PaymentConfirmation" @click="transactionPaymentOperation()" :disabled="paymentController" id="btnPaymentConfirmation">Confirm payment.</button>
         <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
       </div>
     </div>
@@ -26,7 +30,9 @@
     data(){
       return{
         modalVisibility: false,
-        infoSelectedCoinReceived: {}
+        infoSelectedCoinReceived: {},
+        coinPartToBuy: 0,
+        paymentController: false
       }
     },
     methods: {
@@ -34,18 +40,17 @@
         // Una vez enviado el objeto después de haberse hecho click en uno de los botones de compra o venta, dicho objeto pasa por el ciclo de vida 'watch' de este componente y llama a esta función.
         this.infoSelectedCoinReceived = newVal;
 
-        this.contentObjectEvaluation();
-      },
-      contentObjectEvaluation(){
-        if(this.infoSelectedCoinReceived != null){
-          this.changingVisibilityVariableOnTrue();
-        }
+        this.changingVisibilityVariableOnTrue();
       },
       changingVisibilityVariableOnTrue(){
         this.modalVisibility = true;
+
+        this.showModalTransaction();
       },
       changingVisibilityVariableOnFalse(){
         this.modalVisibility = false;
+
+        this.closeModalTransaction();
       },
       showModalTransaction(){
         this.$nextTick(() => {
@@ -60,6 +65,24 @@
           this.$refs.ModalContent.classList.remove('show');
           setTimeout(() => {this.$refs.ModalRendering.classList.remove('show');}, 1500);
         }
+
+        this.emptyingSelectedCoinInfoObect();
+      },
+      emptyingSelectedCoinInfoObect(){
+        this.infoSelectedCoinReceived = null;
+        console.log('El objeto de la información de la moneda seleccionada ha sido vaciado!...');
+      },
+      checkingPaymentController(){
+        if(this.coinPartToBuy == 0){
+          this.paymentController = false;
+        }
+        else if (this.coinPartToBuy > 0){
+          this.paymentController = false;
+        }
+      },
+      transactionPaymentOperation(){
+        console.log(this.coinPartToBuy)
+        console.log('El modal está listo para empezar a operar con las monedas!.');
       }
     },
     watch: {
@@ -69,13 +92,6 @@
           if(newVal && Object.keys(newVal).length > 0){
             this.transactionDataLoading(newVal);
           }
-        }
-      },
-      modalVisibility(newVal){
-        if(newVal == true){
-          console.log(this.newVal);
-        } else {
-          console.log(this.newVal);
         }
       }
     }
@@ -104,10 +120,7 @@
     background-color: rgba(0, 0, 0, 0.6); /* Fondo opaco */
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
-  }
-
-  .ModalRendering:placeholder-shown{
+    transition: opacity 1.0s ease-in-out, visibility 1.0s ease-in-out;
     opacity: 1;
     visibility: visible;
   }
@@ -119,10 +132,7 @@
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transform: scale(0);
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  }
-
-  .ModalContent:placeholder-shown{
+    transition: transform 1.0s ease-in-out, opacity 1.0s ease-in-out;
     transform: scale(1); /* Se expande a tamaño completo */
   }
 
