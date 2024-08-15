@@ -9,9 +9,10 @@
         <img :src="this.infoSelectedCoinReceived.coinImage" alt="GifSelectedCoin" class="Coin-Circle">
         <h3>Price: {{ this.infoSelectedCoinReceived.coinPrice }}</h3>
         <h3>Transaction cost: </h3>
-        <label for="coinAmountEntry">Coin amount to buy: </label>
-        <input type="number" v-model="coinPartToBuy" name="coinAmountEntry" step="0.00001" min="0.00001" max="100" id="coinRecordAmount" placeholder="Enter coin amount here...">
-        <button type="button" class="PaymentConfirmation" @click="transactionPaymentOperation()" :disabled="paymentController" id="btnPaymentConfirmation">Confirm payment.</button>
+        <label for="coinAmountEntry" v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">Coin amount to buy: </label>
+        <label for="coinAmountEntry" v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">Coin amount to sold: </label>
+        <input type="number" v-model="coinPartToBuy" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" placeholder="Enter coin amount here...">
+        <button type="button" class="PaymentConfirmation" @click="transactionPaymentOperation()" :disabled="enablingOfPaymentButton" id="btnPaymentConfirmation">Confirm payment.</button>
         <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
       </div>
     </div>
@@ -29,10 +30,11 @@
     },
     data(){
       return{
-        modalVisibility: false,
         infoSelectedCoinReceived: {},
+        modalVisibility: false,
+        paymentController: false,
         coinPartToBuy: 0,
-        paymentController: false
+        resultOfPaymentOperation: 0
       }
     },
     methods: {
@@ -81,8 +83,30 @@
         }
       },
       transactionPaymentOperation(){
-        console.log(this.coinPartToBuy)
-        console.log('El modal está listo para empezar a operar con las monedas!.');
+        if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
+          this.purchaseTransactionCalculation();
+        }
+        else if(this.infoSelectedCoinReceived.typeTransaction == 'sell'){
+          this.saleTransactionCalculation();
+        }
+      },
+      purchaseTransactionCalculation(){
+        this.resultOfPaymentOperation = this.infoSelectedCoinReceived.coinPrice * this.coinPartToBuy;
+        
+        console.log(this.resultOfPaymentOperation);
+      },
+      saleTransactionCalculation(){
+        this.resultOfPaymentOperation = this.infoSelectedCoinReceived.coinPrice / (this.coinPartToBuy * 10);
+
+        console.log(this.resultOfPaymentOperation);
+      }
+    },
+    computed: {
+      enablingOfPaymentButton(){
+        while(this.coinPartToBuy == 0){
+          return true;
+        }
+        return false;
       }
     },
     watch: {
