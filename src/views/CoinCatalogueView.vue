@@ -6,9 +6,12 @@
         <UserProfileComponent/>
       </div>
     </header>
-    <div class="CriptoCoinsListComponent">
-      <CriptoCoinsListComponent/>
-    </div>
+    <body>
+      <div class="CriptoCoinsListComponent">
+        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal"/>
+        <ModalTransactionComponent :receivedSelectedCoinInfo="preparingSelectedCoinInfo"/>
+      </div>
+    </body>
     <footer>
       <div>
 
@@ -20,12 +23,24 @@
 <script>
   import CriptoCoinsListComponent from '@/components/CriptoCoinsListComponent.vue';
   import UserProfileComponent from '@/components/UserProfileComponent.vue';
+  import ModalTransactionComponent from '@/components/ModalTransactionComponent.vue';
 
   export default{
     name: 'CoinCatalogueView',
     components: {
       CriptoCoinsListComponent,
-      UserProfileComponent
+      UserProfileComponent,
+      ModalTransactionComponent
+    },
+    data(){
+      return{
+        preparingSelectedCoinInfo: {}
+      }
+    },
+    methods: {
+      openTransactionModal(infoSelectedCoin){
+        this.preparingSelectedCoinInfo = infoSelectedCoin;
+      }
     }
   }
 </script>

@@ -46,10 +46,29 @@
           criptoCoinAmount: '',
           spentMoney: 0,
           dateTime: null
+        },
+        eventReceiverUserData: {
+          receivedName: '',
+          receivedId: ''
         }
       }
     },
     methods: {
+      userDataLoading(){
+        this.$emit('user-data-loading');
+      },
+      dataLoadingInProfile(){
+        this.dataUserProfile.userName = this.eventReceiverUserData.receivedName;
+        this.dataUserProfile.userId = this.eventReceiverUserData.receivedId;
+      },
+      receiverEventData(newVal){
+        this.eventReceiverUserData.receivedName = newVal.userNameRegister;
+        this.eventReceiverUserData.receivedId = newVal.userIdRegister;
+
+        console.log(this.eventReceiverUserData);
+
+        this.dataLoadingInProfile();
+      }
     },
     computed: {
       vShowUserName(){
@@ -78,8 +97,9 @@
       receivedData: {
         handler(newVal) {
           if(newVal){
-            this.dataUserProfile.userName = newVal.userNameRegister;
-            this.dataUserProfile.userId = newVal.userIdRegister;
+            this.receiverEventData(newVal);
+            
+            this.userDataLoading();
           }
         },
         inmediate: true

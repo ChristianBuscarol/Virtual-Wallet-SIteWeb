@@ -10,12 +10,11 @@
             <img :src="showCoinImageSelected" alt="GifSelectedCoin" class="Coin-Circle">
             <h3>Price: </h3><p><strong>{{ this.Coins[selectedCoin].price }}</strong></p>
           </div>
-
           <!--Sector de botones para la compra y venta de monedas aquí abajo-->
           <div class="TransactionsButtonsBox">
-            <button type="button" id="btnValidatePurchase">Buy...</button><br><br>
-            <button type="button" id="btnValidateSale">Sell...</button><br><br>
-            <!--<button type="button" @click="obtainPrice()" id="btnRefreshPrices">Refresh Prices...</button>-->
+            <button type="button" @click="openTransactionModal(this.functionParameterEvent = 1)" id="btnValidatePurchase">Buy...</button><br><br>
+            <button type="button" @click="openTransactionModal(this.functionParameterEvent = 2)" id="btnValidateSale">Sell...</button><br><br>
+            <button type="button" @click="btnHistoryEntry()" id="btnGoToTransactionHistory">Trasaction History...</button>
           </div>
         </div>
 
@@ -38,6 +37,7 @@
     data(){
       return{
         selectedCoin: 0,
+        functionParameterEvent: 0,
         Coins: [
           {
             id: 1,
@@ -81,7 +81,13 @@
             image: require("@/assets/USDCgif.gif"),
             url: 'https://criptoya.com/api/satoshitango/usdc/ars'
           }
-        ]
+        ],
+        infoSelectedCoin: {
+          coinTittle: '',
+          coinPrice: 0,
+          coinImage: '',
+          typeTransaction: ''
+        }
       }
     },
     methods: {
@@ -93,8 +99,24 @@
           let response = await axios.get(this.Coins[i].url);
           this.Coins[i].price = response.data.totalAsk;
         }
+      },
+      capturingInfoSelectedCoin(){
+        this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
+        this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
+        this.infoSelectedCoin.coinImage = this.Coins[this.selectedCoin].image;
+        if(this.functionParameterEvent == 1){
+          this.infoSelectedCoin.typeTransaction = 'purchase'
+        } else if (this.functionParameterEvent == 2){
+          this.infoSelectedCoin.typeTransaction = 'sell'
+        }
+      },
+      openTransactionModal(functionParameterEvent){
+        this.capturingInfoSelectedCoin(functionParameterEvent);
         
-        console.log('Hola a todos!');
+        this.$emit('open-transaction-modal', this.infoSelectedCoin)
+      },
+      btnHistoryEntry(){
+        window.location.href = '/UsuaryHistoryView';
       }
     },
     computed: {
@@ -108,7 +130,7 @@
     async created() {
       this.obtainPrice()
 
-      setInterval(() => {this.obtainPrice();}, 15000);
+      setInterval(() => {this.obtainPrice();}, 10000);
     }
   }
 </script>
