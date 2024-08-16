@@ -14,10 +14,19 @@ const apiClient = axios.create({
 });
 
 export default{
-  getTransactionInfo(userId){
-    return apiClient.get('/userId=' + userId)
+  getPurchaseTransactionInfo(userId){
+    return apiClient.get('/userId=' + userId + '/typeTransaction=purchase');
+  },
+  getSaleTransactionInfo(userId){
+    return apiClient.get('/userId=' + userId + '/typeTransaction=sell');
   },
   postNewTransaction(transactionInfo){
-    return apiClient.post(transactionInfo)
+    return apiClient.post(transactionInfo);
+  },
+  patchSelectedTransaction(transactionId){
+    return apiClient.patch('/' + transactionId);
+  },
+  deleteSelectedTransaction(transactionId){
+    return apiClient.delete('/' + transactionId);
   }
 }
