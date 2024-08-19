@@ -18,8 +18,8 @@
       <!--Sector de información para el usuario aquí abajo-->
       <div class="Info-Box">
         <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
-        <p v-if="localStorageComparison == 1 || localStorageComparison == 3">Sea bienvenido usted, '{{ this.userData.userNameRegister }}', a la plataforma virtual de transacciones de criptomonedas...</p>
-        <p v-else-if="localStorageComparison == 2">Bienvenido de nuevo '{{ this.userData.userNameRegister }}'!...</p><br><br>
+        <p v-if="localStorageComparison == 1 || localStorageComparison == 4">Sea bienvenido usted, '{{ this.userData.userNameRegister }}', a la plataforma virtual de transacciones de criptomonedas...</p>
+        <p v-else-if="localStorageComparison == 2 || localStorageComparison == 3">Bienvenido de nuevo '{{ this.userData.userNameRegister }}'!...</p><br><br>
         <p>Intentos realizados: °{{ this.entryAttempts }} --- Cantidad máxima de intentos: °3</p>
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       </div>
@@ -41,11 +41,12 @@
         userName: "",
         dateValidation: true,
         entryAttempts: 0,
+        localStorageComparison: 0,
         userData: {
           userNameRegister: "",
-          userIdRegister: ""
-        },
-        localStorageComparison: 0
+          userIdRegister: "",
+          firstConnection: false
+        }
       }
     },
     methods: {
@@ -100,45 +101,58 @@
       localStorageGettingItems(){
         // Se pregunta a Local Storage si tiene datos referidos al usuario (Nombre y ID), si es afirmativo llenará el objeto 'userData' con los datos obtenidos.
         if(JSON.parse(localStorage.getItem('userData')) != null){
-          this.userData.userNameRegister = JSON.parse(localStorage.getItem('userData.userNameRegister'));
-          this.userData.userIdRegister = JSON.parse(localStorage.getItem('userData.userIdRegister'));
+          this.userData = JSON.parse(localStorage.getItem('userData'));
         }
       },
       userObjectConstructor(){
         // Se llenará el objeto 'userData' con el Nombre y ID recién ingresados por el usuario una vez todo esté en orden para continuar.
         this.userData.userNameRegister = this.userName;
         this.userData.userIdRegister = this.userId;
+
+        // Se agregó esta característica para evaluar si la conexión de dicho usuario es nueva en la plataforma.
+        if(this.localStorageComparison == 2 || this.localStorageComparison == 3){
+          this.userData.firstConnection = false;
+        }
+        else if (this.localStorageComparison == 1 || this.localStorageComparison == 4){
+          this.userData.firstConnection = true;
+        }
       },
       localStorageSettingItems(){
         //Se llamará al método que está justo arriba para preparar e igualar el objeto 'userData' con los datos ingresados por el usuario.
         this.userObjectConstructor();
-        
+        console.log(this.userData);
+
         // Una vez listo nuestro 'userData' se empuja dicho objeto al Local Storage.
         localStorage.setItem('userData', JSON.stringify(this.userData))
       },
       userRegisterValidation(){
         // Se llama al método de consulta del Local Storage para su posterior evaluación en el mismo método.
         this.localStorageGettingItems()
+        console.log(this.userData);
 
+        // Aunque aquí abajo se termina ingresando si o sí los datos del usuario al Local Storage, lo que se evalúa es si la conexión del usuario es nueva a la plataforma solo para el agregado de algunos detalles.
         if(this.userData != null){
           if(this.userId != this.userData.userIdRegister){
             this.localStorageComparison = 1;
-            this.localStorageSettingItems();
           }
           else if (this.userName != this.userData.userNameRegister){
             this.localStorageComparison = 2;
-            this.localStorageSettingItems();
+          }
+          else  if (this.userName == this.userData.userNameRegister && this.userId == this.userData.userIdRegister){
+            this.localStorageComparison = 3;
           }
         } else {
-          this.localStorageComparison = 3;
-          this.localStorageSettingItems();
+          this.localStorageComparison = 4;
         }
+
+        this.localStorageSettingItems();
       },
       userRegister(){
         // Se emite el evento 'user-register' para que la vista Index lo escuche y realice las operaciones necesarias.
         this.$emit('user-register', this.userData);
       },
       attemptIncrement(){
+        // Cada vez que el usuario haga click en el botón de validar datos se incrementará este contador, que servirá para limitar el uso del formulario de entrada.
         this.entryAttempts++;
       },
       entryAttemptsFalied(){
