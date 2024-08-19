@@ -8,7 +8,7 @@
     </header>
     <body>
       <div class="CriptoCoinsListComponent">
-        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal"/>
+        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal" @keeping-user-info-active="KeepingUserInfoActive"/>
         <ModalTransactionComponent :receivedSelectedCoinInfo="preparingSelectedCoinInfo"/>
       </div>
     </body>
@@ -40,6 +40,9 @@
     methods: {
       openTransactionModal(infoSelectedCoin){
         this.preparingSelectedCoinInfo = infoSelectedCoin;
+      },
+      KeepingUserInfoActive(){
+        console.log('Esta cosa funciona...');
       }
     }
   }
