@@ -3,7 +3,6 @@
     <header>
       <h4>Actual usuary acount:</h4>
       <p><strong>Name: {{ vShowUserName }}</strong></p>
-      <p><strong>Id: {{ vShowUserId }}</strong></p>
       <p><strong>Available money: {{ vShowMoneyUser }}</strong></p>
     </header>
   </div>
@@ -46,10 +45,6 @@
           criptoCoinAmount: '',
           spentMoney: 0,
           dateTime: null
-        },
-        eventReceiverUserData: {
-          receivedName: '',
-          receivedId: ''
         }
       }
     },
@@ -57,17 +52,13 @@
       userDataLoading(){
         this.$emit('user-data-loading');
       },
-      dataLoadingInProfile(){
-        this.dataUserProfile.userName = this.eventReceiverUserData.receivedName;
-        this.dataUserProfile.userId = this.eventReceiverUserData.receivedId;
-      },
       receiverEventData(newVal){
-        this.eventReceiverUserData.receivedName = newVal.userNameRegister;
-        this.eventReceiverUserData.receivedId = newVal.userIdRegister;
+        this.dataUserProfile.userName = newVal.userNameRegister;
+        this.dataUserProfile.userId = newVal.userIdRegister;
 
-        console.log(this.eventReceiverUserData);
-
-        this.dataLoadingInProfile();
+        if(newVal.firstConnection == true){
+          this.dataUserProfile.userWallet += 100000;
+        }
       }
     },
     computed: {
