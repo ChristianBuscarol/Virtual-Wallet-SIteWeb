@@ -115,6 +115,9 @@
         
         this.$emit('open-transaction-modal', this.infoSelectedCoin)
       },
+      keepingUserInfoActive(){
+        this.$emit('keeping-user-info-active');
+      },
       btnHistoryEntry(){
         window.location.href = '/UsuaryHistoryView';
       }
@@ -131,6 +134,9 @@
       this.obtainPrice()
 
       setInterval(() => {this.obtainPrice();}, 10000);
+    },
+    mounted(){
+      this.keepingUserInfoActive();
     }
   }
 </script>
