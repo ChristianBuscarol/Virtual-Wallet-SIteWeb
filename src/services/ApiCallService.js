@@ -8,17 +8,16 @@ import axios from "axios";
 const apiClient = axios.create({
 	baseURL: 'http://localhost:8080/rest/transactions',
   headers: {
-    'x-apikey': '64bdbb6f86d8c5e18ded91e3',
     'Access-Control-Allow-Origin': '*'
   }
 });
 
 export default{
   getPurchaseTransactionInfo(userId){
-    return apiClient.get('/userId=' + userId + '/typeTransaction=purchase');
+    return apiClient.get('/userId=' + userId);
   },
   getSaleTransactionInfo(userId){
-    return apiClient.get('/userId=' + userId + '/typeTransaction=sell');
+    return apiClient.get('?userId=' + userId + '/action=sell');
   },
   postNewTransaction(transactionInfo){
     return apiClient.post(transactionInfo);
