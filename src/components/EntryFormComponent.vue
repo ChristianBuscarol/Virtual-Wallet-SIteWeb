@@ -44,6 +44,7 @@
         dateValidation: true,
         entryAttempts: 0,
         localStorageComparison: 0,
+        historyOfUserMovementsTransactions: [],
         historyOfPurchaseTransactions: [],
         historyOfSaleTransactions: [],
         userData: {
@@ -95,7 +96,7 @@
             this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
             this.attemptIncrement();
             this.userRegisterValidation();
-            this.userRegister();
+            //this.userRegister();
             this.userId = "",
             this.userName = "",
             this.dateValidation = false
@@ -106,31 +107,33 @@
         // Se llenará el objeto 'userData' con el Nombre y ID recién ingresados por el usuario una vez todo esté en orden para continuar.
         this.userData.userNameRegister = this.userName;
         this.userData.userIdRegister = this.userId;
-
-        // Se agregó esta característica para evaluar si la conexión de dicho usuario es nueva en la plataforma, y si es así, se le obsequiará un monto de dinero para su uso en las transacciones.
-        if(this.localStorageComparison == 1 || this.localStorageComparison == 4){
-          this.firstConnectionMoneyGift();
-        }
       },
       firstConnectionMoneyGift(){
         this.userData.userMoneyRegister = 100000;
       },
       localStorageSettingItems(){
-        //Se llamará al método que está justo arriba para preparar e igualar el objeto 'userData' con los datos ingresados por el usuario.
-        this.userObjectConstructor();
-
         // Una vez listo nuestro 'userData' se empuja dicho objeto al Local Storage.
         localStorage.setItem('userData', JSON.stringify(this.userData))
       },
       userRegisterValidation(){
-        this.consultingApiForUserPurchaseMovements();
-        console.log(this.historyOfPurchaseTransactions);
+        this.consultingApiForUserMovements();
       },
-      async consultingApiForUserPurchaseMovements(){
-        this.historyOfPurchaseTransactions = await ApiCallService.getPurchaseTransactionInfo(this.userId);
+      async consultingApiForUserMovements(){
+        let response = await ApiCallService.getUserTransactionsInfo(this.userId);
+
+        this.fillingUserHistoryArraySpace(response);
       },
-      async consultingApiForUserSaleMovements(){
-        this.historyOfSaleTransactions = await ApiCallService.getSaleTransactionInfo(this.userId);
+      fillingUserHistoryArraySpace(response){
+        for(let i = 0; i < response.data.length; i++){
+          this.historyOfUserMovementsTransactions[i] = response.data[i];
+        }
+
+        this.separatingTransactionsType();
+      },
+      separatingTransactionsType(){
+        for(let i = 0; i < this.historyOfUserMovementsTransactions.length; i++){
+          console.log(this.historyOfUserMovementsTransactions[i]);
+        }
       },
       userRegister(){
         // Se emite el evento 'user-register' para que la vista Index lo escuche y realice las operaciones necesarias.
@@ -167,9 +170,6 @@
         }
         return false;
       }
-    },
-    async created(){
-      this.consultingApiForUserPurchaseMovements();
     }
   }
 </script>
