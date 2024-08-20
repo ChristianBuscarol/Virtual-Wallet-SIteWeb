@@ -13,11 +13,15 @@ const apiClient = axios.create({
 });
 
 export default{
-  getPurchaseTransactionInfo(userId){
-    return apiClient.get('/userId=' + userId);
-  },
-  getSaleTransactionInfo(userId){
-    return apiClient.get('?userId=' + userId + '/action=sell');
+  getUserTransactionsInfo(userId){
+    const apiClientPurchase = axios.create({
+      // TODO: Una vez cumplido los objetivos del proyecto como realiza el 'posteo' de las transacciones y otras cosas, arreglar el problema de la 'url' para que sea universal y no individual para cada consulta.
+      baseURL: 'http://localhost:8080/rest/transactions?userId=' + userId,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+    return apiClientPurchase.get();
   },
   postNewTransaction(transactionInfo){
     return apiClient.post(transactionInfo);
