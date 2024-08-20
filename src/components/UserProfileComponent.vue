@@ -55,23 +55,13 @@
       receiverEventData(newVal){
         this.dataUserProfile.userName = newVal.userNameRegister;
         this.dataUserProfile.userId = newVal.userIdRegister;
-
-        if(newVal.firstConnection == true){
-          this.dataUserProfile.userWallet += 100000;
-        }
+        this.dataUserProfile.userWallet = newVal.userMoneyRegister;
       }
     },
     computed: {
       vShowUserName(){
         if(this.dataUserProfile.userName != ''){
           return this.dataUserProfile.userName;
-        } else {
-          return 'Esperando el ingreso de Datos para verificación...';
-        }
-      },
-      vShowUserId(){
-        if(this.dataUserProfile.userId != ''){
-          return this.dataUserProfile.userId;
         } else {
           return 'Esperando el ingreso de Datos para verificación...';
         }
