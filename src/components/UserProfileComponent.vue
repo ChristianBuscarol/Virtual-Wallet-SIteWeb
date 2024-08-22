@@ -25,6 +25,8 @@
           userWallet: 0,
           actionMade: ['purchase', 'sell'],
           totalMoneySpent: 0,
+          totalMoneyEarned: 0,
+          totalMoneyLost: 0,
           totalCoinsPurchased: 0,
           totalCoinsSold: 0,
           unitCoinAmount: {
@@ -34,9 +36,7 @@
             litecoinAmount: 0,
             solana: 0,
             usdcAmount: 0
-          },
-          totalMoneyEarned: 0,
-          totalMoneyLost: 0
+          }
         },
         dataTransaction: {
           userId: '',
@@ -56,6 +56,9 @@
         this.dataUserProfile.userName = newVal.userNameRegister;
         this.dataUserProfile.userId = newVal.userIdRegister;
         this.dataUserProfile.userWallet = newVal.userMoneyRegister;
+        this.dataUserProfile.totalMoneySpent = newVal.moneySpent;
+        this.dataUserProfile.totalMoneyEarned = newVal.moneyEarned;
+        console.log(this.dataUserProfile);
       }
     },
     computed: {
@@ -79,8 +82,6 @@
         handler(newVal) {
           if(newVal){
             this.receiverEventData(newVal);
-            
-            this.userDataLoading();
           }
         },
         inmediate: true
