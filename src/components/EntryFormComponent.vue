@@ -50,7 +50,9 @@
         userData: {
           userNameRegister: "",
           userIdRegister: "",
-          userMoneyRegister: 0
+          userMoneyRegister: 0,
+          moneySpent: 0,
+          moneyEarned: 0
         }
       }
     },
@@ -96,10 +98,9 @@
             this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
             this.attemptIncrement();
             this.userRegisterValidation();
-            //this.userRegister();
+            this.dateValidation = false,
             this.userId = "",
-            this.userName = "",
-            this.dateValidation = false
+            this.userName = ""
           }
         }
       },
@@ -112,15 +113,13 @@
         // Este va a ser un pequeño regalo para el usuario en caso de conectarse por °1 vez y no haber hecho transacciones aún.
         this.userData.userMoneyRegister = 100000;
       },
-      localStorageSettingItems(){
-        // Una vez listo nuestro 'userData' se empuja dicho objeto al Local Storage.
-        localStorage.setItem('userData', JSON.stringify(this.userData))
-      },
       userRegisterValidation(){
         // Una vez los datos ingresados sean correctos, se llamará a este método, lo cual desencadenará una suceción de varios métodos más que investigarán anteriores conexiones del usuario en cuestión.
         this.consultingApiForUserMovements();
+        this.userObjectConstructor();
       },
       async consultingApiForUserMovements(){
+        // Esta función llamará a la Api para pedir la información del usuario requerida según el Id que le pasamos como parámetro y después, llamamos a otra función para analizar la información que conseguimos y a la vez le pasamos como parámetro también.
         let response = await ApiCallService.getUserTransactionsInfo(this.userId);
 
         this.evaluatingUserFirstConnection(response);
@@ -129,7 +128,6 @@
         if(response.data != null || response.data != undefined){
           this.fillingUserHistoryArraySpace(response);
         } else{
-          this.userObjectConstructor();
           this.firstConnectionMoneyGift();
         }
       },
@@ -150,25 +148,33 @@
           }
         }
 
-        console.log(this.historyOfPurchaseTransactions);
-        console.log(this.historyOfSaleTransactions);
         this.calculatingUserMoneyAvailable();
       },
       calculatingUserMoneyAvailable(){
-        this.userObjectConstructor();
         this.sumOfMoney();
         this.restOfMoney();
+        this.totalUserAvailableMoney();
+        this.localStorageSettingItems();
         console.log(this.userData);
       },
       restOfMoney(){
         for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
-          this.userData.userMoneyRegister -= this.historyOfPurchaseTransactions[i].money;
+          this.userData.moneySpent = this.userData.moneySpent + parseFloat(this.historyOfPurchaseTransactions[i].money);
         }
       },
       sumOfMoney(){
         for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
-          this.userData.userMoneyRegister += this.historyOfSaleTransactions[i].money;
+          this.userData.moneyEarned = this.userData.moneyEarned + parseFloat(this.historyOfSaleTransactions[i].money);
         }
+      },
+      totalUserAvailableMoney(){
+        this.userData.userMoneyRegister = this.userData.moneyEarned - this.userData.moneySpent;
+      },
+      localStorageSettingItems(){
+        // Una vez listo nuestro 'userData' se empuja dicho objeto al Local Storage.
+        localStorage.setItem('userData', JSON.stringify(this.userData))
+        
+        this.userRegister();
       },
       userRegister(){
         // Se emite el evento 'user-register' para que la vista Index lo escuche y realice las operaciones necesarias.
