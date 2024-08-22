@@ -109,6 +109,7 @@
         this.userData.userIdRegister = this.userId;
       },
       firstConnectionMoneyGift(){
+        // Este va a ser un pequeño regalo para el usuario en caso de conectarse por °1 vez y no haber hecho transacciones aún.
         this.userData.userMoneyRegister = 100000;
       },
       localStorageSettingItems(){
@@ -116,23 +117,57 @@
         localStorage.setItem('userData', JSON.stringify(this.userData))
       },
       userRegisterValidation(){
+        // Una vez los datos ingresados sean correctos, se llamará a este método, lo cual desencadenará una suceción de varios métodos más que investigarán anteriores conexiones del usuario en cuestión.
         this.consultingApiForUserMovements();
       },
       async consultingApiForUserMovements(){
         let response = await ApiCallService.getUserTransactionsInfo(this.userId);
 
-        this.fillingUserHistoryArraySpace(response);
+        this.evaluatingUserFirstConnection(response);
+      },
+      evaluatingUserFirstConnection(response){
+        if(response.data != null || response.data != undefined){
+          this.fillingUserHistoryArraySpace(response);
+        } else{
+          this.userObjectConstructor();
+          this.firstConnectionMoneyGift();
+        }
       },
       fillingUserHistoryArraySpace(response){
         for(let i = 0; i < response.data.length; i++){
           this.historyOfUserMovementsTransactions[i] = response.data[i];
         }
 
-        this.separatingTransactionsType();
+        this.separatingTransactionsByType();
       },
-      separatingTransactionsType(){
+      separatingTransactionsByType(){
         for(let i = 0; i < this.historyOfUserMovementsTransactions.length; i++){
-          console.log(this.historyOfUserMovementsTransactions[i]);
+          if(this.historyOfUserMovementsTransactions[i].action == 'purchase'){
+            this.historyOfPurchaseTransactions.push(this.historyOfUserMovementsTransactions[i]);
+          }
+          else if(this.historyOfUserMovementsTransactions[i].action == 'sell'){
+            this.historyOfSaleTransactions.push(this.historyOfUserMovementsTransactions[i]);
+          }
+        }
+
+        console.log(this.historyOfPurchaseTransactions);
+        console.log(this.historyOfSaleTransactions);
+        this.calculatingUserMoneyAvailable();
+      },
+      calculatingUserMoneyAvailable(){
+        this.userObjectConstructor();
+        this.sumOfMoney();
+        this.restOfMoney();
+        console.log(this.userData);
+      },
+      restOfMoney(){
+        for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
+          this.userData.userMoneyRegister -= this.historyOfPurchaseTransactions[i].money;
+        }
+      },
+      sumOfMoney(){
+        for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
+          this.userData.userMoneyRegister += this.historyOfSaleTransactions[i].money;
         }
       },
       userRegister(){
