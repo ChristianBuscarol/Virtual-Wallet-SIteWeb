@@ -34,7 +34,7 @@
             dogecoinAmount: 0,
             ethereumAmount: 0,
             litecoinAmount: 0,
-            solana: 0,
+            solanaAmount: 0,
             usdcAmount: 0
           }
         },
@@ -58,6 +58,7 @@
         this.dataUserProfile.userWallet = newVal.userMoneyRegister;
         this.dataUserProfile.totalMoneySpent = newVal.moneySpent;
         this.dataUserProfile.totalMoneyEarned = newVal.moneyEarned;
+        this.dataUserProfile.unitCoinAmount= newVal.coinAvailableList;
         console.log(this.dataUserProfile);
       }
     },
