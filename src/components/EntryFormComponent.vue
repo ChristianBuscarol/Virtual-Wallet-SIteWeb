@@ -18,8 +18,8 @@
       <!--Sector de información para el usuario aquí abajo-->
       <div class="Info-Box">
         <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
-        <p v-if="localStorageComparison == 1 || localStorageComparison == 4">Sea bienvenido usted, '{{ this.userData.userNameRegister }}', a la plataforma virtual de transacciones de criptomonedas...</p>
-        <p v-else-if="localStorageComparison == 2 || localStorageComparison == 3">Bienvenido de nuevo '{{ this.userData.userNameRegister }}'!...</p><br><br>
+        <p v-if="localStorageComparison == 2">Sea bienvenido usted, '{{ this.userData.userNameRegister }}', a la plataforma virtual de transacciones de criptomonedas...</p>
+        <p v-else-if="localStorageComparison == 1">Bienvenido de nuevo '{{ this.userData.userNameRegister }}'!...</p><br><br>
         <p>Intentos realizados: °{{ this.entryAttempts }} --- Cantidad máxima de intentos: °3</p>
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       </div>
@@ -52,7 +52,15 @@
           userIdRegister: "",
           userMoneyRegister: 0,
           moneySpent: 0,
-          moneyEarned: 0
+          moneyEarned: 0,
+          coinAvailableList: {
+            bitcoinAmount: 0,
+            dogecoinAmount: 0,
+            ethereumAmount: 0,
+            litecoinAmount: 0,
+            solanaAmount: 0,
+            usdcAmount: 0
+          }
         }
       }
     },
@@ -127,8 +135,10 @@
       evaluatingUserFirstConnection(response){
         if(response.data != null || response.data != undefined){
           this.fillingUserHistoryArraySpace(response);
+          this.localStorageComparison = 1;
         } else{
           this.firstConnectionMoneyGift();
+          this.localStorageComparison = 2;
         }
       },
       fillingUserHistoryArraySpace(response){
@@ -154,8 +164,6 @@
         this.sumOfMoney();
         this.restOfMoney();
         this.totalUserAvailableMoney();
-        this.localStorageSettingItems();
-        console.log(this.userData);
       },
       restOfMoney(){
         for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
@@ -169,11 +177,63 @@
       },
       totalUserAvailableMoney(){
         this.userData.userMoneyRegister = this.userData.moneyEarned - this.userData.moneySpent;
+
+        this.calculatingUserCoinsAvailable();
+      },
+      calculatingUserCoinsAvailable(){
+        this.sumOfCoins();
+        this.restOfCoins();
+        this.localStorageSettingItems();
+      },
+      sumOfCoins(){
+        for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
+          if(this.historyOfPurchaseTransactions[i].crypto_code == 'bitcoin'){
+            this.userData.coinAvailableList.bitcoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'dogecoin'){
+            this.userData.coinAvailableList.dogecoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'ethereum'){
+            this.userData.coinAvailableList.ethereumAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'litecoin'){
+            this.userData.coinAvailableList.litecoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'solana'){
+            this.userData.coinAvailableList.solanaAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'usdcd'){
+            this.userData.coinAvailableList.usdcAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+        }
+      },
+      restOfCoins(){
+        for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
+          if(this.historyOfSaleTransactions[i].crypto_code == 'bitcoin'){
+            this.userData.coinAvailableList.bitcoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'dogecoin'){
+            this.userData.coinAvailableList.dogecoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'ethereum'){
+            this.userData.coinAvailableList.ethereumAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'litecoin'){
+            this.userData.coinAvailableList.litecoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'solana'){
+            this.userData.coinAvailableList.solanaAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'usdcd'){
+            this.userData.coinAvailableList.usdcAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+        }
       },
       localStorageSettingItems(){
         // Una vez listo nuestro 'userData' se empuja dicho objeto al Local Storage.
         localStorage.setItem('userData', JSON.stringify(this.userData))
         
+        // Una vez los datos del usuario han sido consultados, confirmados y guardados en el Local Storage, se llama al método dedicado a emitir el evento para que ejecute dicha función.
         this.userRegister();
       },
       userRegister(){
