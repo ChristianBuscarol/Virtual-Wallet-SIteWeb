@@ -46,7 +46,12 @@
       }
     },
     methods: {
-
+      keepingUserInfoActive(){
+        this.$emit('keeping-user-info-active');
+      }
+    },
+    mounted(){
+      this.keepingUserInfoActive();
     }
   }
 </script>
