@@ -83,11 +83,15 @@
           }
         ],
         infoSelectedCoin: {
+          userName: '',
+          userId: '',
+          userMoneyAvailable: 0,
           coinTittle: '',
           coinPrice: 0,
           coinImage: '',
           typeTransaction: ''
-        }
+        },
+        userCurrentAccountinfo: {}
       }
     },
     methods: {
@@ -99,6 +103,11 @@
           let response = await axios.get(this.Coins[i].url);
           this.Coins[i].price = response.data.totalAsk;
         }
+      },
+      gettingUserCurrentAccountinfo(){
+        this.userCurrentAccountinfo = this.emitUserDataReceived = JSON.parse(localStorage.getItem('userData'));
+        console.log('Se logró traer la siguiente información del usuario des de el Local Storage:');
+        console.log(this.userCurrentAccountinfo);
       },
       capturingInfoSelectedCoin(){
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
@@ -137,6 +146,7 @@
     },
     mounted(){
       this.keepingUserInfoActive();
+      this.gettingUserCurrentAccountinfo();
     }
   }
 </script>
