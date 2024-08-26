@@ -3,7 +3,7 @@
     <header>
       <div class="CoinCatalogue">
         <h1>This is an catalogue page</h1>
-        <UserProfileComponent/>
+        <UserProfileComponent :receivedData="emitUserDataReceived"/>
       </div>
     </header>
     <body>
@@ -34,7 +34,8 @@
     },
     data(){
       return{
-        preparingSelectedCoinInfo: {}
+        preparingSelectedCoinInfo: {},
+        emitUserDataReceived: {}
       }
     },
     methods: {
@@ -42,7 +43,7 @@
         this.preparingSelectedCoinInfo = infoSelectedCoin;
       },
       KeepingUserInfoActive(){
-        console.log('Esta cosa funciona...');
+        this.emitUserDataReceived = JSON.parse(localStorage.getItem('userData'));
       }
     }
   }
