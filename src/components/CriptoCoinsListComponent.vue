@@ -89,7 +89,8 @@
           coinTittle: '',
           coinPrice: 0,
           coinImage: '',
-          typeTransaction: ''
+          typeTransaction: '',
+          recordOfAvailableCoinsList: {}
         },
         userCurrentAccountinfo: {}
       }
@@ -106,10 +107,11 @@
       },
       gettingUserCurrentAccountinfo(){
         this.userCurrentAccountinfo = this.emitUserDataReceived = JSON.parse(localStorage.getItem('userData'));
-        console.log('Se logró traer la siguiente información del usuario des de el Local Storage:');
-        console.log(this.userCurrentAccountinfo);
       },
       capturingInfoSelectedCoin(){
+        this.infoSelectedCoin.userName = this.userCurrentAccountinfo.userNameRegister;
+        this.infoSelectedCoin.userId = this.userCurrentAccountinfo.userIdRegister;
+        this.infoSelectedCoin.userMoneyAvailable = this.userCurrentAccountinfo.userMoneyRegister;
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
         this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
         this.infoSelectedCoin.coinImage = this.Coins[this.selectedCoin].image;
@@ -118,6 +120,7 @@
         } else if (this.functionParameterEvent == 2){
           this.infoSelectedCoin.typeTransaction = 'sell'
         }
+        this.infoSelectedCoin.recordOfAvailableCoinsList = this.userCurrentAccountinfo.coinAvailableList;
       },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);
