@@ -2,15 +2,25 @@
   <body>
     <div v-if="modalVisibility == true" class="ModalRendering">
       <div class="ModalContent" @click.stop>
+        <!--Info del usuario para el modal aquí abajo.-->
+        <h3>{{ this.infoSelectedCoinReceived.userName }}</h3>
+        <h3>Money ready for this transaction: {{ this.infoSelectedCoinReceived.userMoneyAvailable }}</h3>
+
+        <!--Info de la moneda seleccionada para el modal aquí abajo.-->
         <h3>Coin selected for the transaction: {{ this.infoSelectedCoinReceived.coinTittle }}</h3>
-        <h3 v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">Type of transaction: Sell!...</h3>
-        <h3 v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">Type of transaction: Purchase!...</h3>
         <h3>Coin image display:</h3>
         <img :src="this.infoSelectedCoinReceived.coinImage" alt="GifSelectedCoin" class="Coin-Circle">
         <h3>Price: {{ this.infoSelectedCoinReceived.coinPrice }}</h3>
-        <h3>Transaction cost: </h3>
+
+        <!--Pequeño sector de información para el usuario según el tipo de transacción que ha elegido.-->
+        <h3 v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">Type of transaction: Purchase!...</h3>
         <label for="coinAmountEntry" v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">Coin amount to buy: </label>
+
+        <h3 v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">Type of transaction: Sell!...</h3>
         <label for="coinAmountEntry" v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">Coin amount to sold: </label>
+        
+        <!--Sector de interacción para realizar la transacción aquí abajo.-->
+        <h3>Transaction cost: </h3>
         <input type="number" v-model="coinPartToBuy" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" placeholder="Enter coin amount here...">
         <button type="button" class="PaymentConfirmation" @click="transactionPaymentOperation()" :disabled="enablingOfPaymentButton" id="btnPaymentConfirmation">Confirm payment.</button>
         <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
@@ -41,6 +51,7 @@
       transactionDataLoading(newVal){
         // Una vez enviado el objeto después de haberse hecho click en uno de los botones de compra o venta, dicho objeto pasa por el ciclo de vida 'watch' de este componente y llama a esta función.
         this.infoSelectedCoinReceived = newVal;
+        console.log(this.infoSelectedCoinReceived);
 
         this.changingVisibilityVariableOnTrue();
       },
