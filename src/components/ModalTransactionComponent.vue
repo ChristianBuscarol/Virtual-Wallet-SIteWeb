@@ -40,7 +40,16 @@
     },
     data(){
       return{
-        infoSelectedCoinReceived: {},
+        infoSelectedCoinReceived: {
+          userName: '',
+          userId: '',
+          userMoneyAvailable: 0,
+          coinTittle: '',
+          coinPrice: 0,
+          coinImage: '',
+          typeTransaction: ''
+        },
+        userAvailableCoinList: {},
         modalVisibility: false,
         paymentController: false,
         coinPartToBuy: 0,
@@ -50,8 +59,18 @@
     methods: {
       transactionDataLoading(newVal){
         // Una vez enviado el objeto después de haberse hecho click en uno de los botones de compra o venta, dicho objeto pasa por el ciclo de vida 'watch' de este componente y llama a esta función.
-        this.infoSelectedCoinReceived = newVal;
-        console.log(this.infoSelectedCoinReceived);
+        this.infoSelectedCoinReceived.userName = newVal.userName;
+        this.infoSelectedCoinReceived.userId = newVal.userId;
+        this.infoSelectedCoinReceived.userMoneyAvailable = newVal.userMoneyAvailable;
+        this.infoSelectedCoinReceived.coinTittle = newVal.coinTittle;
+        this.infoSelectedCoinReceived.coinImage = newVal.coinImage;
+        this.infoSelectedCoinReceived.coinPrice = newVal.coinPrice;
+        this.infoSelectedCoinReceived.typeTransaction = newVal.typeTransaction;
+
+        this.availableCoinListLoading(newVal);
+      },
+      availableCoinListLoading(newVal){
+        this.userAvailableCoinList = newVal.recordOfAvailableCoinsList;
 
         this.changingVisibilityVariableOnTrue();
       },
