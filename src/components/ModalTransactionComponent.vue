@@ -3,27 +3,40 @@
     <div v-if="modalVisibility == true" class="ModalRendering">
       <div class="ModalContent" @click.stop>
         <!--Info del usuario para el modal aquí abajo.-->
-        <h3>{{ this.infoSelectedCoinReceived.userName }}</h3>
-        <h3>Money ready for this transaction: {{ this.infoSelectedCoinReceived.userMoneyAvailable }}</h3>
+        <div class="ModalUserInfoBox">
+          <h3>{{ this.infoSelectedCoinReceived.userName }}</h3>
+          <h3>Money ready for this transaction: {{ this.infoSelectedCoinReceived.userMoneyAvailable }}</h3>
+        </div>
 
         <!--Info de la moneda seleccionada para el modal aquí abajo.-->
-        <h3>Coin selected for the transaction: {{ this.infoSelectedCoinReceived.coinTittle }}</h3>
-        <h3>Coin image display:</h3>
-        <img :src="this.infoSelectedCoinReceived.coinImage" alt="GifSelectedCoin" class="Coin-Circle">
-        <h3>Price: {{ this.infoSelectedCoinReceived.coinPrice }}</h3>
+        <div class="ModalSelectedCoinInfoBox">
+          <h3>Coin selected for the transaction: {{ this.infoSelectedCoinReceived.coinTittle }}</h3>
+          <h3>Coin image display:</h3>
+          <img :src="this.infoSelectedCoinReceived.coinImage" alt="GifSelectedCoin" class="Coin-Circle">
+          <h3>Price: {{ this.infoSelectedCoinReceived.coinPrice }}</h3>
+        </div>
 
         <!--Pequeño sector de información para el usuario según el tipo de transacción que ha elegido.-->
-        <h3 v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">Type of transaction: Purchase!...</h3>
-        <label for="coinAmountEntry" v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">Coin amount to buy: </label>
-
-        <h3 v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">Type of transaction: Sell!...</h3>
-        <label for="coinAmountEntry" v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">Coin amount to sold: </label>
+        <div class="ModalTransactionInfoBox">
+          <div v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">
+            <h3>Type of transaction: Purchase!...</h3>
+            <label for="coinAmountEntry">Coin limit to buy: {{ showCoinLimit }}</label>
+          </div>
+          
+          <div v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">
+            <h3>Type of transaction: Sell!...</h3>
+            <label for="coinAmountEntry">Coin portion ready to sold: {{ this.userAvailableCoinList.userCoinAvailable }}</label>
+            <h3>Proceeds from sale: {{ showProceedsFromSale }}</h3>
+          </div>
+        </div>
         
         <!--Sector de interacción para realizar la transacción aquí abajo.-->
-        <h3>Transaction cost: </h3>
-        <input type="number" v-model="coinPartToBuy" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" placeholder="Enter coin amount here...">
-        <button type="button" class="PaymentConfirmation" @click="transactionPaymentOperation()" :disabled="enablingOfPaymentButton" id="btnPaymentConfirmation">Confirm payment.</button>
-        <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
+        <div class="ModalInteractionBox">
+          <h3>Transaction cost: </h3>
+          <input type="number" v-model="coinPartToBuy" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" placeholder="Enter coin amount here...">
+          <button type="button" class="PaymentConfirmation" @click="transactionPaymentOperation()" :disabled="enablingOfPaymentButton" id="btnPaymentConfirmation">Confirm payment.</button>
+          <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
+        </div>
       </div>
     </div>
   </body>
@@ -44,12 +57,12 @@
           userName: '',
           userId: '',
           userMoneyAvailable: 0,
+          userCoinAvailable: {},
           coinTittle: '',
           coinPrice: 0,
           coinImage: '',
           typeTransaction: ''
         },
-        userAvailableCoinList: {},
         modalVisibility: false,
         paymentController: false,
         coinPartToBuy: 0,
@@ -59,19 +72,17 @@
     methods: {
       transactionDataLoading(newVal){
         // Una vez enviado el objeto después de haberse hecho click en uno de los botones de compra o venta, dicho objeto pasa por el ciclo de vida 'watch' de este componente y llama a esta función.
+        
         this.infoSelectedCoinReceived.userName = newVal.userName;
         this.infoSelectedCoinReceived.userId = newVal.userId;
         this.infoSelectedCoinReceived.userMoneyAvailable = newVal.userMoneyAvailable;
+        this.infoSelectedCoinReceived.userCoinAvailable = newVal.userCoinAvailable;
+
         this.infoSelectedCoinReceived.coinTittle = newVal.coinTittle;
         this.infoSelectedCoinReceived.coinImage = newVal.coinImage;
         this.infoSelectedCoinReceived.coinPrice = newVal.coinPrice;
         this.infoSelectedCoinReceived.typeTransaction = newVal.typeTransaction;
-
-        this.availableCoinListLoading(newVal);
-      },
-      availableCoinListLoading(newVal){
-        this.userAvailableCoinList = newVal.recordOfAvailableCoinsList;
-
+        
         this.changingVisibilityVariableOnTrue();
       },
       changingVisibilityVariableOnTrue(){
@@ -121,14 +132,8 @@
         }
       },
       purchaseTransactionCalculation(){
-        this.resultOfPaymentOperation = this.infoSelectedCoinReceived.coinPrice * this.coinPartToBuy;
-        
-        console.log(this.resultOfPaymentOperation);
       },
       saleTransactionCalculation(){
-        this.resultOfPaymentOperation = this.infoSelectedCoinReceived.coinPrice / (this.coinPartToBuy * 10);
-
-        console.log(this.resultOfPaymentOperation);
       }
     },
     computed: {
@@ -137,6 +142,12 @@
           return true;
         }
         return false;
+      },
+      showCoinLimit(){
+        return this.infoSelectedCoinReceived.userMoneyAvailable / this.infoSelectedCoinReceived.coinPrice;
+      },
+      showProceedsFromSale(){
+        return this.userAvailableCoinList.userCoinAvailable * this.infoSelectedCoinReceived.coinPrice;
       }
     },
     watch: {
@@ -181,13 +192,33 @@
 
   .ModalContent{
     background-color: #fff;
-    width: 33%; /* Ocupa un tercio de la pantalla */
+    width: 40%; /* Ocupa un tercio de la pantalla */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
     transform: scale(0);
     transition: transform 1.0s ease-in-out, opacity 1.0s ease-in-out;
     transform: scale(1); /* Se expande a tamaño completo */
+    display: grid;
+    grid-template-columns: auto auto;
+    margin: 0 auto;
+    justify-content: space-around;
+  }
+
+  .ModalUserInfoBox {
+    grid-column: 1/2;
+  }
+
+  .ModalSelectedCoinInfoBox {
+    grid-column: 1/2;
+  }
+
+  .ModalTransactionInfoBox {
+    grid-column: 2/2;
+  }
+
+  .ModalInteractionBox {
+    grid-column: 2/2;
   }
 
   .ClosingModal {
