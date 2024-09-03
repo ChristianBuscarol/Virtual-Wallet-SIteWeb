@@ -86,7 +86,7 @@
           userName: '',
           userId: '',
           userMoneyAvailable: 0,
-          userCoinAvailable: {},
+          userCoinAvailableList: {},
           coinTittle: '',
           coinPrice: 0,
           coinImage: '',
@@ -113,8 +113,8 @@
         this.infoSelectedCoin.userName = this.userCurrentAccountinfo.userNameRegister;
         this.infoSelectedCoin.userId = this.userCurrentAccountinfo.userIdRegister;
         this.infoSelectedCoin.userMoneyAvailable = this.userCurrentAccountinfo.userMoneyRegister;
-        this.infoSelectedCoin.userCoinAvailable = this.userCurrentAccountinfo.unitCoinAmount;
-
+        this.loadingAmountOfSelectedCoin();
+        
         // Y en esta parte de aquí abajo, se prepara la información de la moneda seleccionada para a transacción que el usuario realizará.
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
         this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
@@ -126,6 +126,14 @@
         }
 
         console.log(this.infoSelectedCoin);
+      },
+      loadingAmountOfSelectedCoin(){
+        for(let i = 0; i < this.userCurrentAccountinfo.unitCoinAmount.length; i++){
+          if(this.Coins[this.selectedCoin].title == this.userCurrentAccountinfo.unitCoinAmount[i]){
+            console.log(this.userCoinAvailableList[i]);
+            break;
+          }
+        }
       },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);
