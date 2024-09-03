@@ -57,12 +57,12 @@
           userName: '',
           userId: '',
           userMoneyAvailable: 0,
-          userCoinAvailable: {},
           coinTittle: '',
           coinPrice: 0,
           coinImage: '',
           typeTransaction: ''
         },
+        userCoinAvailableList: {},
         modalVisibility: false,
         paymentController: false,
         coinPartToBuy: 0,
@@ -72,12 +72,12 @@
     methods: {
       transactionDataLoading(newVal){
         // Una vez enviado el objeto después de haberse hecho click en uno de los botones de compra o venta, dicho objeto pasa por el ciclo de vida 'watch' de este componente y llama a esta función.
-        
+        // Aquí abajo se prepara los datos del usuario que se necesitará para la transacción, esto incluye la lista de monedas aparte ya que no necesitaremos todas, y la llamada a la función que solicitará la cantidad disponible de la moneda seleccionada para la operación.
         this.infoSelectedCoinReceived.userName = newVal.userName;
         this.infoSelectedCoinReceived.userId = newVal.userId;
         this.infoSelectedCoinReceived.userMoneyAvailable = newVal.userMoneyAvailable;
-        this.infoSelectedCoinReceived.userCoinAvailable = newVal.userCoinAvailable;
 
+        // Aquí abajo, se prepara los datos de la moneda seleccionada para que el usuario pueda interactuar antes de la operación una vez el Modal esté abierto.
         this.infoSelectedCoinReceived.coinTittle = newVal.coinTittle;
         this.infoSelectedCoinReceived.coinImage = newVal.coinImage;
         this.infoSelectedCoinReceived.coinPrice = newVal.coinPrice;
