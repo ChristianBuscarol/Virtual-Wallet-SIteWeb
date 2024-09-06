@@ -92,7 +92,9 @@
           coinImage: '',
           typeTransaction: ''
         },
-        userCurrentAccountinfo: {}
+        userCurrentAccountinfo: {},
+        userCoinListAvailables: [],
+        coinAmountSelected: 0
       }
     },
     methods: {
@@ -107,12 +109,14 @@
       },
       gettingUserCurrentAccountinfo(){
         this.userCurrentAccountinfo = JSON.parse(localStorage.getItem('userData'));
+        this.takingAmountsOfCoinAvailableList();
       },
       capturingInfoSelectedCoin(){
         // En esta parte de aquí abajo se prepara los datos del usuario que se utilizarán para la transacción que el mismo deseará realizar.
         this.infoSelectedCoin.userName = this.userCurrentAccountinfo.userNameRegister;
         this.infoSelectedCoin.userId = this.userCurrentAccountinfo.userIdRegister;
         this.infoSelectedCoin.userMoneyAvailable = this.userCurrentAccountinfo.userMoneyRegister;
+        this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.selectedCoin];
         
         // Y en esta parte de aquí abajo, se prepara la información de la moneda seleccionada para a transacción que el usuario realizará.
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
@@ -126,13 +130,8 @@
 
         console.log(this.infoSelectedCoin);
       },
-      loadingAmountOfSelectedCoin(){
-        for(let i = 0; i < this.userCurrentAccountinfo.coinAvailableList.length; i++){
-          if(this.Coins[this.selectedCoin].title == this.userCurrentAccountinfo.coinAvailableList[i]){
-            this.infoSelectedCoin.userCoinPartAvailable = this.userCurrentAccountinfo.coinAvailableList[i];
-            break;
-          }
-        }
+      takingAmountsOfCoinAvailableList(){
+        this.userCoinListAvailables = this.userCurrentAccountinfo.coinAvailableList;
       },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);
