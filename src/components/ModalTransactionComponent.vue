@@ -25,7 +25,7 @@
           
           <div v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">
             <h3>Type of transaction: Sell!...</h3>
-            <label for="coinAmountEntry">Coin portion ready to sold: {{ this.userAvailableCoinList.userCoinAvailable }}</label>
+            <label for="coinAmountEntry">Coin portion ready to sold: {{ this.infoSelectedCoinReceived.userCoinPartAvailable }}</label>
             <h3>Proceeds from sale: {{ showProceedsFromSale }}</h3>
           </div>
         </div>
@@ -57,12 +57,12 @@
           userName: '',
           userId: '',
           userMoneyAvailable: 0,
+          userCoinPartAvailable: 0,
           coinTittle: '',
           coinPrice: 0,
           coinImage: '',
           typeTransaction: ''
         },
-        userCoinAvailableList: {},
         modalVisibility: false,
         paymentController: false,
         coinPartToBuy: 0,
@@ -76,6 +76,7 @@
         this.infoSelectedCoinReceived.userName = newVal.userName;
         this.infoSelectedCoinReceived.userId = newVal.userId;
         this.infoSelectedCoinReceived.userMoneyAvailable = newVal.userMoneyAvailable;
+        this.infoSelectedCoinReceived.userCoinPartAvailable = newVal.userCoinPartAvailable;
 
         // Aquí abajo, se prepara los datos de la moneda seleccionada para que el usuario pueda interactuar antes de la operación una vez el Modal esté abierto.
         this.infoSelectedCoinReceived.coinTittle = newVal.coinTittle;
@@ -147,7 +148,7 @@
         return this.infoSelectedCoinReceived.userMoneyAvailable / this.infoSelectedCoinReceived.coinPrice;
       },
       showProceedsFromSale(){
-        return this.userAvailableCoinList.userCoinAvailable * this.infoSelectedCoinReceived.coinPrice;
+        return this.infoSelectedCoinReceived.userCoinPartAvailable * this.infoSelectedCoinReceived.coinPrice;
       }
     },
     watch: {
