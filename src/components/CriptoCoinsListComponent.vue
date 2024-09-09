@@ -41,7 +41,7 @@
         Coins: [
           {
             id: 1,
-            title: "Bitecoin",
+            title: "Bitcoin",
             price: 0,
             image: require('@/assets/BitecoinGif.gif'),
             url: 'https://criptoya.com/api/satoshitango/btc/ars'
@@ -116,8 +116,9 @@
         this.infoSelectedCoin.userName = this.userCurrentAccountinfo.userNameRegister;
         this.infoSelectedCoin.userId = this.userCurrentAccountinfo.userIdRegister;
         this.infoSelectedCoin.userMoneyAvailable = this.userCurrentAccountinfo.userMoneyRegister;
-        this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.selectedCoin];
-        
+        //this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.selectedCoin];
+        this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.wololoCoinName()];
+
         // Y en esta parte de aquí abajo, se prepara la información de la moneda seleccionada para a transacción que el usuario realizará.
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
         this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
@@ -129,6 +130,12 @@
         }
 
         console.log(this.infoSelectedCoin);
+        console.log(this.userCoinListAvailables);
+      },
+      wololoCoinName(){
+        let wololoName = this.Coins[this.selectedCoin].title;
+
+        return wololoName.toLowerCase() + 'Amount';
       },
       takingAmountsOfCoinAvailableList(){
         this.userCoinListAvailables = this.userCurrentAccountinfo.coinAvailableList;
