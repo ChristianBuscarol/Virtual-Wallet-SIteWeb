@@ -18,8 +18,8 @@
       <!--Sector de información para el usuario aquí abajo-->
       <div class="Info-Box">
         <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
-        <p v-if="localStorageComparison == 1 || localStorageComparison == 3">Sea bienvenido usted, '{{ this.userData.userNameRegister }}', a la plataforma virtual de transacciones de criptomonedas...</p>
-        <p v-else-if="localStorageComparison == 2">Bienvenido de nuevo '{{ this.userData.userNameRegister }}'!...</p><br><br>
+        <p v-if="localStorageComparison == 2">Sea bienvenido usted, '{{ this.userData.userNameRegister }}', a la plataforma virtual de transacciones de criptomonedas...</p>
+        <p v-else-if="localStorageComparison == 1">Bienvenido de nuevo '{{ this.userData.userNameRegister }}'!...</p><br><br>
         <p>Intentos realizados: °{{ this.entryAttempts }} --- Cantidad máxima de intentos: °3</p>
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       </div>
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+  import ApiCallService from '@/services/ApiCallService';
+
   export default {
     name: 'EntryFormComponent',
     data() {
@@ -41,11 +43,25 @@
         userName: "",
         dateValidation: true,
         entryAttempts: 0,
+        localStorageComparison: 0,
+        historyOfUserMovementsTransactions: [],
+        historyOfPurchaseTransactions: [],
+        historyOfSaleTransactions: [],
         userData: {
           userNameRegister: "",
-          userIdRegister: ""
-        },
-        localStorageComparison: 0
+          userIdRegister: "",
+          userMoneyRegister: 0,
+          moneySpent: 0,
+          moneyEarned: 0,
+          coinAvailableList: {
+            bitcoinAmount: 0,
+            dogecoinAmount: 0,
+            ethereumAmount: 0,
+            litecoinAmount: 0,
+            solanaAmount: 0,
+            usdcAmount: 0
+          }
+        }
       }
     },
     methods: {
@@ -90,18 +106,10 @@
             this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
             this.attemptIncrement();
             this.userRegisterValidation();
-            this.userRegister();
+            this.dateValidation = false,
             this.userId = "",
-            this.userName = "",
-            this.dateValidation = false
+            this.userName = ""
           }
-        }
-      },
-      localStorageGettingItems(){
-        // Se pregunta a Local Storage si tiene datos referidos al usuario (Nombre y ID), si es afirmativo llenará el objeto 'userData' con los datos obtenidos.
-        if(JSON.parse(localStorage.getItem('userData')) != null){
-          this.userData.userNameRegister = JSON.parse(localStorage.getItem('userData.userNameRegister'));
-          this.userData.userIdRegister = JSON.parse(localStorage.getItem('userData.userIdRegister'));
         }
       },
       userObjectConstructor(){
@@ -109,36 +117,131 @@
         this.userData.userNameRegister = this.userName;
         this.userData.userIdRegister = this.userId;
       },
-      localStorageSettingItems(){
-        //Se llamará al método que está justo arriba para preparar e igualar el objeto 'userData' con los datos ingresados por el usuario.
-        this.userObjectConstructor();
-        
-        // Una vez listo nuestro 'userData' se empuja dicho objeto al Local Storage.
-        localStorage.setItem('userData', JSON.stringify(this.userData))
+      firstConnectionMoneyGift(){
+        // Este va a ser un pequeño regalo para el usuario en caso de conectarse por °1 vez y no haber hecho transacciones aún.
+        this.userData.userMoneyRegister = 100000;
       },
       userRegisterValidation(){
-        // Se llama al método de consulta del Local Storage para su posterior evaluación en el mismo método.
-        this.localStorageGettingItems()
+        // Una vez los datos ingresados sean correctos, se llamará a este método, lo cual desencadenará una suceción de varios métodos más que investigarán anteriores conexiones del usuario en cuestión.
+        this.consultingApiForUserMovements();
+        this.userObjectConstructor();
+      },
+      async consultingApiForUserMovements(){
+        // Esta función llamará a la Api para pedir la información del usuario requerida según el Id que le pasamos como parámetro y después, llamamos a otra función para analizar la información que conseguimos y a la vez le pasamos como parámetro también.
+        let response = await ApiCallService.getUserTransactionsInfo(this.userId);
 
-        if(this.userData != null){
-          if(this.userId != this.userData.userIdRegister){
-            this.localStorageComparison = 1;
-            this.localStorageSettingItems();
-          }
-          else if (this.userName != this.userData.userNameRegister){
-            this.localStorageComparison = 2;
-            this.localStorageSettingItems();
-          }
-        } else {
-          this.localStorageComparison = 3;
-          this.localStorageSettingItems();
+        this.evaluatingUserFirstConnection(response);
+      },
+      evaluatingUserFirstConnection(response){
+        if(response.data != null || response.data != undefined){
+          this.fillingUserHistoryArraySpace(response);
+          this.localStorageComparison = 1;
+        } else{
+          this.firstConnectionMoneyGift();
+          this.localStorageComparison = 2;
         }
+      },
+      fillingUserHistoryArraySpace(response){
+        for(let i = 0; i < response.data.length; i++){
+          this.historyOfUserMovementsTransactions[i] = response.data[i];
+        }
+
+        this.separatingTransactionsByType();
+      },
+      separatingTransactionsByType(){
+        for(let i = 0; i < this.historyOfUserMovementsTransactions.length; i++){
+          if(this.historyOfUserMovementsTransactions[i].action == 'purchase'){
+            this.historyOfPurchaseTransactions.push(this.historyOfUserMovementsTransactions[i]);
+          }
+          else if(this.historyOfUserMovementsTransactions[i].action == 'sell'){
+            this.historyOfSaleTransactions.push(this.historyOfUserMovementsTransactions[i]);
+          }
+        }
+
+        this.calculatingUserMoneyAvailable();
+      },
+      calculatingUserMoneyAvailable(){
+        this.sumOfMoney();
+        this.restOfMoney();
+        this.totalUserAvailableMoney();
+      },
+      restOfMoney(){
+        for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
+          this.userData.moneySpent = this.userData.moneySpent + parseFloat(this.historyOfPurchaseTransactions[i].money);
+        }
+      },
+      sumOfMoney(){
+        for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
+          this.userData.moneyEarned = this.userData.moneyEarned + parseFloat(this.historyOfSaleTransactions[i].money);
+        }
+      },
+      totalUserAvailableMoney(){
+        this.userData.userMoneyRegister = this.userData.moneyEarned - this.userData.moneySpent;
+
+        this.calculatingUserCoinsAvailable();
+      },
+      calculatingUserCoinsAvailable(){
+        this.sumOfCoins();
+        this.restOfCoins();
+        this.localStorageSettingItems();
+      },
+      sumOfCoins(){
+        for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
+          if(this.historyOfPurchaseTransactions[i].crypto_code == 'bitcoin'){
+            this.userData.coinAvailableList.bitcoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'dogecoin'){
+            this.userData.coinAvailableList.dogecoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'ethereum'){
+            this.userData.coinAvailableList.ethereumAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'litecoin'){
+            this.userData.coinAvailableList.litecoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'solana'){
+            this.userData.coinAvailableList.solanaAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'usdcd'){
+            this.userData.coinAvailableList.usdcAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
+          }
+        }
+      },
+      restOfCoins(){
+        for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
+          if(this.historyOfSaleTransactions[i].crypto_code == 'bitcoin'){
+            this.userData.coinAvailableList.bitcoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'dogecoin'){
+            this.userData.coinAvailableList.dogecoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'ethereum'){
+            this.userData.coinAvailableList.ethereumAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'litecoin'){
+            this.userData.coinAvailableList.litecoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'solana'){
+            this.userData.coinAvailableList.solanaAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'usdcd'){
+            this.userData.coinAvailableList.usdcAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+          }
+        }
+      },
+      localStorageSettingItems(){
+        // Una vez listo nuestro 'userData' se empuja dicho objeto al Local Storage.
+        localStorage.setItem('userData', JSON.stringify(this.userData))
+        
+        // Una vez los datos del usuario han sido consultados, confirmados y guardados en el Local Storage, se llama al método dedicado a emitir el evento para que ejecute dicha función.
+        this.userRegister();
       },
       userRegister(){
         // Se emite el evento 'user-register' para que la vista Index lo escuche y realice las operaciones necesarias.
         this.$emit('user-register', this.userData);
       },
       attemptIncrement(){
+        // Cada vez que el usuario haga click en el botón de validar datos se incrementará este contador, que servirá para limitar el uso del formulario de entrada.
         this.entryAttempts++;
       },
       entryAttemptsFalied(){
@@ -168,9 +271,6 @@
         }
         return false;
       }
-    },
-    mounted(){
-      this.localStorageGettingItems();
     }
   }
 </script>

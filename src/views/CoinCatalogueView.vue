@@ -3,12 +3,12 @@
     <header>
       <div class="CoinCatalogue">
         <h1>This is an catalogue page</h1>
-        <UserProfileComponent/>
+        <UserProfileComponent :receivedData="emitUserDataReceived"/>
       </div>
     </header>
     <body>
       <div class="CriptoCoinsListComponent">
-        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal"/>
+        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal" @keeping-user-info-active="KeepingUserInfoActive"/>
         <ModalTransactionComponent :receivedSelectedCoinInfo="preparingSelectedCoinInfo"/>
       </div>
     </body>
@@ -34,12 +34,16 @@
     },
     data(){
       return{
-        preparingSelectedCoinInfo: {}
+        preparingSelectedCoinInfo: {},
+        emitUserDataReceived: {}
       }
     },
     methods: {
       openTransactionModal(infoSelectedCoin){
         this.preparingSelectedCoinInfo = infoSelectedCoin;
+      },
+      KeepingUserInfoActive(){
+        this.emitUserDataReceived = JSON.parse(localStorage.getItem('userData'));
       }
     }
   }

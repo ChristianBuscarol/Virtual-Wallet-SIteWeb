@@ -3,7 +3,6 @@
     <header>
       <h4>Actual usuary acount:</h4>
       <p><strong>Name: {{ vShowUserName }}</strong></p>
-      <p><strong>Id: {{ vShowUserId }}</strong></p>
       <p><strong>Available money: {{ vShowMoneyUser }}</strong></p>
     </header>
   </div>
@@ -26,6 +25,8 @@
           userWallet: 0,
           actionMade: ['purchase', 'sell'],
           totalMoneySpent: 0,
+          totalMoneyEarned: 0,
+          totalMoneyLost: 0,
           totalCoinsPurchased: 0,
           totalCoinsSold: 0,
           unitCoinAmount: {
@@ -33,11 +34,9 @@
             dogecoinAmount: 0,
             ethereumAmount: 0,
             litecoinAmount: 0,
-            solana: 0,
+            solanaAmount: 0,
             usdcAmount: 0
-          },
-          totalMoneyEarned: 0,
-          totalMoneyLost: 0
+          }
         },
         dataTransaction: {
           userId: '',
@@ -46,10 +45,6 @@
           criptoCoinAmount: '',
           spentMoney: 0,
           dateTime: null
-        },
-        eventReceiverUserData: {
-          receivedName: '',
-          receivedId: ''
         }
       }
     },
@@ -57,30 +52,20 @@
       userDataLoading(){
         this.$emit('user-data-loading');
       },
-      dataLoadingInProfile(){
-        this.dataUserProfile.userName = this.eventReceiverUserData.receivedName;
-        this.dataUserProfile.userId = this.eventReceiverUserData.receivedId;
-      },
       receiverEventData(newVal){
-        this.eventReceiverUserData.receivedName = newVal.userNameRegister;
-        this.eventReceiverUserData.receivedId = newVal.userIdRegister;
-
-        console.log(this.eventReceiverUserData);
-
-        this.dataLoadingInProfile();
+        this.dataUserProfile.userName = newVal.userNameRegister;
+        this.dataUserProfile.userId = newVal.userIdRegister;
+        this.dataUserProfile.userWallet = newVal.userMoneyRegister;
+        this.dataUserProfile.totalMoneySpent = newVal.moneySpent;
+        this.dataUserProfile.totalMoneyEarned = newVal.moneyEarned;
+        this.dataUserProfile.unitCoinAmount= newVal.coinAvailableList;
+        console.log(this.dataUserProfile);
       }
     },
     computed: {
       vShowUserName(){
         if(this.dataUserProfile.userName != ''){
           return this.dataUserProfile.userName;
-        } else {
-          return 'Esperando el ingreso de Datos para verificación...';
-        }
-      },
-      vShowUserId(){
-        if(this.dataUserProfile.userId != ''){
-          return this.dataUserProfile.userId;
         } else {
           return 'Esperando el ingreso de Datos para verificación...';
         }
@@ -98,8 +83,6 @@
         handler(newVal) {
           if(newVal){
             this.receiverEventData(newVal);
-            
-            this.userDataLoading();
           }
         },
         inmediate: true

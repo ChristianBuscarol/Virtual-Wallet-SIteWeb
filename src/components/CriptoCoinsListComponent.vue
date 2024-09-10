@@ -41,7 +41,7 @@
         Coins: [
           {
             id: 1,
-            title: "Bitecoin",
+            title: "Bitcoin",
             price: 0,
             image: require('@/assets/BitecoinGif.gif'),
             url: 'https://criptoya.com/api/satoshitango/btc/ars'
@@ -83,11 +83,18 @@
           }
         ],
         infoSelectedCoin: {
+          userName: '',
+          userId: '',
+          userMoneyAvailable: 0,
+          userCoinPartAvailable: 0,
           coinTittle: '',
           coinPrice: 0,
           coinImage: '',
           typeTransaction: ''
-        }
+        },
+        userCurrentAccountinfo: {},
+        userCoinListAvailables: [],
+        coinAmountSelected: 0
       }
     },
     methods: {
@@ -100,7 +107,19 @@
           this.Coins[i].price = response.data.totalAsk;
         }
       },
+      gettingUserCurrentAccountinfo(){
+        this.userCurrentAccountinfo = JSON.parse(localStorage.getItem('userData'));
+        this.takingAmountsOfCoinAvailableList();
+      },
       capturingInfoSelectedCoin(){
+        // En esta parte de aquí abajo se prepara los datos del usuario que se utilizarán para la transacción que el mismo deseará realizar.
+        this.infoSelectedCoin.userName = this.userCurrentAccountinfo.userNameRegister;
+        this.infoSelectedCoin.userId = this.userCurrentAccountinfo.userIdRegister;
+        this.infoSelectedCoin.userMoneyAvailable = this.userCurrentAccountinfo.userMoneyRegister;
+        //this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.selectedCoin];
+        this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.coinNameChangeForCoinPartSearch()];
+
+        // Y en esta parte de aquí abajo, se prepara la información de la moneda seleccionada para a transacción que el usuario realizará.
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
         this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
         this.infoSelectedCoin.coinImage = this.Coins[this.selectedCoin].image;
@@ -110,10 +129,21 @@
           this.infoSelectedCoin.typeTransaction = 'sell'
         }
       },
+      coinNameChangeForCoinPartSearch(){
+        let wololoName = this.Coins[this.selectedCoin].title;
+
+        return wololoName.toLowerCase() + 'Amount';
+      },
+      takingAmountsOfCoinAvailableList(){
+        this.userCoinListAvailables = this.userCurrentAccountinfo.coinAvailableList;
+      },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);
         
         this.$emit('open-transaction-modal', this.infoSelectedCoin)
+      },
+      keepingUserInfoActive(){
+        this.$emit('keeping-user-info-active');
       },
       btnHistoryEntry(){
         window.location.href = '/UsuaryHistoryView';
@@ -131,6 +161,10 @@
       this.obtainPrice()
 
       setInterval(() => {this.obtainPrice();}, 10000);
+    },
+    mounted(){
+      this.keepingUserInfoActive();
+      this.gettingUserCurrentAccountinfo();
     }
   }
 </script>
