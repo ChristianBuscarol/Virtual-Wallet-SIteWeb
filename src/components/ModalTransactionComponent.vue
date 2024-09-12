@@ -33,7 +33,7 @@
         <!--Sector de interacción para realizar la transacción aquí abajo.-->
         <div class="ModalInteractionBox">
           <h3>Transaction cost: </h3>
-          <input type="number" v-model="coinPartToBuy" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" placeholder="Enter coin amount here...">
+          <input type="number" v-model="coinPartToTrade" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" placeholder="Enter coin amount here...">
           <button type="button" class="PaymentConfirmation" @click="requestBodyObjectFilled()" :disabled="enablingOfPaymentButton" id="btnPaymentConfirmation">Confirm payment.</button>
           <button type="button" class="PaymentConfirmation" v-show="lastConfirmationButton" :disabled="lastConfirmationButton">¿Sure?...</button>
           <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
@@ -74,7 +74,7 @@
         },
         modalVisibility: false,
         paymentController: false,
-        coinPartToBuy: 0,
+        coinPartToTrade: 0,
         resultOfPaymentOperation: 0,
         lastConfirmationButton: false
       }
@@ -127,10 +127,10 @@
         console.log('El objeto de la información de la moneda seleccionada ha sido vaciado!...');
       },
       checkingPaymentController(){
-        if(this.coinPartToBuy == 0){
+        if(this.coinPartToTrade == 0){
           this.paymentController = false;
         }
-        else if (this.coinPartToBuy > 0){
+        else if (this.coinPartToTrade > 0){
           this.paymentController = false;
         }
       },
@@ -144,13 +144,28 @@
         this.requestBody.coinAmount = this.coinPartToBuy;
         this.requestBody.dateTime = transactionTime.toISOString();
       },
-      transactionMoneyCalculation(){
-        
+      transactionMoneyEvaluation(){
+        if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
+          if(this.coinPartToTrade <= (this.infoSelectedCoinReceived.userMoneyAvailable / this.infoSelectedCoinReceived.coinPrice)){
+            this.transactionMoneySpentCalculated();
+          }
+        }
+        else if(this.infoSelectedCoinReceived.typeTransaction == 'sell'){
+          if(this.coinPartToTrade < this.requestBody.coinAmount){
+            this.transactionCoinPartSoldCalculation();
+          }
+        }
+      },
+      transactionMoneySpentCalculated(){
+
+      },
+      transactionCoinPartSoldCalculation(){
+
       }
     },
     computed: {
       enablingOfPaymentButton(){
-        while(this.coinPartToBuy == 0){
+        while(this.coinPartToTrade == 0){
           return true;
         }
         return false;
