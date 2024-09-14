@@ -139,7 +139,7 @@
 
         this.requestBody.userId = this.infoSelectedCoinReceived.userId;
         this.requestBody.action = this.infoSelectedCoinReceived.typeTransaction;
-        this.transactionMoneyCalculation();
+        this.transactionMoneyEvaluation();
         this.requestBody.coinTittle = this.infoSelectedCoinReceived.coinTittle;
         this.requestBody.coinAmount = this.coinPartToBuy;
         this.requestBody.dateTime = transactionTime.toISOString();
@@ -157,9 +157,25 @@
         }
       },
       transactionMoneySpentCalculated(){
+        let totalCost = this.coinPartToTrade * this.infoSelectedCoinReceived.coinPrice;
 
+        if (totalCost < this.infoSelectedCoinReceived.userMoneyAvailable){
+          this.requestBody.money = totalCost;
+          this.showLastButtonConfirmation();
+        }
       },
       transactionCoinPartSoldCalculation(){
+        let moneyEarned = this.coinPartToTrade * this.infoSelectedCoinReceived.coinPrice; 
+
+        if(this.coinPartToTrade < this.infoSelectedCoinReceived.userCoinPartAvailable){
+          this.requestBody.money = moneyEarned;
+          this.showLastButtonConfirmation();
+        }
+      },
+      showLastButtonConfirmation(){
+        this.lastConfirmationButton = true;
+      },
+      transactionPostingOperation(){
 
       }
     },
