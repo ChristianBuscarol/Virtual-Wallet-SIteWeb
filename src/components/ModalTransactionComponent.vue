@@ -34,12 +34,12 @@
         
         <!--Sector de interacción para realizar la transacción aquí abajo.-->
         <div class="ModalInteractionBox">
-          <h3>Transaction cost: {{ showTransactionCost }}</h3>
-          <h3 v-if="this.showWarningMessageByNumber == 1 || this.showWarningMessageByNumber == 3"></h3>
-          <h3 v-else-if="this.showWarningMessageByNumber == 2 || this.showWarningMessageByNumber == 4"></h3>
-          <input type="number" v-model="coinPartToTrade" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" placeholder="Enter coin amount here...">
-          <button type="button" class="PaymentConfirmation" @click="requestBodyObjectFilled()" v-show="enableTransactionButton" :disabled="enableTransactionButton" id="btnPaymentConfirmation">Prepare transaction.</button><br><br>
-          <button type="button" class="PaymentConfirmation" v-show="lastConfirmationButton" :disabled="lastConfirmationButton">¿Sure?...</button>
+          <h3>Transaction cost: {{ showTransactionCost() }}</h3>
+          <h3 v-if="this.showWarningMessageByNumber == 2">The money available isn't enough to do this transaction.</h3>
+          <h3 v-else-if="this.showWarningMessageByNumber == 4">The coin part available isn't enough to do this tranasaction.</h3>
+          <input type="number" v-model="coinPartToTrade" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" :disabled="!lastConfirmationButton" placeholder="Enter coin amount here...">
+          <button type="button" class="PaymentConfirmation" @click="requestBodyObjectFilled()" v-show="enableTransactionButton()" :disabled="enableTransactionButton()" id="btnPaymentConfirmation">Prepare transaction.</button><br><br>
+          <button type="button" class="PaymentConfirmation" @click="transactionPostingOperation()" v-show="lastConfirmationButton" :disabled="lastConfirmationButton">¿Sure?...</button>
           <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
         </div>
       </div>
@@ -165,8 +165,7 @@
         let totalCost = this.coinPartToTrade * this.infoSelectedCoinReceived.coinPrice;
 
         if (totalCost < this.infoSelectedCoinReceived.userMoneyAvailable){
-          this.requestBody.money = totalCost;
-          this.requestBody.coinAmount = this.coinPartToTrade;
+          this.loadingRequestBodyLastTwoResources(totalCost);
           this.showLastButtonConfirmation();
           this.showWarningMessageByNumber = 1;
         }
@@ -178,8 +177,7 @@
         let moneyEarned = this.coinPartToTrade * this.infoSelectedCoinReceived.coinPrice; 
 
         if(this.coinPartToTrade < this.infoSelectedCoinReceived.userCoinPartAvailable){
-          this.requestBody.money = moneyEarned;
-          this.requestBody.coinAmount = this.coinPartToTrade;
+          this.loadingRequestBodyLastTwoResources(moneyEarned);
           this.showLastButtonConfirmation();
           this.showWarningMessageByNumber = 3;
         }
@@ -187,32 +185,46 @@
           this.showWarningMessageByNumber = 4;
         }
       },
+      loadingRequestBodyLastTwoResources(totalCost, moneyEarned){
+        if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
+          this.requestBody.money = totalCost;
+          this.requestBody.coinAmount = this.coinPartToTrade;
+        }
+        else if(this.infoSelectedCoinReceived.typeTransaction == 'sell'){
+          this.requestBody.money = moneyEarned;
+          this.requestBody.coinAmount = this.coinPartToTrade;
+        }
+      },
       showLastButtonConfirmation(){
         this.lastConfirmationButton = false;
       },
+      disabledTransactionFirstButtonOperation(){
+        this.coinPartToTrade = 0;
+      },
       async transactionPostingOperation(){
-      }
-    },
-    computed: {
+        await ApiCallService.postNewTransaction(this.requestBody);
+      },
       enableTransactionButton(){
         while(this.coinPartToTrade == 0){
           return true;
         }
         return false;
       },
+      showTransactionCost(){
+        if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
+          return '$' + this.infoSelectedCoinReceived.userMoneyAvailable - (this.coinPartToTrade * this.infoSelectedCoinReceived.coinPrice);
+        }
+        else if(this.infoSelectedCoinReceived.typeTransaction == 'sell'){
+          return this.infoSelectedCoinReceived.userCoinPartAvailable - this.coinPartToTrade + '' + this.infoSelectedCoinReceived.coinTittle + '' + 'portion/unit/s.';
+        }
+      }
+    },
+    computed: {
       showCoinLimit(){
         return this.infoSelectedCoinReceived.userMoneyAvailable / this.infoSelectedCoinReceived.coinPrice;
       },
       showProceedsFromSale(){
         return this.infoSelectedCoinReceived.userCoinPartAvailable * this.infoSelectedCoinReceived.coinPrice;
-      },
-      showTransactionCost(){
-        if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
-
-        }
-        else if(this.infoSelectedCoinReceived.typeTransaction == 'sell'){
-
-        }
       }
     },
     watch: {
