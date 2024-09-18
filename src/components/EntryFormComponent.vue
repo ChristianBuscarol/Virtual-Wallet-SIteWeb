@@ -119,7 +119,7 @@
       },
       firstConnectionMoneyGift(){
         // Este va a ser un pequeño regalo para el usuario en caso de conectarse por °1 vez y no haber hecho transacciones aún.
-        this.userData.userMoneyRegister = 100000;
+        this.userData.userMoneyRegister = 1000000;
       },
       userRegisterValidation(){
         // Una vez los datos ingresados sean correctos, se llamará a este método, lo cual desencadenará una suceción de varios métodos más que investigarán anteriores conexiones del usuario en cuestión.
