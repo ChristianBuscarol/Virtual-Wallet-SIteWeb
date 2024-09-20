@@ -15,6 +15,10 @@
       receivedData: {
         type: Object,
         default: null
+      },
+      userMoneyUpdate: {
+        type: Object,
+        default: null
       }
     },
     data(){
@@ -59,7 +63,68 @@
         this.dataUserProfile.totalMoneySpent = newVal.moneySpent;
         this.dataUserProfile.totalMoneyEarned = newVal.moneyEarned;
         this.dataUserProfile.unitCoinAmount= newVal.coinAvailableList;
-        console.log(this.dataUserProfile);
+      },
+      receiptOfTransactionDoneInfo(newVol){
+        if(newVol.action == 'purchase'){
+          this.sumOfMoneyEarnedFromTransactionDone(newVol);
+          this.sumOfCoins(newVol);
+        }
+        else if(newVol.action == 'sell'){
+          this.restOfMoneySpentFromTransactionDone();
+          this.restOfCoins(newVol);
+        }
+      },
+      sumOfMoneyEarnedFromTransactionDone(){
+        this.dataUserProfile.userWallet += this.newVol.money;
+        this.dataUserProfile.totalMoneyEarned += this.newVol.money;
+      },
+      restOfMoneySpentFromTransactionDone(){
+        this.dataUserProfile.userWallet -= this.newVol.money;
+        this.dataUserProfile.totalMoneySpent += this.newVol.money;
+      },
+      sumOfCoins(){
+        for(let i = 0; i < this.dataUserProfile.unitCoinAmount.length; i++){
+          if(this.newVol.coinTittle == 'bitcoin'){
+            this.dataUserProfile.unitCoinAmount[i] += parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'dogecoin'){
+            this.dataUserProfile.unitCoinAmount[i] += parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'ethereum'){
+            this.dataUserProfile.unitCoinAmount[i] += parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'litecoin'){
+            this.dataUserProfile.unitCoinAmount[i] += parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'solana'){
+            this.dataUserProfile.unitCoinAmount[i] += parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'usdcd'){
+            this.dataUserProfile.unitCoinAmount[i] += parseFloat(this.newVol.coinAmount);
+          }
+        }
+      },
+      restOfCoins(){
+        for(let i = 0; i < this.dataUserProfile.unitCoinAmount.length; i++){
+          if(this.newVol.coinTittle == 'bitcoin'){
+            this.dataUserProfile.unitCoinAmount[i] -= parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'dogecoin'){
+            this.dataUserProfile.unitCoinAmount[i] -= parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'ethereum'){
+            this.dataUserProfile.unitCoinAmount[i] -= parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'litecoin'){
+            this.dataUserProfile.unitCoinAmount[i] -= parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'solana'){
+            this.dataUserProfile.unitCoinAmount[i] -= parseFloat(this.newVol.coinAmount);
+          }
+          else if (this.newVol.coinTittle == 'usdcd'){
+            this.dataUserProfile.unitCoinAmount[i] -= parseFloat(this.newVol.coinAmount);
+          }
+        }
       }
     },
     computed: {
@@ -83,6 +148,14 @@
         handler(newVal) {
           if(newVal){
             this.receiverEventData(newVal);
+          }
+        },
+        inmediate: true
+      },
+      userMoneyUpdate: {
+        handler(newVol) {
+          if(newVol){
+            this.receiptOfTransactionDoneInfo(newVol);
           }
         },
         inmediate: true
