@@ -71,12 +71,12 @@
           typeTransaction: ''
         },
         requestBody: {
-          userId: '',
+          user_id: '',
           action: '',
           money: 0,
-          coinTittle: '',
-          coinAmount: 0,
-          dateTime: 0
+          crypto_code: '',
+          crypto_amount: 0,
+          datetime: 0
         },
         modalVisibility: false,
         lastConfirmationButton: true,
@@ -142,11 +142,11 @@
       requestBodyObjectFilled(){
         let transactionTime = new Date();
 
-        this.requestBody.userId = this.infoSelectedCoinReceived.userId;
+        this.requestBody.user_id = this.infoSelectedCoinReceived.userId;
         this.requestBody.action = this.infoSelectedCoinReceived.typeTransaction;
         this.transactionMoneyEvaluation();
-        this.requestBody.coinTittle = this.infoSelectedCoinReceived.coinTittle;
-        this.requestBody.dateTime = transactionTime.toISOString();
+        this.requestBody.crypto_code = this.infoSelectedCoinReceived.coinTittle;
+        this.requestBody.datetime = transactionTime.toISOString();
       },
       transactionMoneyEvaluation(){
         if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
@@ -183,11 +183,11 @@
       loadingRequestBodyLastTwoResources(totalCost, moneyEarned){
         if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
           this.requestBody.money = totalCost;
-          this.requestBody.coinAmount = this.coinPartToTrade;
+          this.requestBody.crypto_amount = this.coinPartToTrade;
         }
         else if(this.infoSelectedCoinReceived.typeTransaction == 'sell'){
           this.requestBody.money = moneyEarned;
-          this.requestBody.coinAmount = this.coinPartToTrade;
+          this.requestBody.crypto_amount = this.coinPartToTrade;
         }
       },
       showLastButtonConfirmation(){
