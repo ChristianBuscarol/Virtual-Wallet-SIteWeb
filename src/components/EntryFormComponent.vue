@@ -172,7 +172,10 @@
       },
       sumOfMoney(){
         for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
-          this.userData.moneyEarned = this.userData.moneyEarned + parseFloat(this.historyOfSaleTransactions[i].money);
+          if(isNaN(this.historyOfSaleTransactions[i].money) != true){
+            this.userData.moneyEarned = this.userData.moneyEarned + parseFloat(this.historyOfSaleTransactions[i].money);
+            console.log(this.userData.moneyEarned);
+          }
         }
       },
       totalUserAvailableMoney(){
