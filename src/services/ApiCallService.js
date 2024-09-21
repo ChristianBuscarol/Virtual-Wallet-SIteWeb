@@ -24,7 +24,7 @@ export default{
     return apiClientPurchase.get();
   },
   postNewTransaction(transactionInfo){
-    return apiClient.post(transactionInfo);
+    return apiClient.post('', transactionInfo);
   },
   patchSelectedTransaction(transactionId){
     return apiClient.patch('/' + transactionId);
