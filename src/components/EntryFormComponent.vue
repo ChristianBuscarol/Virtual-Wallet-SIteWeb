@@ -18,8 +18,6 @@
       <!--Sector de información para el usuario aquí abajo-->
       <div class="Info-Box">
         <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
-        <p v-if="localStorageComparison == 2">Sea bienvenido usted, '{{ this.userData.userNameRegister }}', a la plataforma virtual de transacciones de criptomonedas...</p>
-        <p v-else-if="localStorageComparison == 1">Bienvenido de nuevo '{{ this.userData.userNameRegister }}'!...</p><br><br>
         <p>Intentos realizados: °{{ this.entryAttempts }} --- Cantidad máxima de intentos: °3</p>
         <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
       </div>
@@ -41,7 +39,6 @@
         userName: "",
         dateValidation: true,
         entryAttempts: 0,
-        localStorageComparison: 0,
         userData: {
           userNameRegister: "",
           userIdRegister: "",
@@ -96,14 +93,18 @@
           }
         }
       },
+      userRegisterValidation(){
+        this.userObjectConstructor();
+        this.localStorageSetUserItems();
+        this.userRegister();
+      },
       userObjectConstructor(){
         // Se llenará el objeto 'userData' con el Nombre y ID recién ingresados por el usuario una vez todo esté en orden para continuar.
         this.userData.userNameRegister = this.userName;
         this.userData.userIdRegister = this.userId;
       },
-      userRegisterValidation(){
-        this.userObjectConstructor();
-        this.userRegister();
+      localStorageSetUserItems(){
+        localStorage.setItem('userData', JSON.stringify(this.userData))
       },
       userRegister(){
         // Se emite el evento 'user-register' para que la vista Index lo escuche y realice las operaciones necesarias.
