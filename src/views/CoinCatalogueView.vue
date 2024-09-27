@@ -3,13 +3,13 @@
     <header>
       <div class="CoinCatalogue">
         <h1>This is an catalogue page</h1>
-        <UserProfileComponent :receivedData="emitUserDataReceived" :transactionInfo="userMoneyUpdate"/>
+        <UserProfileComponent :receivedData="emitUserDataReceived"/>
       </div>
     </header>
     <body>
       <div class="CriptoCoinsListComponent">
-        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal" @keeping-user-info-active="KeepingUserInfoActive"/>
-        <ModalTransactionComponent :receivedSelectedCoinInfo="preparingSelectedCoinInfo" @account-money-update="accountMoneyUpdate"/>
+        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal"/>
+        <ModalTransactionComponent :receivedSelectedCoinInfo="preparingSelectedCoinInfo"/>
       </div>
     </body>
     <footer>
@@ -35,8 +35,7 @@
     data(){
       return{
         preparingSelectedCoinInfo: {},
-        emitUserDataReceived: {},
-        userMoneyUpdate: {}
+        emitUserDataReceived: {}
       }
     },
     methods: {
@@ -45,11 +44,10 @@
       },
       KeepingUserInfoActive(){
         this.emitUserDataReceived = JSON.parse(localStorage.getItem('userData'));
-      },
-      accountMoneyUpdate(requestBody){
-        this.userMoneyUpdate = requestBody;
-        console.log(this.userMoneyUpdate);
       }
+    },
+    mounted(){
+      this.KeepingUserInfoActive();
     }
   }
 </script>
