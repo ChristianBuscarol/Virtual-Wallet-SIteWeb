@@ -108,8 +108,8 @@
         }
       },
       gettingUserCurrentAccountinfo(){
-        this.userCurrentAccountinfo = JSON.parse(localStorage.getItem('userData'));
-        this.takingAmountsOfCoinAvailableList();
+        //this.userCurrentAccountinfo = JSON.parse(localStorage.getItem('userData'));
+        //this.takingAmountsOfCoinAvailableList();
       },
       capturingInfoSelectedCoin(){
         // En esta parte de aquí abajo se prepara los datos del usuario que se utilizarán para la transacción que el mismo deseará realizar.
@@ -142,9 +142,6 @@
         
         this.$emit('open-transaction-modal', this.infoSelectedCoin)
       },
-      keepingUserInfoActive(){
-        this.$emit('keeping-user-info-active');
-      },
       btnHistoryEntry(){
         window.location.href = '/UsuaryHistoryView';
       }
@@ -163,7 +160,6 @@
       setInterval(() => {this.obtainPrice();}, 10000);
     },
     mounted(){
-      this.keepingUserInfoActive();
       this.gettingUserCurrentAccountinfo();
     }
   }
