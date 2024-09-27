@@ -79,7 +79,9 @@
           datetime: 0
         },
         modalVisibility: false,
+        confirmationOfTransactionInteraction: false,
         lastConfirmationButton: true,
+        refreshCatalogueView: true,
         coinPartToTrade: 0,
         resultOfPaymentOperation: 0,
         showWarningMessageByNumber: 0
@@ -194,15 +196,14 @@
         this.lastConfirmationButton = false;
         this.disabledTransactionFirstButtonOperation();
       },
-      accountMoneyUpdate(){
-        this.$emit('account-money-update', this.requestBody);
+      refreshTheView(){
+        this.$emit('refresh-the-view', this.refreshCatalogueView);
       },
       disabledTransactionFirstButtonOperation(){
         this.coinPartToTrade = 0;
       },
       transactionPostingOperation(){
         ApiCallService.postNewTransaction(this.requestBody);
-        this.accountMoneyUpdate();
       },
       showTransactionCost(){
         if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
