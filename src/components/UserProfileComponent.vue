@@ -17,14 +17,13 @@
       receivedData: {
         type: Object,
         default: null
-      },
-      userMoneyUpdate: {
-        type: Object,
-        default: null
       }
     },
     data(){
       return{
+        historyOfUserMovementsTransactions: [],
+        historyOfPurchaseTransactions: [],
+        historyOfSaleTransactions: [],
         dataUserProfile: {
           userName: '',
           userId: '',
@@ -33,9 +32,6 @@
           totalMoneyEarned: 0,
           totalCoinsPurchased: 0,
           totalCoinsSold: 0,
-          historyOfUserMovementsTransactions: [],
-          historyOfPurchaseTransactions: [],
-          historyOfSaleTransactions: [],
           unitCoinAmount: {
             bitcoinAmount: 0,
             dogecoinAmount: 0,
@@ -55,7 +51,7 @@
       },
       async consultingApiForUserMovements(){
         // Esta función llamará a la Api para pedir la información del usuario requerida según el Id que le pasamos como parámetro y después, llamamos a otra función para analizar la información que conseguimos y a la vez le pasamos como parámetro también.
-        let response = await ApiCallService.getUserTransactionsInfo(this.userId);
+        let response = await ApiCallService.getUserTransactionsInfo(this.dataUserProfile.userId);
 
         this.evaluatingUserFirstConnection(response);
       },
@@ -87,31 +83,36 @@
           }
         }
 
-        this.calculatingUserMoneyAvailable();
+        this.calculateUserMoneyAvailable();
       },
-      calculatingUserMoneyAvailable(){
+      calculateUserMoneyAvailable(){
         this.sumOfMoney();
         this.restOfMoney();
         this.totalUserAvailableMoney();
       },
       sumOfMoney(){
         for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
-          this.dataUserProfile.totalMoneyEarned = this.dataUserProfile.totalMoneyEarned + parseFloat(this.historyOfSaleTransactions[i].money);
+          if(isNaN(this.historyOfSaleTransactions[i].money) != true){
+            this.dataUserProfile.totalMoneyEarned = this.dataUserProfile.totalMoneyEarned + parseFloat(this.historyOfSaleTransactions[i].money);
+          }
         }
       },
       restOfMoney(){
         for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
-          this.dataUserProfile.totalMoneySpent = this.dataUserProfile.totalMoneySpent + parseFloat(this.historyOfPurchaseTransactions[i].money);
+          if(isNaN(this.historyOfPurchaseTransactions[i].money) != true){
+            this.dataUserProfile.totalMoneySpent = this.dataUserProfile.totalMoneySpent + parseFloat(this.historyOfPurchaseTransactions[i].money);
+          }
         }
       },
       totalUserAvailableMoney(){
-        this.dataUserProfile.userMoneyRegister = this.dataUserProfile.totalMoneyEarned - this.dataUserProfile.totalMoneySpent;
+        this.dataUserProfile.userWallet = this.dataUserProfile.totalMoneyEarned - this.dataUserProfile.totalMoneySpent;
 
-        this.calculatingUserCoinsAvailable();
+        this.calculateUserCoinsAvailable();
       },
-      calculatingUserCoinsAvailable(){
+      calculateUserCoinsAvailable(){
         this.sumOfCoins();
         this.restOfCoins();
+        this.calculateTransactionCoinQuantity();
       },
       sumOfCoins(){
         for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
@@ -156,6 +157,27 @@
             this.dataUserProfile.unitCoinAmount.usdcAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
           }
         }
+      },
+      calculateTransactionCoinQuantity(){
+        this.sumOfPurchasedCoinQuantity();
+        this.sumOfSoldCoinQuantity();
+        this.emitUserInfoToModal();
+        this.emitUserInfoForUserHistory();
+        console.log(this.dataUserProfile);
+      },
+      sumOfPurchasedCoinQuantity(){
+        for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
+          this.dataUserProfile.totalCoinsPurchased += this.historyOfPurchaseTransactions[i].crypto_amount;
+        }
+      },
+      sumOfSoldCoinQuantity(){
+        this.dataUserProfile.totalCoinsSold += this.historyOfSaleTransactions[i].crypto_amount;
+      },
+      emitUserInfoToModal(){
+        this.$emit('emit-user-info-to-modal', this.dataUserProfile);
+      },
+      emitUserInfoForUserHistory(){
+        this.$emit('emit-user-info-for-user-history');
       }
     },
     computed: {
@@ -179,14 +201,6 @@
         handler(newVal) {
           if(newVal){
             this.receiverEventData(newVal);
-          }
-        },
-        inmediate: true
-      },
-      userMoneyUpdate: {
-        handler(newVol) {
-          if(newVol){
-            this.receiptOfTransactionDoneInfo(newVol);
           }
         },
         inmediate: true
