@@ -34,6 +34,12 @@
 
   export default{
     name: 'CriptoCoinsListComponent',
+    props: {
+      prepareUserProfileInfo: {
+        type: Object,
+        required: true
+      }
+    },
     data(){
       return{
         selectedCoin: 0,
@@ -107,9 +113,8 @@
           this.Coins[i].price = response.data.totalAsk;
         }
       },
-      gettingUserCurrentAccountinfo(){
-        //this.userCurrentAccountinfo = JSON.parse(localStorage.getItem('userData'));
-        //this.takingAmountsOfCoinAvailableList();
+      getUserAccountinfo(newVal){
+        
       },
       capturingInfoSelectedCoin(){
         // En esta parte de aquí abajo se prepara los datos del usuario que se utilizarán para la transacción que el mismo deseará realizar.
@@ -133,9 +138,6 @@
         let wololoName = this.Coins[this.selectedCoin].title;
 
         return wololoName.toLowerCase() + 'Amount';
-      },
-      takingAmountsOfCoinAvailableList(){
-        this.userCoinListAvailables = this.userCurrentAccountinfo.coinAvailableList;
       },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);
@@ -161,6 +163,16 @@
     },
     mounted(){
       this.gettingUserCurrentAccountinfo();
+    },
+    watch: {
+      prepareUserProfileInfo: {
+        inmediate: true,
+        handler(newVal) {
+          if(newVal && Object.keys(newVal).length > 0){
+            this.getUserAccountinfo(newVal);
+          }
+        }
+      }
     }
   }
 </script>
