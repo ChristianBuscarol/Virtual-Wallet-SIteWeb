@@ -9,7 +9,7 @@
     <body>
       <div class="CriptoCoinsListComponent">
         <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal" :receivedUserProfileData="prepareUserProfileInfo"/>
-        <ModalTransactionComponent :receivedSelectedCoinInfo="prepareSelectedCoinInfo"/>
+        <ModalTransactionComponent @refresh-the-view="refreshTheView" :receivedSelectedCoinInfo="prepareSelectedCoinInfo"/>
       </div>
     </body>
     <footer>
@@ -48,6 +48,9 @@
       },
       sendUserInfoToModal(dataUserProfile){
         this.prepareUserProfileInfo = dataUserProfile;
+      },
+      refreshTheView(){
+        window.location.reload();
       }
     },
     mounted(){
