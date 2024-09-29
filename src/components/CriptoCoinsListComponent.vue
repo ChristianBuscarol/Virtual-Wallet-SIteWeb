@@ -35,9 +35,9 @@
   export default{
     name: 'CriptoCoinsListComponent',
     props: {
-      prepareUserProfileInfo: {
+      receivedUserProfileData: {
         type: Object,
-        required: true
+        default: null
       }
     },
     data(){
@@ -114,16 +114,14 @@
         }
       },
       getUserAccountinfo(newVal){
-        
+        // En esta parte de aquí abajo se prepara los datos del usuario que se utilizarán para la transacción que el mismo deseará realizar.
+        this.infoSelectedCoin.userName = newVal.userName;
+        this.infoSelectedCoin.userId = newVal.userId;
+        this.infoSelectedCoin.userMoneyAvailable = newVal.userWallet;
+        //this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.selectedCoin];
+        this.infoSelectedCoin.userCoinPartAvailable = newVal.unitCoinAmount[this.coinNameChangeForCoinPartSearch()];
       },
       capturingInfoSelectedCoin(){
-        // En esta parte de aquí abajo se prepara los datos del usuario que se utilizarán para la transacción que el mismo deseará realizar.
-        this.infoSelectedCoin.userName = this.userCurrentAccountinfo.userNameRegister;
-        this.infoSelectedCoin.userId = this.userCurrentAccountinfo.userIdRegister;
-        this.infoSelectedCoin.userMoneyAvailable = this.userCurrentAccountinfo.userMoneyRegister;
-        //this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.selectedCoin];
-        this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.coinNameChangeForCoinPartSearch()];
-
         // Y en esta parte de aquí abajo, se prepara la información de la moneda seleccionada para a transacción que el usuario realizará.
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
         this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
@@ -141,7 +139,9 @@
       },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);
-        
+        console.log('El objeto con la información para el Modal es la siguiente: ');
+        console.log(this.infoSelectedCoin);
+
         this.$emit('open-transaction-modal', this.infoSelectedCoin)
       },
       btnHistoryEntry(){
@@ -161,17 +161,16 @@
 
       setInterval(() => {this.obtainPrice();}, 10000);
     },
-    mounted(){
-      this.gettingUserCurrentAccountinfo();
-    },
     watch: {
-      prepareUserProfileInfo: {
-        inmediate: true,
+      receivedUserProfileData: {
         handler(newVal) {
           if(newVal && Object.keys(newVal).length > 0){
             this.getUserAccountinfo(newVal);
+            console.log('el newVal que recibe el componente del catálogo de las monedas es el siguiente: ');
+            console.log(newVal);
           }
-        }
+        },
+        inmediate: true
       }
     }
   }
