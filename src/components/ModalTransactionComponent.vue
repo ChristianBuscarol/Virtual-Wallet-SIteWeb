@@ -37,7 +37,7 @@
           <h3>Transaction cost: {{ showTransactionCost() }}</h3>
           <h3 v-if="this.showWarningMessageByNumber == 2">The money available isn't enough to do this transaction.</h3>
           <h3 v-else-if="this.showWarningMessageByNumber == 4">The coin part available isn't enough to do this tranasaction.</h3>
-          <input type="number" v-model="coinPartToTrade" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" :disabled="!lastConfirmationButton" placeholder="Enter coin amount here...">
+          <input type="number" v-model="coinPartToTrade" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" :disabled="confirmationOfTransactionInteraction" placeholder="Enter coin amount here...">
           <button type="button" class="PaymentConfirmation" @click="requestBodyObjectFilled()" v-show="!enableFirstTransactionButton" :disabled="enableFirstTransactionButton" id="btnPaymentConfirmation">Prepare transaction.</button><br><br>
           <button type="button" class="PaymentConfirmation" @click="transactionPostingOperation()" v-show="!lastConfirmationButton" :disabled="lastConfirmationButton">¿Sure?...</button>
           <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
@@ -81,7 +81,6 @@
         modalVisibility: false,
         confirmationOfTransactionInteraction: false,
         lastConfirmationButton: true,
-        refreshCatalogueView: true,
         coinPartToTrade: 0,
         resultOfPaymentOperation: 0,
         showWarningMessageByNumber: 0
@@ -129,6 +128,7 @@
         }
 
         this.emptyingSelectedCoinInfoObect();
+        this.refreshTheView();
       },
       emptyingSelectedCoinInfoObect(){
         this.infoSelectedCoinReceived = null;
@@ -197,13 +197,21 @@
         this.disabledTransactionFirstButtonOperation();
       },
       refreshTheView(){
-        this.$emit('refresh-the-view', this.refreshCatalogueView);
+        this.$emit('refresh-the-view');
       },
       disabledTransactionFirstButtonOperation(){
         this.coinPartToTrade = 0;
+        this.disabledFirstButtonInteraction();
+      },
+      disabledFirstButtonInteraction(){
+        this.confirmationOfTransactionInteraction = true;
       },
       transactionPostingOperation(){
         ApiCallService.postNewTransaction(this.requestBody);
+        this.disabledTransactionLastButtonOperation();
+      },
+      disabledTransactionLastButtonOperation(){
+        this.lastConfirmationButton = true;
       },
       showTransactionCost(){
         if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
