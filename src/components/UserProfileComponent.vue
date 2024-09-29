@@ -163,8 +163,6 @@
         this.sumOfSoldCoinQuantity();
         this.emitUserInfoToModal();
         this.emitUserInfoForUserHistory();
-        console.log('La info preparada del perfil del usuario es la siguiente:');
-        console.log(this.dataUserProfile);
       },
       sumOfPurchasedCoinQuantity(){
         for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
