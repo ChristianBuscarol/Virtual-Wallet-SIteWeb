@@ -163,15 +163,18 @@
         this.sumOfSoldCoinQuantity();
         this.emitUserInfoToModal();
         this.emitUserInfoForUserHistory();
+        console.log('La info preparada del perfil del usuario es la siguiente:');
         console.log(this.dataUserProfile);
       },
       sumOfPurchasedCoinQuantity(){
         for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
-          this.dataUserProfile.totalCoinsPurchased += this.historyOfPurchaseTransactions[i].crypto_amount;
+          this.dataUserProfile.totalCoinsPurchased += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
         }
       },
       sumOfSoldCoinQuantity(){
-        this.dataUserProfile.totalCoinsSold += this.historyOfSaleTransactions[i].crypto_amount;
+        for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
+          this.dataUserProfile.totalCoinsSold += parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
+        }
       },
       emitUserInfoToModal(){
         this.$emit('emit-user-info-to-modal', this.dataUserProfile);
