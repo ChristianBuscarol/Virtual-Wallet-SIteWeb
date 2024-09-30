@@ -98,7 +98,6 @@
           coinImage: '',
           typeTransaction: ''
         },
-        userCurrentAccountinfo: {},
         userCoinListAvailables: [],
         coinAmountSelected: 0
       }
@@ -118,10 +117,14 @@
         this.infoSelectedCoin.userName = newVal.userName;
         this.infoSelectedCoin.userId = newVal.userId;
         this.infoSelectedCoin.userMoneyAvailable = newVal.userWallet;
-        //this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.selectedCoin];
-        this.infoSelectedCoin.userCoinPartAvailable = newVal.unitCoinAmount[this.coinNameChangeForCoinPartSearch()];
+        this.userCoinListAvailables = newVal.unitCoinAmount;
+        console.log('Lista de monedas disponibles para la transacción:');
+        console.log(this.userCoinListAvailables);
       },
       capturingInfoSelectedCoin(){
+        console.log('Moneda disponible seleccionada:');
+        console.log(this.userCoinListAvailables[this.selectedCoin]);
+        this.infoSelectedCoin.userCoinPartAvailable += parseFloat(this.userCoinListAvailables[this.selectedCoin]);
         // Y en esta parte de aquí abajo, se prepara la información de la moneda seleccionada para a transacción que el usuario realizará.
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
         this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
@@ -132,10 +135,18 @@
           this.infoSelectedCoin.typeTransaction = 'sell'
         }
       },
-      coinNameChangeForCoinPartSearch(){
-        let wololoName = this.Coins[this.selectedCoin].title;
-
-        return wololoName.toLowerCase() + 'Amount';
+      coinAmountLoading(){
+        for(let i = 0; i < this.userCoinListAvailables.length; i++){
+          console.log('Elemento °' + i + ' de la lista de monedas:');
+          console.log(this.userCoinListAvailables[i]);
+        }
+        /*
+        if(this.selectedCoin == i){
+          this.infoSelectedCoin.userCoinPartAvailable = parseFloat(this.userCoinListAvailables[i]);
+        }
+        */
+        //let wololoName = this.Coins[i].title;
+        //this.unitCoinAmount[i] = wololoName.toLowerCase() + 'Amount';
       },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);
