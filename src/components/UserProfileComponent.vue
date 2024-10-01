@@ -116,19 +116,19 @@
       },
       sumOfCoins(){
         for(let i = 0; i < this.historyOfPurchaseTransactions.length; i++){
-          if(this.historyOfPurchaseTransactions[i].crypto_code == 'bitcoin'){
+          if(this.historyOfPurchaseTransactions[i].crypto_code == 'bitcoin' || this.historyOfPurchaseTransactions[i].crypto_code == 'Bitcoin'){
             this.dataUserProfile.unitCoinAmount.bitcoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
           }
-          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'dogecoin'){
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'dogecoin' || this.historyOfPurchaseTransactions[i].crypto_code == 'Dogecoin'){
             this.dataUserProfile.unitCoinAmount.dogecoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
           }
-          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'ethereum'){
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'ethereum' || this.historyOfPurchaseTransactions[i].crypto_code == 'Ethereum'){
             this.dataUserProfile.unitCoinAmount.ethereumAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
           }
-          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'litecoin'){
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'litecoin' || this.historyOfPurchaseTransactions[i].crypto_code == 'Litecoin'){
             this.dataUserProfile.unitCoinAmount.litecoinAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
           }
-          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'solana'){
+          else if (this.historyOfPurchaseTransactions[i].crypto_code == 'solana' || this.historyOfPurchaseTransactions[i].crypto_code == 'Solana'){
             this.dataUserProfile.unitCoinAmount.solanaAmount += parseFloat(this.historyOfPurchaseTransactions[i].crypto_amount);
           }
           else if (this.historyOfPurchaseTransactions[i].crypto_code == 'usdcd'){
@@ -138,19 +138,19 @@
       },
       restOfCoins(){
         for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
-          if(this.historyOfSaleTransactions[i].crypto_code == 'bitcoin'){
+          if(this.historyOfSaleTransactions[i].crypto_code == 'bitcoin' || this.historyOfSaleTransactions[i].crypto_code == 'Bitcoin'){
             this.dataUserProfile.unitCoinAmount.bitcoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
           }
-          else if (this.historyOfSaleTransactions[i].crypto_code == 'dogecoin'){
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'dogecoin' || this.historyOfSaleTransactions[i].crypto_code == 'Dogecoin'){
             this.dataUserProfile.unitCoinAmount.dogecoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
           }
-          else if (this.historyOfSaleTransactions[i].crypto_code == 'ethereum'){
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'ethereum' || this.historyOfSaleTransactions[i].crypto_code == 'Ethereum'){
             this.dataUserProfile.unitCoinAmount.ethereumAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
           }
-          else if (this.historyOfSaleTransactions[i].crypto_code == 'litecoin'){
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'litecoin' || this.historyOfSaleTransactions[i].crypto_code == 'Litecoin'){
             this.dataUserProfile.unitCoinAmount.litecoinAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
           }
-          else if (this.historyOfSaleTransactions[i].crypto_code == 'solana'){
+          else if (this.historyOfSaleTransactions[i].crypto_code == 'solana' || this.historyOfSaleTransactions[i].crypto_code == 'Solana'){
             this.dataUserProfile.unitCoinAmount.solanaAmount -= parseFloat(this.historyOfSaleTransactions[i].crypto_amount);
           }
           else if (this.historyOfSaleTransactions[i].crypto_code == 'usdcd'){
