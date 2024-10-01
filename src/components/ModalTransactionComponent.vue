@@ -162,7 +162,7 @@
         let totalCost = this.coinPartToTrade * this.infoSelectedCoinReceived.coinPrice;
 
         if (totalCost <= this.infoSelectedCoinReceived.userMoneyAvailable){
-          this.loadingRequestBodyLastTwoResources(totalCost);
+          this.loadingLastTwoResourcesPurchaseTransaction(totalCost);
           this.showLastButtonConfirmation();
           this.showWarningMessageByNumber = 1;
         }
@@ -174,7 +174,7 @@
         let moneyEarned = this.coinPartToTrade * this.infoSelectedCoinReceived.coinPrice; 
 
         if(this.coinPartToTrade < this.infoSelectedCoinReceived.userCoinPartAvailable){
-          this.loadingRequestBodyLastTwoResources(moneyEarned);
+          this.loadingLastTwoResourcesSaleTransaction(moneyEarned);
           this.showLastButtonConfirmation();
           this.showWarningMessageByNumber = 3;
         }
@@ -182,15 +182,15 @@
           this.showWarningMessageByNumber = 4;
         }
       },
-      loadingRequestBodyLastTwoResources(totalCost, moneyEarned){
-        if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
-          this.requestBody.money = totalCost;
-          this.requestBody.crypto_amount = this.coinPartToTrade;
-        }
-        else if(this.infoSelectedCoinReceived.typeTransaction == 'sell'){
-          this.requestBody.money = moneyEarned;
-          this.requestBody.crypto_amount = this.coinPartToTrade;
-        }
+      loadingLastTwoResourcesPurchaseTransaction(totalCost){
+        this.requestBody.money = totalCost;
+        this.requestBody.crypto_amount = this.coinPartToTrade;
+        console.log(this.requestBody);
+      },
+      loadingLastTwoResourcesSaleTransaction(moneyEarned){
+        this.requestBody.money = moneyEarned;
+        this.requestBody.crypto_amount = this.coinPartToTrade;
+        console.log(this.requestBody);
       },
       showLastButtonConfirmation(){
         this.lastConfirmationButton = false;
