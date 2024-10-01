@@ -122,9 +122,7 @@
         console.log(this.userCoinListAvailables);
       },
       capturingInfoSelectedCoin(){
-        console.log('Moneda disponible seleccionada:');
-        console.log(this.userCoinListAvailables[this.selectedCoin]);
-        this.infoSelectedCoin.userCoinPartAvailable += parseFloat(this.userCoinListAvailables[this.selectedCoin]);
+        this.coinAmountLoading();
         // Y en esta parte de aquí abajo, se prepara la información de la moneda seleccionada para a transacción que el usuario realizará.
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
         this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
@@ -136,13 +134,28 @@
         }
       },
       coinAmountLoading(){
+        if(this.Coins[this.selectedCoin].title == 'Bitcoin'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.bitcoinAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'Dogecoin'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.dogecoinAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'Ethereum'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.ethereumAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'Litecoin'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.litecoinAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'Solana'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.solanaAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'USDC'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.usdcAmount;
+        }
+        /*
         for(let i = 0; i < this.userCoinListAvailables.length; i++){
           console.log('Elemento °' + i + ' de la lista de monedas:');
           console.log(this.userCoinListAvailables[i]);
-        }
-        /*
-        if(this.selectedCoin == i){
-          this.infoSelectedCoin.userCoinPartAvailable = parseFloat(this.userCoinListAvailables[i]);
         }
         */
         //let wololoName = this.Coins[i].title;
