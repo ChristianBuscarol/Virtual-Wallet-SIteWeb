@@ -21,10 +21,10 @@
       <div class="SalesHistoryBox">
         <h3>Table of CriptoCoins sold...</h3>
         <div v-for="(SalesT, index) in usuarySalesTransactions" :key="index">
-          <h4>CriptoCoin sold: {{ SalesT.criptoCoin }}</h4>
-          <h4>Money earned on the transaction: {{ PurchaseT.spentMoney }}</h4>
-          <h4>Amount of CriptoCoin purchased: {{ PurchaseT.criptoCoinAmount }}</h4>
-          <h4>DateTime of sale: {{ PurchaseT.dateTime }}</h4>
+          <h4>CriptoCoin sold: {{  }}</h4>
+          <h4>Money earned on the transaction: {{  }}</h4>
+          <h4>Amount of CriptoCoin purchased: {{  }}</h4>
+          <h4>DateTime of sale: {{ SalesT.dateTime }}</h4>
         </div>
         <!--Sector de botones para la configuración de las monedas vendidas aquí abajo.-->
         <div class="CoinsSoldConfigButtons">
@@ -41,17 +41,9 @@
     name: 'UsuaryHistoryComponent',
     data(){
       return{
-        usuaryPurchaseTransactions: [],
-        usuarySalesTransactions: []
       }
     },
     methods: {
-      keepingUserInfoActive(){
-        this.$emit('keeping-user-info-active');
-      }
-    },
-    mounted(){
-      this.keepingUserInfoActive();
     }
   }
 </script>

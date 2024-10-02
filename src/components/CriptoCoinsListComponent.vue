@@ -34,6 +34,12 @@
 
   export default{
     name: 'CriptoCoinsListComponent',
+    props: {
+      receivedUserProfileData: {
+        type: Object,
+        default: null
+      }
+    },
     data(){
       return{
         selectedCoin: 0,
@@ -92,7 +98,6 @@
           coinImage: '',
           typeTransaction: ''
         },
-        userCurrentAccountinfo: {},
         userCoinListAvailables: [],
         coinAmountSelected: 0
       }
@@ -107,18 +112,17 @@
           this.Coins[i].price = response.data.totalAsk;
         }
       },
-      gettingUserCurrentAccountinfo(){
-        this.userCurrentAccountinfo = JSON.parse(localStorage.getItem('userData'));
-        this.takingAmountsOfCoinAvailableList();
+      getUserAccountinfo(newVal){
+        // En esta parte de aquí abajo se prepara los datos del usuario que se utilizarán para la transacción que el mismo deseará realizar.
+        this.infoSelectedCoin.userName = newVal.userName;
+        this.infoSelectedCoin.userId = newVal.userId;
+        this.infoSelectedCoin.userMoneyAvailable = newVal.userWallet;
+        this.userCoinListAvailables = newVal.unitCoinAmount;
+        console.log('Lista de monedas disponibles para la transacción:');
+        console.log(this.userCoinListAvailables);
       },
       capturingInfoSelectedCoin(){
-        // En esta parte de aquí abajo se prepara los datos del usuario que se utilizarán para la transacción que el mismo deseará realizar.
-        this.infoSelectedCoin.userName = this.userCurrentAccountinfo.userNameRegister;
-        this.infoSelectedCoin.userId = this.userCurrentAccountinfo.userIdRegister;
-        this.infoSelectedCoin.userMoneyAvailable = this.userCurrentAccountinfo.userMoneyRegister;
-        //this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.selectedCoin];
-        this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables[this.coinNameChangeForCoinPartSearch()];
-
+        this.coinAmountLoading();
         // Y en esta parte de aquí abajo, se prepara la información de la moneda seleccionada para a transacción que el usuario realizará.
         this.infoSelectedCoin.coinTittle = this.Coins[this.selectedCoin].title;
         this.infoSelectedCoin.coinPrice = this.Coins[this.selectedCoin].price;
@@ -129,21 +133,40 @@
           this.infoSelectedCoin.typeTransaction = 'sell'
         }
       },
-      coinNameChangeForCoinPartSearch(){
-        let wololoName = this.Coins[this.selectedCoin].title;
-
-        return wololoName.toLowerCase() + 'Amount';
-      },
-      takingAmountsOfCoinAvailableList(){
-        this.userCoinListAvailables = this.userCurrentAccountinfo.coinAvailableList;
+      coinAmountLoading(){
+        if(this.Coins[this.selectedCoin].title == 'Bitcoin'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.bitcoinAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'Dogecoin'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.dogecoinAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'Ethereum'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.ethereumAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'Litecoin'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.litecoinAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'Solana'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.solanaAmount;
+        }
+        else if(this.Coins[this.selectedCoin].title == 'USDC'){
+          this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.usdcAmount;
+        }
+        /*
+        for(let i = 0; i < this.userCoinListAvailables.length; i++){
+          console.log('Elemento °' + i + ' de la lista de monedas:');
+          console.log(this.userCoinListAvailables[i]);
+        }
+        */
+        //let wololoName = this.Coins[i].title;
+        //this.unitCoinAmount[i] = wololoName.toLowerCase() + 'Amount';
       },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);
-        
+        console.log('El objeto con la información para el Modal es la siguiente: ');
+        console.log(this.infoSelectedCoin);
+
         this.$emit('open-transaction-modal', this.infoSelectedCoin)
-      },
-      keepingUserInfoActive(){
-        this.$emit('keeping-user-info-active');
       },
       btnHistoryEntry(){
         window.location.href = '/UsuaryHistoryView';
@@ -162,9 +185,17 @@
 
       setInterval(() => {this.obtainPrice();}, 10000);
     },
-    mounted(){
-      this.keepingUserInfoActive();
-      this.gettingUserCurrentAccountinfo();
+    watch: {
+      receivedUserProfileData: {
+        handler(newVal) {
+          if(newVal && Object.keys(newVal).length > 0){
+            this.getUserAccountinfo(newVal);
+            console.log('el newVal que recibe el componente del catálogo de las monedas es el siguiente: ');
+            console.log(newVal);
+          }
+        },
+        inmediate: true
+      }
     }
   }
 </script>

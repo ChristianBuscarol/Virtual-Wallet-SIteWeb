@@ -3,13 +3,13 @@
     <header>
       <div class="CoinCatalogue">
         <h1>This is an catalogue page</h1>
-        <UserProfileComponent :receivedData="emitUserDataReceived"/>
+        <UserProfileComponent @emit-user-info-to-modal="sendUserInfoToModal" :receivedData="emitedLocalStorageUserData"/>
       </div>
     </header>
     <body>
       <div class="CriptoCoinsListComponent">
-        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal" @keeping-user-info-active="KeepingUserInfoActive"/>
-        <ModalTransactionComponent :receivedSelectedCoinInfo="preparingSelectedCoinInfo"/>
+        <CriptoCoinsListComponent @open-transaction-modal="openTransactionModal" :receivedUserProfileData="prepareUserProfileInfo"/>
+        <ModalTransactionComponent @refresh-the-view="refreshTheView" :receivedSelectedCoinInfo="prepareSelectedCoinInfo"/>
       </div>
     </body>
     <footer>
@@ -34,17 +34,27 @@
     },
     data(){
       return{
-        preparingSelectedCoinInfo: {},
-        emitUserDataReceived: {}
+        prepareSelectedCoinInfo: {},
+        emitedLocalStorageUserData: {},
+        prepareUserProfileInfo: {}
       }
     },
     methods: {
       openTransactionModal(infoSelectedCoin){
-        this.preparingSelectedCoinInfo = infoSelectedCoin;
+        this.prepareSelectedCoinInfo = infoSelectedCoin;
       },
       KeepingUserInfoActive(){
-        this.emitUserDataReceived = JSON.parse(localStorage.getItem('userData'));
+        this.emitedLocalStorageUserData = JSON.parse(localStorage.getItem('userData'));
+      },
+      sendUserInfoToModal(dataUserProfile){
+        this.prepareUserProfileInfo = dataUserProfile;
+      },
+      refreshTheView(){
+        window.location.reload();
       }
+    },
+    mounted(){
+      this.KeepingUserInfoActive();
     }
   }
 </script>

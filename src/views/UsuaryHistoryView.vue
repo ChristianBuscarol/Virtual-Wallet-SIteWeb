@@ -4,7 +4,7 @@
     <UserProfileComponent :receivedData="emitUserDataReceived"/>
   </header>
   <body>
-    <UsuaryHistoryComponent @keeping-user-info-active="KeepingUserInfoActive"/>
+    <UsuaryHistoryComponent/>
   </body>
   <footer class="HistoryFooterBox">
 
@@ -29,8 +29,10 @@
     methods: {
       KeepingUserInfoActive(){
         this.emitUserDataReceived = JSON.parse(localStorage.getItem('userData'));
-        console.log(this.emitUserDataReceived);
       }
+    },
+    mounted(){
+      this.KeepingUserInfoActive();
     }
   }
 </script>
