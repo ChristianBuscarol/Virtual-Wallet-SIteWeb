@@ -39,11 +39,32 @@
 <script>
   export default{
     name: 'UsuaryHistoryComponent',
+    props: {
+      emitUserTransactionsHistory: {
+        type: Object,
+        default: null
+      }
+    },
     data(){
       return{
+        userTransactionHistory: []
       }
     },
     methods: {
+      userTransactionHistoryReceived(newVal){
+        console.log('Y la lista de transacciones recibida en el componente del historial es el siguiente: ');
+        console.log(newVal);
+      }
+    },
+    watch: {
+      emitUserTransactionsHistory: {
+        inmediate: true,
+        handler(newVal) {
+          if(newVal && Object.keys(newVal).length > 0){
+            this.userTransactionHistoryReceived(newVal);
+          }
+        }
+      }
     }
   }
 </script>
