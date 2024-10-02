@@ -1,10 +1,10 @@
 <template>
   <header class="HistoryHeaderBox">
     <h3>Records table of the usuary: </h3>
-    <UserProfileComponent :receivedData="emitUserDataReceived"/>
+    <UserProfileComponent @emit-user-info-for-user-history="prepareUserTransactionsHistory" :receivedData="emitUserDataReceived"/>
   </header>
   <body>
-    <UsuaryHistoryComponent/>
+    <UsuaryHistoryComponent :receivedUserHistoryData="emitUserTransactionsHistory"/>
   </body>
   <footer class="HistoryFooterBox">
 
@@ -23,12 +23,18 @@
     },
     data(){
       return{
-        emitUserDataReceived: {}
+        emitUserDataReceived: {},
+        emitUserTransactionsHistory: []
       }
     },
     methods: {
       KeepingUserInfoActive(){
         this.emitUserDataReceived = JSON.parse(localStorage.getItem('userData'));
+      },
+      prepareUserTransactionsHistory(historyOfUserMovementsTransactions){
+        this.emitUserTransactionsHistory = historyOfUserMovementsTransactions;
+        console.log('La lista de transacciones pasadas por la vista del historial es el siguiente: ');
+        console.log(this.emitUserTransactionsHistory);
       }
     },
     mounted(){
