@@ -24,7 +24,7 @@
     data(){
       return{
         emitUserDataReceived: {},
-        emitUserTransactionsHistory: []
+        emitUserTransactionsHistory: {}
       }
     },
     methods: {
@@ -33,8 +33,6 @@
       },
       prepareUserTransactionsHistory(historyOfUserMovementsTransactions){
         this.emitUserTransactionsHistory = historyOfUserMovementsTransactions;
-        console.log('La lista de transacciones pasadas por la vista del historial es el siguiente: ');
-        console.log(this.emitUserTransactionsHistory);
       }
     },
     mounted(){
