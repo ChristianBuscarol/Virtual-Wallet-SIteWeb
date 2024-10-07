@@ -4,14 +4,12 @@
       <!--En el 'Div' de acá abajo se renderizará el historial de compras de criptomonedas del usuario mediante el lado izquierdo de la pantalla.-->
       <div class="ShoppingHistoryBox">
         <h3>Table of purchased CriptoCoins...</h3>
-        <div v-for="(UserP, index) in userPurchasesHistory" :key="index">
+        <div class="UnitPurchaseTransaction" v-for="(UserP, index) in userPurchasesHistory" :key="index">
           <h4>CriptoCoin purchased: {{ UserP.crypto_code }}</h4>
           <h4>Money spent on the transaction: {{ UserP.money }}</h4>
-          <h4>Amount of CriptoCoin sold: {{ UserP.crypto_amount }}</h4>
+          <h4>Amount of CriptoCoin purchased: {{ UserP.crypto_amount }}</h4>
           <h4>DateTime of purchase: {{ UserP.datetime }}</h4>
-        </div>
-        <!--Sector de botones para la configuración de las monedas compradas aquí abajo.-->
-        <div class="PurchasedCoinsConfigButtons">
+
           <button type="button" id="btnEditPurchasedCoin">Edit Transaction</button>
           <button type="button" id="btnDeletePurchasedCoin">Delete Transaction</button>
         </div>
@@ -20,14 +18,12 @@
       <!--En el 'Div' de acá abajo se renderizará el historial de ventas de criptomonedas del usuario mediante el lado derecho de la pantalla.-->
       <div class="SalesHistoryBox">
         <h3>Table of CriptoCoins sold...</h3>
-        <div v-for="(UserS, index) in userSalesHistory" :key="index">
+        <div class="UnitSaleTransaction" v-for="(UserS, index) in userSalesHistory" :key="index">
           <h4>CriptoCoin sold: {{ UserS.crypto_code }}</h4>
-          <h3>Money earned on the transaction: {{ UserS.money }}</h3>
-          <h4>Amount of CriptoCoin purchased: {{ UserS.crypto_amount }}</h4>
+          <h4>Money earned on the transaction: {{ UserS.money }}</h4>
+          <h4>Amount of CriptoCoin sold: {{ UserS.crypto_amount }}</h4>
           <h4>DateTime of sale: {{ UserS.datetime }}</h4>
-        </div>
-        <!--Sector de botones para la configuración de las monedas vendidas aquí abajo.-->
-        <div class="CoinsSoldConfigButtons">
+
           <button type="button" id="btnEditCoinSold">Edit Transaction</button>
           <button type="button" id="btnDeleteCoinSold">Delete Transaction</button>
         </div>
@@ -60,9 +56,16 @@
           }
         }
         
+        this.changeCoinTittleToUpperCase()
+        this.separateTransactionByType();
         console.log('Y la lista de transacciones ya preparada en el componente del historial es el siguiente: ');
         console.log(this.userTransactionHistory);
-        this.separateTransactionByType();
+      },
+      changeCoinTittleToUpperCase(){
+        for(let i = 0; i < this.userTransactionHistory.length; i++){
+          let wololoName = this.userTransactionHistory[i].crypto_code;
+          this.userTransactionHistory[i].crypto_code = wololoName.toUpperCase();
+        }
       },
       separateTransactionByType(){
         for(let i = 0; i < this.userTransactionHistory.length; i++){
@@ -98,9 +101,25 @@
 
   .ShoppingHistoryBox{
     grid-column: 1/2;
+    text-align: center;
   }
 
   .SalesHistoryBox{
     grid-column: 2/2;
+    text-align: center;
+  }
+
+  .UnitSaleTransaction{
+    background-color: lightgray;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
+  }
+
+  .UnitPurchaseTransaction{
+    background-color: lightgray;
+    border: 1px solid black;
+    padding: 10px;
+    margin: 10px;
   }
 </style>
