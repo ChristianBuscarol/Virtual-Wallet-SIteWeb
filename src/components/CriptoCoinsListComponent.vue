@@ -152,14 +152,6 @@
         else if(this.Coins[this.selectedCoin].title == 'USDC'){
           this.infoSelectedCoin.userCoinPartAvailable = this.userCoinListAvailables.usdcAmount;
         }
-        /*
-        for(let i = 0; i < this.userCoinListAvailables.length; i++){
-          console.log('Elemento °' + i + ' de la lista de monedas:');
-          console.log(this.userCoinListAvailables[i]);
-        }
-        */
-        //let wololoName = this.Coins[i].title;
-        //this.unitCoinAmount[i] = wololoName.toLowerCase() + 'Amount';
       },
       openTransactionModal(functionParameterEvent){
         this.capturingInfoSelectedCoin(functionParameterEvent);

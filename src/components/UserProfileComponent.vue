@@ -178,7 +178,7 @@
         this.$emit('emit-user-info-to-modal', this.dataUserProfile);
       },
       emitUserInfoForUserHistory(){
-        this.$emit('emit-user-info-for-user-history');
+        this.$emit('emit-user-info-for-user-history', this.historyOfUserMovementsTransactions);
       }
     },
     computed: {
