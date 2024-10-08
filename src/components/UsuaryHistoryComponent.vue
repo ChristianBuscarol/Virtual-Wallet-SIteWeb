@@ -45,7 +45,21 @@
       return{
         userTransactionHistory: [],
         userPurchasesHistory: [],
-        userSalesHistory: []
+        userSalesHistory: [],
+        transactionInfo: {
+          crypto_code: '',
+          crypto_amount: 0,
+          userMoney: 0,
+          dateTime: 0
+        },
+        unitCoinAmount: {
+          bitcoinAmount: 0,
+          dogecoinAmount: 0,
+          ethereumAmount: 0,
+          litecoinAmount: 0,
+          solanaAmount: 0,
+          usdcAmount: 0
+        }
       }
     },
     methods: {
@@ -76,6 +90,9 @@
             this.userSalesHistory.push(this.userTransactionHistory[i]);
           }
         }
+      },
+      openTransactionModificationModal(){
+        this.$emit('open-transaction-modification-modal', this.transactionInfo)
       }
     },
     watch: {
