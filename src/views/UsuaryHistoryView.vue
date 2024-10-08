@@ -4,7 +4,8 @@
     <UserProfileComponent @emit-user-info-for-user-history="prepareUserTransactionsHistory" :receivedData="emitUserDataReceived"/>
   </header>
   <body>
-    <UsuaryHistoryComponent :receivedUserHistoryData="emitUserTransactionsHistory"/>
+    <UsuaryHistoryComponent @open-transaction-modification-modal="prepareTransactionInfoForModModal" :receivedUserHistoryData="emitUserTransactionsHistory"/>
+    <ModalTransactionModification :receivedTransactionInfo="emitUserUnitTransactionInfo"></ModalTransactionModification>
   </body>
   <footer class="HistoryFooterBox">
 
@@ -14,17 +15,20 @@
 <script>
   import UsuaryHistoryComponent from '@/components/UsuaryHistoryComponent.vue';
   import UserProfileComponent from '@/components/UserProfileComponent.vue';
+  import ModalTransactionModification from '@/components/ModalTransactionModification.vue';
 
   export default {
     name: 'UsuaryHistoryView',
     components: {
       UsuaryHistoryComponent,
-      UserProfileComponent
+      UserProfileComponent,
+      ModalTransactionModification
     },
     data(){
       return{
         emitUserDataReceived: {},
-        emitUserTransactionsHistory: {}
+        emitUserTransactionsHistory: {},
+        emitUserUnitTransactionInfo: {}
       }
     },
     methods: {
@@ -33,6 +37,11 @@
       },
       prepareUserTransactionsHistory(historyOfUserMovementsTransactions){
         this.emitUserTransactionsHistory = historyOfUserMovementsTransactions;
+      },
+      prepareTransactionInfoForModModal(transactionInfo){
+        this.emitUserUnitTransactionInfo = transactionInfo;
+        console.log('La información de la transacción para modificar en el Modal es el siguiente: ');
+        console.log(this.emitUserUnitTransactionInfo);
       }
     },
     mounted(){
