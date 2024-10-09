@@ -4,28 +4,28 @@
       <!--En el 'Div' de acá abajo se renderizará el historial de compras de criptomonedas del usuario mediante el lado izquierdo de la pantalla.-->
       <div class="ShoppingHistoryBox">
         <h3>Table of purchased CriptoCoins...</h3>
-        <div class="UnitPurchaseTransaction" v-for="(UserP, index) in userPurchasesHistory" :key="index">
+        <div class="UnitPurchaseTransaction" v-for="(UserP, index) in userPurchasesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
           <h4>CriptoCoin purchased: {{ UserP.crypto_code }}</h4>
           <h4>Money spent on the transaction: {{ UserP.money }}</h4>
           <h4>Amount of CriptoCoin purchased: {{ UserP.crypto_amount }}</h4>
           <h4>DateTime of purchase: {{ UserP.datetime }}</h4>
 
-          <button type="button" id="btnEditPurchasedCoin">Edit Transaction</button>
-          <button type="button" id="btnDeletePurchasedCoin">Delete Transaction</button>
+          <button type="button" @click="transactionInfoObjectConstructor(this.transactionObjectLevel = 1)" id="btnEditPurchasedCoin">Edit Transaction</button>
+          <button type="button" @click="transactionInfoObjectConstructor(this.transactionObjectLevel = 2)" id="btnDeletePurchasedCoin">Delete Transaction</button>
         </div>
       </div>
 
       <!--En el 'Div' de acá abajo se renderizará el historial de ventas de criptomonedas del usuario mediante el lado derecho de la pantalla.-->
       <div class="SalesHistoryBox">
         <h3>Table of CriptoCoins sold...</h3>
-        <div class="UnitSaleTransaction" v-for="(UserS, index) in userSalesHistory" :key="index">
+        <div class="UnitSaleTransaction" v-for="(UserS, index) in userSalesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
           <h4>CriptoCoin sold: {{ UserS.crypto_code }}</h4>
           <h4>Money earned on the transaction: {{ UserS.money }}</h4>
           <h4>Amount of CriptoCoin sold: {{ UserS.crypto_amount }}</h4>
           <h4>DateTime of sale: {{ UserS.datetime }}</h4>
 
-          <button type="button" id="btnEditCoinSold">Edit Transaction</button>
-          <button type="button" id="btnDeleteCoinSold">Delete Transaction</button>
+          <button type="button" @click="transactionInfoObjectConstructor(this.transactionObjectLevel = 3)" id="btnEditCoinSold">Edit Transaction</button>
+          <button type="button" @click="transactionInfoObjectConstructor(this.transactionObjectLevel = 4)" id="btnDeleteCoinSold">Delete Transaction</button>
         </div>
       </div>
     </div>
@@ -46,6 +46,8 @@
         userTransactionHistory: [],
         userPurchasesHistory: [],
         userSalesHistory: [],
+        transactionInfoIndex: 0,
+        transactionObjectLevel: 0,
         transactionInfo: {
           crypto_code: '',
           crypto_amount: 0,
@@ -72,8 +74,6 @@
         
         this.changeCoinTittleToUpperCase()
         this.separateTransactionByType();
-        console.log('Y la lista de transacciones ya preparada en el componente del historial es el siguiente: ');
-        console.log(this.userTransactionHistory);
       },
       changeCoinTittleToUpperCase(){
         for(let i = 0; i < this.userTransactionHistory.length; i++){
@@ -88,6 +88,83 @@
           }
           else if(this.userTransactionHistory[i].action == 'sell'){
             this.userSalesHistory.push(this.userTransactionHistory[i]);
+          }
+        }
+
+        this.prepareUserInfoForTransactionMod();
+      },
+      prepareUserInfoForTransactionMod(){
+        this.sumOfCoins();
+        this.restOfCoins();
+      },
+      sumOfCoins(){
+        for(let i = 0; i < this.userPurchasesHistory.length; i++){
+          if(this.userPurchasesHistory[i].crypto_code == 'bitcoin' || this.userPurchasesHistory[i].crypto_code == 'Bitcoin'){
+            this.unitCoinAmount.bitcoinAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
+          }
+          else if (this.userPurchasesHistory[i].crypto_code == 'dogecoin' || this.userPurchasesHistory[i].crypto_code == 'Dogecoin'){
+            this.unitCoinAmount.dogecoinAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
+          }
+          else if (this.userPurchasesHistory[i].crypto_code == 'ethereum' || this.userPurchasesHistory[i].crypto_code == 'Ethereum'){
+            this.unitCoinAmount.ethereumAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
+          }
+          else if (this.userPurchasesHistory[i].crypto_code == 'litecoin' || this.userPurchasesHistory[i].crypto_code == 'Litecoin'){
+            this.unitCoinAmount.litecoinAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
+          }
+          else if (this.userPurchasesHistory[i].crypto_code == 'solana' || this.userPurchasesHistory[i].crypto_code == 'Solana'){
+            this.unitCoinAmount.solanaAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
+          }
+          else if (this.userPurchasesHistory[i].crypto_code == 'usdcd'){
+            this.unitCoinAmount.usdcAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
+          }
+        }
+      },
+      restOfCoins(){
+        for(let i = 0; i < this.userSalesHistory.length; i++){
+          if(this.userSalesHistory[i].crypto_code == 'bitcoin' || this.userSalesHistory[i].crypto_code == 'Bitcoin'){
+            this.unitCoinAmount.bitcoinAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
+          }
+          else if (this.userSalesHistory[i].crypto_code == 'dogecoin' || this.userSalesHistory[i].crypto_code == 'Dogecoin'){
+            this.unitCoinAmount.dogecoinAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
+          }
+          else if (this.userSalesHistory[i].crypto_code == 'ethereum' || this.userSalesHistory[i].crypto_code == 'Ethereum'){
+            this.unitCoinAmount.ethereumAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
+          }
+          else if (this.userSalesHistory[i].crypto_code == 'litecoin' || this.userSalesHistory[i].crypto_code == 'Litecoin'){
+            this.unitCoinAmount.litecoinAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
+          }
+          else if (this.userSalesHistory[i].crypto_code == 'solana' || this.userSalesHistory[i].crypto_code == 'Solana'){
+            this.unitCoinAmount.solanaAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
+          }
+          else if (this.userSalesHistory[i].crypto_code == 'usdcd'){
+            this.unitCoinAmount.usdcAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
+          }
+        }
+      },
+      sumOfUserMoney(){
+        for(let i = 0; i < this.userPurchasesHistory.length; i++){
+          this.transactionInfo.userMoney += parseFloat(this.userPurchasesHistory[i].money);
+        }
+
+        this.restOfUserMoney();
+      },
+      restOfUserMoney(){
+        for(let i = 0; i < this.userSalesHistory.length; i++){
+          this.transactionInfo.userMoney -= parseFloat(this.userSalesHistory[i].money);
+        }
+      },
+      captureTransactionInfoIndex(index){
+        this.transactionInfoIndex = index;
+      },
+      transactionInfoObjectConstructor(){
+        if(this.transactionObjectLevel == 1){
+
+        }
+      },
+      searchOfPurchaseTransactionSelected(){
+        for(let i = 0; i < this.userPurchasesHistory.length; i++){
+          if(i == this.transactionInfoIndex){
+
           }
         }
       },
