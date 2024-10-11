@@ -49,8 +49,12 @@
         transactionInfoIndex: 0,
         transactionObjectLevel: 0,
         transactionInfo: {
+          transactionInfoLevel: 0,
+          id: '',
+          typeTransaction: '',
           crypto_code: '',
           crypto_amount: 0,
+          cryptoAmountAvailable: 0,
           userMoney: 0,
           dateTime: 0
         },
@@ -96,75 +100,146 @@
       prepareUserInfoForTransactionMod(){
         this.sumOfCoins();
         this.restOfCoins();
+        this.sumOfUserMoney();
       },
       sumOfCoins(){
         for(let i = 0; i < this.userPurchasesHistory.length; i++){
-          if(this.userPurchasesHistory[i].crypto_code == 'bitcoin' || this.userPurchasesHistory[i].crypto_code == 'Bitcoin'){
+          if(this.userPurchasesHistory[i].crypto_code == 'BITCOIN' || this.userPurchasesHistory[i].crypto_code == 'Bitcoin' || this.userPurchasesHistory[i].crypto_code == 'bitcoin'){
             this.unitCoinAmount.bitcoinAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
           }
-          else if (this.userPurchasesHistory[i].crypto_code == 'dogecoin' || this.userPurchasesHistory[i].crypto_code == 'Dogecoin'){
+          else if (this.userPurchasesHistory[i].crypto_code == 'DOGECOIN' || this.userPurchasesHistory[i].crypto_code == 'Dogecoin' || this.userPurchasesHistory[i].crypto_code == 'dogecoin'){
             this.unitCoinAmount.dogecoinAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
           }
-          else if (this.userPurchasesHistory[i].crypto_code == 'ethereum' || this.userPurchasesHistory[i].crypto_code == 'Ethereum'){
+          else if (this.userPurchasesHistory[i].crypto_code == 'ETHEREUM' || this.userPurchasesHistory[i].crypto_code == 'Ethereum' || this.userPurchasesHistory[i].crypto_code == 'ethereum'){
             this.unitCoinAmount.ethereumAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
           }
-          else if (this.userPurchasesHistory[i].crypto_code == 'litecoin' || this.userPurchasesHistory[i].crypto_code == 'Litecoin'){
+          else if (this.userPurchasesHistory[i].crypto_code == 'LITECOIN' || this.userPurchasesHistory[i].crypto_code == 'Litecoin' || this.userPurchasesHistory[i].crypto_code == 'litecoin'){
             this.unitCoinAmount.litecoinAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
           }
-          else if (this.userPurchasesHistory[i].crypto_code == 'solana' || this.userPurchasesHistory[i].crypto_code == 'Solana'){
+          else if (this.userPurchasesHistory[i].crypto_code == 'SOLANA' || this.userPurchasesHistory[i].crypto_code == 'Solana' || this.userPurchasesHistory[i].crypto_code == 'solana'){
             this.unitCoinAmount.solanaAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
           }
-          else if (this.userPurchasesHistory[i].crypto_code == 'usdcd'){
+          else if (this.userPurchasesHistory[i].crypto_code == 'USDC' || this.userPurchasesHistory[i].crypto_code == 'usdc'){
             this.unitCoinAmount.usdcAmount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
           }
         }
       },
       restOfCoins(){
         for(let i = 0; i < this.userSalesHistory.length; i++){
-          if(this.userSalesHistory[i].crypto_code == 'bitcoin' || this.userSalesHistory[i].crypto_code == 'Bitcoin'){
+          if(this.userSalesHistory[i].crypto_code == 'BITCOIN' || this.userSalesHistory[i].crypto_code == 'Bitcoin' || this.userSalesHistory[i].crypto_code == 'bitcoin'){
             this.unitCoinAmount.bitcoinAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
           }
-          else if (this.userSalesHistory[i].crypto_code == 'dogecoin' || this.userSalesHistory[i].crypto_code == 'Dogecoin'){
+          else if (this.userSalesHistory[i].crypto_code == 'DOGECOIN' || this.userSalesHistory[i].crypto_code == 'Dogecoin' || this.userSalesHistory[i].crypto_code == 'dogecoin'){
             this.unitCoinAmount.dogecoinAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
           }
-          else if (this.userSalesHistory[i].crypto_code == 'ethereum' || this.userSalesHistory[i].crypto_code == 'Ethereum'){
+          else if (this.userSalesHistory[i].crypto_code == 'ETHEREUM' || this.userSalesHistory[i].crypto_code == 'Ethereum' || this.userSalesHistory[i].crypto_code == 'ethereum'){
             this.unitCoinAmount.ethereumAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
           }
-          else if (this.userSalesHistory[i].crypto_code == 'litecoin' || this.userSalesHistory[i].crypto_code == 'Litecoin'){
+          else if (this.userSalesHistory[i].crypto_code == 'LITECOIN' || this.userSalesHistory[i].crypto_code == 'Litecoin' || this.userSalesHistory[i].crypto_code == 'litecoin'){
             this.unitCoinAmount.litecoinAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
           }
-          else if (this.userSalesHistory[i].crypto_code == 'solana' || this.userSalesHistory[i].crypto_code == 'Solana'){
+          else if (this.userSalesHistory[i].crypto_code == 'SOLANA' || this.userSalesHistory[i].crypto_code == 'Solana' || this.userSalesHistory[i].crypto_code == 'solana'){
             this.unitCoinAmount.solanaAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
           }
-          else if (this.userSalesHistory[i].crypto_code == 'usdcd'){
+          else if (this.userSalesHistory[i].crypto_code == 'USDC' || this.userSalesHistory[i].crypto_code == 'usdc'){
             this.unitCoinAmount.usdcAmount -= parseFloat(this.userSalesHistory[i].crypto_amount);
           }
         }
       },
       sumOfUserMoney(){
-        for(let i = 0; i < this.userPurchasesHistory.length; i++){
-          this.transactionInfo.userMoney += parseFloat(this.userPurchasesHistory[i].money);
+        for(let i = 0; i < this.userSalesHistory.length; i++){
+          this.transactionInfo.userMoney += parseFloat(this.userSalesHistory[i].money);
         }
 
         this.restOfUserMoney();
       },
       restOfUserMoney(){
-        for(let i = 0; i < this.userSalesHistory.length; i++){
-          this.transactionInfo.userMoney -= parseFloat(this.userSalesHistory[i].money);
+        for(let i = 0; i < this.userPurchasesHistory.length; i++){
+          this.transactionInfo.userMoney -= parseFloat(this.userPurchasesHistory[i].money);
         }
+        console.log('Lo cargado en transactionInfo por ahora es lo siguiente: ');
+        console.log(this.transactionInfo);
+        console.log('La lista de monedas disponibles del usuario es el siguiente:');
+        console.log(this.unitCoinAmount);
       },
       captureTransactionInfoIndex(index){
         this.transactionInfoIndex = index;
       },
       transactionInfoObjectConstructor(){
         if(this.transactionObjectLevel == 1){
-
+          this.searchOfPurchaseTransactionSelected();
+          this.transactionInfo.transactionInfoLevel = 1;
         }
+        else if(this.transactionObjectLevel == 2){
+          this.searchOfPurchaseTransactionSelected();
+          this.transactionInfo.transactionInfoLevel = 2;
+        }
+        else if(this.transactionObjectLevel == 3){
+          this.searchOfSaleTransactionSelected();
+          this.transactionInfo.transactionInfoLevel = 3;
+        }
+        else if(this.transactionObjectLevel == 4){
+          this.searchOfSaleTransactionSelected();
+          this.transactionInfo.transactionInfoLevel = 4;
+        }
+        
+        this.transactionInfoCoinAmountAssignment();
+        console.log('Y el objeto preparado y necesario para la modificación o eliminación de la transacción seleccionada es el siguiente: ');
+        console.log(this.transactionInfo);
       },
       searchOfPurchaseTransactionSelected(){
         for(let i = 0; i < this.userPurchasesHistory.length; i++){
           if(i == this.transactionInfoIndex){
+            /*
+            let transactionInfoTime = this.userPurchasesHistory[i].datetime;
 
+            this.transactionInfo.id = this.userPurchasesHistory[i].id;
+            this.transactionInfo.typeTransaction = this.userPurchasesHistory[i].action;
+            this.transactionInfo.crypto_code = this.userPurchasesHistory[i].crypto_code;
+            this.transactionInfo.crypto_amount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
+            this.this.transactionInfo.dateTime = transactionInfoTime.toISOString();
+            */
+            console.log('La transacción seleccionada para la modificación o eliminación es la siguiente: ');
+            console.log(this.userPurchasesHistory[i]);
+          }
+        }
+      },
+      searchOfSaleTransactionSelected(){
+        for(let i = 0; i < this.userSalesHistory.length; i++){
+          if(i == this.transactionInfoIndex){
+            /*
+            let transactionInfoTime = this.userSalesHistory[i].datetime;
+
+            this.transactionInfo.id = this.userSalesHistory[i].id;
+            this.transactionInfo.typeTransaction = this.userSalesHistory[i].action;
+            this.transactionInfo.crypto_code = this.userSalesHistory[i].crypto_code;
+            this.transactionInfo.crypto_amount += parseFloat(this.userSalesHistory[i].crypto_amount);
+            this.this.transactionInfo.dateTime = transactionInfoTime.toISOString();
+            */
+            console.log('La transacción seleccionada para la modificación o eliminación es la siguiente: ');
+            console.log(this.userSalesHistory[i]);
+          }
+        }
+      },
+      transactionInfoCoinAmountAssignment(){
+        for(let i = 0; i < this.unitCoinAmount.length; i++){
+          if(this.transactionInfo.crypto_code == 'BITCOIN'){
+            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.bitcoinAmount);
+          }
+          else if(this.transactionInfo.crypto_code == 'DOGECOIN'){
+            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.dogecoinAmount);
+          }
+          else if(this.transactionInfo.crypto_code == 'ETHEREUM'){
+            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.ethereumAmount);
+          }
+          else if(this.transactionInfo.crypto_code == 'LITECOIN'){
+            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.litecoinAmount);
+          }
+          else if(this.transactionInfo.crypto_code == 'SOLANA'){
+            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.solanaAmount);
+          }
+          else if(this.transactionInfo.crypto_code == 'USDC'){
+            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.usdcAmount);
           }
         }
       },
