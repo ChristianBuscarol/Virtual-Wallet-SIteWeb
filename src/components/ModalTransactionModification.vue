@@ -1,10 +1,12 @@
 <template>
-
+  <body>
+    
+  </body>
 </template>
 
 <script>
   export default{
-    name: '',
+    name: 'ModalTransactionModification',
     props: {
       receivedTransactionInfo: {
         type: Object,
