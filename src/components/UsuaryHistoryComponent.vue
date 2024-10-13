@@ -157,10 +157,6 @@
         for(let i = 0; i < this.userPurchasesHistory.length; i++){
           this.transactionInfo.userMoney -= parseFloat(this.userPurchasesHistory[i].money);
         }
-        console.log('Lo cargado en transactionInfo por ahora es lo siguiente: ');
-        console.log(this.transactionInfo);
-        console.log('La lista de monedas disponibles del usuario es el siguiente:');
-        console.log(this.unitCoinAmount);
       },
       captureTransactionInfoIndex(index){
         this.transactionInfoIndex = index;
@@ -184,63 +180,39 @@
         }
         
         this.transactionInfoCoinAmountAssignment();
-        console.log('Y el objeto preparado y necesario para la modificación o eliminación de la transacción seleccionada es el siguiente: ');
-        console.log(this.transactionInfo);
       },
       searchOfPurchaseTransactionSelected(){
-        for(let i = 0; i < this.userPurchasesHistory.length; i++){
-          if(i == this.transactionInfoIndex){
-            /*
-            let transactionInfoTime = this.userPurchasesHistory[i].datetime;
-
-            this.transactionInfo.id = this.userPurchasesHistory[i].id;
-            this.transactionInfo.typeTransaction = this.userPurchasesHistory[i].action;
-            this.transactionInfo.crypto_code = this.userPurchasesHistory[i].crypto_code;
-            this.transactionInfo.crypto_amount += parseFloat(this.userPurchasesHistory[i].crypto_amount);
-            this.this.transactionInfo.dateTime = transactionInfoTime.toISOString();
-            */
-            console.log('La transacción seleccionada para la modificación o eliminación es la siguiente: ');
-            console.log(this.userPurchasesHistory[i]);
-          }
-        }
+        this.transactionInfo.id = this.userPurchasesHistory[this.transactionInfoIndex].id;
+        this.transactionInfo.typeTransaction = this.userPurchasesHistory[this.transactionInfoIndex].action;
+        this.transactionInfo.crypto_code = this.userPurchasesHistory[this.transactionInfoIndex].crypto_code;
+        this.transactionInfo.crypto_amount += parseFloat(this.userPurchasesHistory[this.transactionInfoIndex].crypto_amount);
+        this.transactionInfo.dateTime = this.userPurchasesHistory[this.transactionInfoIndex].datetime;
       },
       searchOfSaleTransactionSelected(){
-        for(let i = 0; i < this.userSalesHistory.length; i++){
-          if(i == this.transactionInfoIndex){
-            /*
-            let transactionInfoTime = this.userSalesHistory[i].datetime;
-
-            this.transactionInfo.id = this.userSalesHistory[i].id;
-            this.transactionInfo.typeTransaction = this.userSalesHistory[i].action;
-            this.transactionInfo.crypto_code = this.userSalesHistory[i].crypto_code;
-            this.transactionInfo.crypto_amount += parseFloat(this.userSalesHistory[i].crypto_amount);
-            this.this.transactionInfo.dateTime = transactionInfoTime.toISOString();
-            */
-            console.log('La transacción seleccionada para la modificación o eliminación es la siguiente: ');
-            console.log(this.userSalesHistory[i]);
-          }
-        }
+        this.transactionInfo.id = this.userSalesHistory[this.transactionInfoIndex].id;
+        this.transactionInfo.typeTransaction = this.userSalesHistory[this.transactionInfoIndex].action;
+        this.transactionInfo.crypto_code = this.userSalesHistory[this.transactionInfoIndex].crypto_code;
+        this.transactionInfo.crypto_amount += parseFloat(this.userSalesHistory[this.transactionInfoIndex].crypto_amount);
+        this.transactionInfo.dateTime = this.userSalesHistory[this.transactionInfoIndex].datetime;
       },
       transactionInfoCoinAmountAssignment(){
-        for(let i = 0; i < this.unitCoinAmount.length; i++){
-          if(this.transactionInfo.crypto_code == 'BITCOIN'){
-            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.bitcoinAmount);
-          }
-          else if(this.transactionInfo.crypto_code == 'DOGECOIN'){
-            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.dogecoinAmount);
-          }
-          else if(this.transactionInfo.crypto_code == 'ETHEREUM'){
-            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.ethereumAmount);
-          }
-          else if(this.transactionInfo.crypto_code == 'LITECOIN'){
-            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.litecoinAmount);
-          }
-          else if(this.transactionInfo.crypto_code == 'SOLANA'){
-            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.solanaAmount);
-          }
-          else if(this.transactionInfo.crypto_code == 'USDC'){
-            this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.usdcAmount);
-          }
+        if(this.transactionInfo.crypto_code == 'BITCOIN'){
+          this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.bitcoinAmount);
+        }
+        else if(this.transactionInfo.crypto_code == 'DOGECOIN'){
+          this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.dogecoinAmount);
+        }
+        else if(this.transactionInfo.crypto_code == 'ETHEREUM'){
+          this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.ethereumAmount);
+        }
+        else if(this.transactionInfo.crypto_code == 'LITECOIN'){
+          this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.litecoinAmount);
+        }
+        else if(this.transactionInfo.crypto_code == 'SOLANA'){
+          this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.solanaAmount);
+        }
+        else if(this.transactionInfo.crypto_code == 'USDC'){
+          this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.usdcAmount);
         }
       },
       openTransactionModificationModal(){
