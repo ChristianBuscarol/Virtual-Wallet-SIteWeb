@@ -51,12 +51,12 @@
         transactionInfo: {
           transactionInfoLevel: 0,
           id: '',
-          typeTransaction: '',
+          action: '',
           crypto_code: '',
           crypto_amount: 0,
           cryptoAmountAvailable: 0,
-          userMoney: 0,
-          dateTime: 0
+          money: 0,
+          datetime: 0
         },
         unitCoinAmount: {
           bitcoinAmount: 0,
@@ -148,14 +148,14 @@
       },
       sumOfUserMoney(){
         for(let i = 0; i < this.userSalesHistory.length; i++){
-          this.transactionInfo.userMoney += parseFloat(this.userSalesHistory[i].money);
+          this.transactionInfo.money += parseFloat(this.userSalesHistory[i].money);
         }
 
         this.restOfUserMoney();
       },
       restOfUserMoney(){
         for(let i = 0; i < this.userPurchasesHistory.length; i++){
-          this.transactionInfo.userMoney -= parseFloat(this.userPurchasesHistory[i].money);
+          this.transactionInfo.money -= parseFloat(this.userPurchasesHistory[i].money);
         }
       },
       captureTransactionInfoIndex(index){
@@ -180,20 +180,21 @@
         }
         
         this.transactionInfoCoinAmountAssignment();
+        this.openTransactionModificationModal();
       },
       searchOfPurchaseTransactionSelected(){
         this.transactionInfo.id = this.userPurchasesHistory[this.transactionInfoIndex].id;
-        this.transactionInfo.typeTransaction = this.userPurchasesHistory[this.transactionInfoIndex].action;
+        this.transactionInfo.action = this.userPurchasesHistory[this.transactionInfoIndex].action;
         this.transactionInfo.crypto_code = this.userPurchasesHistory[this.transactionInfoIndex].crypto_code;
         this.transactionInfo.crypto_amount += parseFloat(this.userPurchasesHistory[this.transactionInfoIndex].crypto_amount);
-        this.transactionInfo.dateTime = this.userPurchasesHistory[this.transactionInfoIndex].datetime;
+        this.transactionInfo.datetime = this.userPurchasesHistory[this.transactionInfoIndex].datetime;
       },
       searchOfSaleTransactionSelected(){
         this.transactionInfo.id = this.userSalesHistory[this.transactionInfoIndex].id;
-        this.transactionInfo.typeTransaction = this.userSalesHistory[this.transactionInfoIndex].action;
+        this.transactionInfo.action = this.userSalesHistory[this.transactionInfoIndex].action;
         this.transactionInfo.crypto_code = this.userSalesHistory[this.transactionInfoIndex].crypto_code;
         this.transactionInfo.crypto_amount += parseFloat(this.userSalesHistory[this.transactionInfoIndex].crypto_amount);
-        this.transactionInfo.dateTime = this.userSalesHistory[this.transactionInfoIndex].datetime;
+        this.transactionInfo.datetime = this.userSalesHistory[this.transactionInfoIndex].datetime;
       },
       transactionInfoCoinAmountAssignment(){
         if(this.transactionInfo.crypto_code == 'BITCOIN'){
