@@ -40,8 +40,6 @@
       },
       prepareTransactionInfoForModModal(transactionInfo){
         this.emitUserUnitTransactionInfo = transactionInfo;
-        console.log('La información de la transacción para modificar en el Modal es el siguiente: ');
-        console.log(this.emitUserUnitTransactionInfo);
       }
     },
     mounted(){
