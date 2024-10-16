@@ -1,7 +1,7 @@
 <template>
   <body>
     <div v-if="modalVisibility == true" ref="modalRendering" class="ModalRendering">
-      <div ref="modalContent" class="ModalContent" @click.stop>
+      <div ref="modalContent" class="ModalContent" @click.stop v-if="userTransaction.transactionInfoLevel == 1">
         <div class="ModalPurchaseTransactionModification">
 
         </div>
@@ -10,9 +10,10 @@
           <h3>¿Are you sure you want to delete this transaction?</h3>
           <button type="button" class="btnEliminationConfirmation">Yes</button>
           <button type="button" class="btnEliminationNegation">No</button>
+          <button type="button" class="btnCloseModal">CLose this window</button>
         </div>
 
-        <div class="ModalSaleTransactionModification">
+        <div class="ModalSaleTransactionModification" v-if="userTransaction.transactionInfoLevel == 3">
           
         </div>
 
@@ -20,6 +21,7 @@
           <h3>¿Are you sure you want to delete this transaction?</h3>
           <button type="button" class="btnEliminationConfirmation">Yes</button>
           <button type="button" class="btnEliminationNegation">No</button>
+          <button type="button" class="btnCloseModal">CLose this window</button>
         </div>
       </div>
     </div>
@@ -60,21 +62,30 @@
         this.userTransaction.cryptoAmountAvailable = newVal.cryptoAmountAvailable;
         this.userTransaction.money = newVal.money;
         this.userTransaction.datetime = newVal.datetime;
-        console.log('El objeto preparado con la información recibida del newVal es el siguiente:');
-        console.log(this.userTransaction);
-
-        this.changeModalVisibilityOnTrue();
-      },
-      changeModalVisibilityOnTrue(){
-        this.modalVisibility = true;
 
         this.showModalTransaction();
       },
       showModalTransaction(){
-        this.$nextTick(() => {
-          this.$refs.modalRendering.classList.add('show');
-          this.$refs.modalContent.classList.add('show');
-        });
+        this.modalVisibility = true;
+
+        if(this.$refs.modalRendering && this.$refs.modalContent){
+          this.$nextTick(() => {
+            this.$refs.modalRendering.classList.add('show');
+            this.$refs.modalContent.classList.add('show');
+          });
+        }
+      },
+      closeModalTransaction(){
+        if(this.$refs.modalContent){
+          this.$refs.modalContent.classList.remove('show');
+
+          if(this.$refs.modalRendering){
+            setTimeout(() => {
+              this.$refs.modalRendering.classList.remove('show');
+              this.$emit('close');
+            }, 500);
+          }
+        }
       }
     },
     watch: {
@@ -91,7 +102,7 @@
 </script>
 
 <style scoped>
-  .ModalRendering{
+  .ModalRendering {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -106,9 +117,9 @@
     transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
   }
 
-  .ModalContent{
+  .ModalContent {
     background-color: #fff;
-    width: 33%;
+    width: 40%;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -116,14 +127,20 @@
     transition: transform 0.5s ease-in-out;
   }
 
-  .ModalContent:show{
+  .ModalContent.show {
     opacity: 1;
     visibility: visible;
   }
 
-  .ModalContent:show{
-    transform: scale(1);
+  .ModalContent.show {
+    transform: scale(1); /* Se expande a tamaño completo */
   }
 
-
+  .btnCloseModal {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+  }
 </style>
