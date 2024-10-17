@@ -1,8 +1,8 @@
 <template>
   <body>
     <div v-show="modalVisibility" ref="modalRendering" class="ModalRendering">
-      <div ref="modalContent" class="ModalContent" @click.stop v-if="userTransaction.transactionInfoLevel == 1">
-        <div class="ModalPurchaseTransactionModification">
+      <div ref="modalContent" class="ModalContent" @click.stop>
+        <div class="ModalPurchaseTransactionModification" v-if="userTransaction.transactionInfoLevel == 1">
           <h3>Hola a todos!...</h3>
         </div>
 
@@ -62,18 +62,16 @@
         this.userTransaction.cryptoAmountAvailable = newVal.cryptoAmountAvailable;
         this.userTransaction.money = newVal.money;
         this.userTransaction.datetime = newVal.datetime;
-        console.log(this.modalVisibility);
-        console.log(this.userTransaction);
+
         this.showModalTransaction();
       },
       showModalTransaction(){
         this.modalVisibility = true;
-        console.log(this.modalVisibility);
 
-        if(this.$refs.ModalRendering && this.$refs.ModalContent){
+        if(this.$refs.modalRendering && this.$refs.modalContent){
           this.$nextTick(() => {
-            this.$refs.ModalRendering.classList.add('show');
-            this.$refs.ModalContent.classList.add('show');
+            this.$refs.modalRendering.classList.add('show');
+            this.$refs.modalContent.classList.add('show');
           });
         }
       },
@@ -114,8 +112,14 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6);
-    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro */
+    opacity: 0; /* Comienza oculto */
+    visibility: hidden; /* No visible */
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+  }
+
+  .ModalRendering.show {
+    opacity: 1; /* Se hace visible */
     visibility: visible;
   }
 
@@ -125,7 +129,12 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: none; /* Sin transformaciones */
+    transform: scale(0.8); /* Comienza más pequeño */
+    transition: transform 1s ease-in-out; /* Animación de expansión */
+  }
+
+  .ModalContent.show {
+    transform: scale(1); /* Expande a su tamaño normal */
   }
 
   .btnCloseModal {
