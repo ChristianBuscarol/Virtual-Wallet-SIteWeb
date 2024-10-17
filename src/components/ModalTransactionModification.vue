@@ -1,9 +1,9 @@
 <template>
   <body>
-    <div v-if="modalVisibility == true" ref="modalRendering" class="ModalRendering">
+    <div v-show="modalVisibility" ref="modalRendering" class="ModalRendering">
       <div ref="modalContent" class="ModalContent" @click.stop v-if="userTransaction.transactionInfoLevel == 1">
         <div class="ModalPurchaseTransactionModification">
-
+          <h3>Hola a todos!...</h3>
         </div>
 
         <div class="ModalPurchaseTransactionElimination" v-if="userTransaction.transactionInfoLevel == 2">
@@ -14,7 +14,7 @@
         </div>
 
         <div class="ModalSaleTransactionModification" v-if="userTransaction.transactionInfoLevel == 3">
-          
+          <h3>Hola a todos!...</h3>
         </div>
 
         <div class="ModalSaleTransactionElimination" v-if="userTransaction.transactionInfoLevel == 4">
@@ -62,30 +62,33 @@
         this.userTransaction.cryptoAmountAvailable = newVal.cryptoAmountAvailable;
         this.userTransaction.money = newVal.money;
         this.userTransaction.datetime = newVal.datetime;
-
+        console.log(this.modalVisibility);
+        console.log(this.userTransaction);
         this.showModalTransaction();
       },
       showModalTransaction(){
         this.modalVisibility = true;
+        console.log(this.modalVisibility);
 
-        if(this.$refs.modalRendering && this.$refs.modalContent){
+        if(this.$refs.ModalRendering && this.$refs.ModalContent){
           this.$nextTick(() => {
-            this.$refs.modalRendering.classList.add('show');
-            this.$refs.modalContent.classList.add('show');
+            this.$refs.ModalRendering.classList.add('show');
+            this.$refs.ModalContent.classList.add('show');
           });
         }
       },
       closeModalTransaction(){
         if(this.$refs.modalContent){
           this.$refs.modalContent.classList.remove('show');
-
-          if(this.$refs.modalRendering){
-            setTimeout(() => {
-              this.$refs.modalRendering.classList.remove('show');
-              this.$emit('close');
-            }, 500);
-          }
         }
+
+        setTimeout(() => {
+          if(this.$refs.modalRendering){
+            this.$refs.modalRendering.classList.remove('show');
+          }
+          this.modalVisibility = false;
+          this.$emit('close');
+        },500);
       }
     },
     watch: {
@@ -112,9 +115,8 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.5s ease-in-out, visibility 0.5s ease-in-out;
+    opacity: 1;
+    visibility: visible;
   }
 
   .ModalContent {
@@ -123,17 +125,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: scale(0); /* Estado inicial */
-    transition: transform 0.5s ease-in-out;
-  }
-
-  .ModalContent.show {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .ModalContent.show {
-    transform: scale(1); /* Se expande a tamaño completo */
+    transform: none; /* Sin transformaciones */
   }
 
   .btnCloseModal {
