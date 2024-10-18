@@ -8,9 +8,10 @@
 
         <div class="ModalPurchaseTransactionElimination" v-if="userTransaction.transactionInfoLevel == 2">
           <h3>¿Are you sure you want to delete this transaction?</h3>
-          <button type="button" class="btnEliminationConfirmation">Yes</button>
-          <button type="button" class="btnEliminationNegation">No</button>
-          <button type="button" class="btnCloseModal">CLose this window</button>
+          <button type="button" @click="delteOfTransactionSelected()" v-show="!interactionOfPurchaseTransactionDelete" :disabled="interactionOfPurchaseTransactionDelete" class="btnEliminationConfirmation">Yes</button>
+          <button type="button" @click="closeModalTransaction()" v-show="!interactionOfPurchaseTransactionDelete" :disabled="interactionOfPurchaseTransactionDelete" class="btnEliminationNegation">No</button>
+          <h3 v-if="this.moneyCalculationForDelete < 0">The 'Deletion' of the selected transaction is't ready to be made for insufficient money.</h3>
+          <button type="button" @click="closeModalTransaction()" v-show="interactionOfPurchaseTransactionDelete" :disabled="!interactionOfPurchaseTransactionDelete" class="btnCloseModal">CLose.</button>
         </div>
 
         <div class="ModalSaleTransactionModification" v-if="userTransaction.transactionInfoLevel == 3">
@@ -19,9 +20,10 @@
 
         <div class="ModalSaleTransactionElimination" v-if="userTransaction.transactionInfoLevel == 4">
           <h3>¿Are you sure you want to delete this transaction?</h3>
-          <button type="button" class="btnEliminationConfirmation">Yes</button>
-          <button type="button" class="btnEliminationNegation">No</button>
-          <button type="button" class="btnCloseModal">CLose this window</button>
+          <button type="button" @click="delteOfTransactionSelected()" v-show="!interactionOfSaleTransactionDelete" :disabled="interactionOfSaleTransactionDelete" class="btnEliminationConfirmation">Yes</button>
+          <button type="button" @click="closeModalTransaction()" v-show="!interactionOfSaleTransactionDelete" :disabled="interactionOfSaleTransactionDelete" class="btnEliminationNegation">No</button>
+          <h3 v-if="this.userTransaction.crypto_amount >= this.userTransaction.cryptoAmountAvailable">The 'Deletion' of the selected transaction is't ready to be made for insufficient coin part.</h3>
+          <button type="button" @click="closeModalTransaction()" v-show="interactionOfSaleTransactionDelete" :disabled="!interactionOfSaleTransactionDelete" class="btnCloseModal">CLose.</button>
         </div>
       </div>
     </div>
@@ -29,6 +31,8 @@
 </template>
 
 <script>
+  import ApiCallService from '@/services/ApiCallService';
+
   export default{
     name: 'ModalTransactionModification',
     props: {
@@ -40,6 +44,8 @@
     data(){
       return{
         modalVisibility: false,
+        interactionOfPurchaseTransactionDelete: false,
+        interactionOfSaleTransactionDelete: false,
         userTransaction: {
           transactionInfoLevel: 0,
           id: '',
@@ -48,8 +54,10 @@
           crypto_amount: 0,
           cryptoAmountAvailable: 0,
           money: 0,
+          transactionMoney: 0,
           datetime: 0
-        }
+        },
+        moneyCalculationForDelete: 0
       }
     },
     methods: {
@@ -61,9 +69,13 @@
         this.userTransaction.crypto_amount = newVal.crypto_amount;
         this.userTransaction.cryptoAmountAvailable = newVal.cryptoAmountAvailable;
         this.userTransaction.money = newVal.money;
+        this.userTransaction.transactionMoney = newVal.transactionMoney;
         this.userTransaction.datetime = newVal.datetime;
 
+        console.log('El objeto del Modal para la modificación o elimnación de la transacción seleccionada contiene la sieguiente info: ');
+        console.log(this.userTransaction);
         this.showModalTransaction();
+        this.evaluateTypeTransactionDeletion();
       },
       showModalTransaction(){
         this.modalVisibility = true;
@@ -87,6 +99,34 @@
           this.modalVisibility = false;
           this.$emit('close');
         },500);
+
+        this.refreshTheView('refresh-the-view');
+      },
+      evaluateTypeTransactionDeletion(){
+        if (this.userTransaction.transactionInfoLevel == 2){
+          this.confirmationOfPurchaseTransactionDelete();
+        }
+        else if (this.userTransaction.transactionInfoLevel == 4){
+          this.confirmationOfSaleTransactionDelete();
+        }
+      },
+      confirmationOfPurchaseTransactionDelete(){
+        if (this.userTransaction.crypto_amount >= this.userTransaction.cryptoAmountAvailable){
+          this.interactionOfPurchaseTransactionDelete = true;
+        }
+      },
+      confirmationOfSaleTransactionDelete(){
+        this.moneyCalculationForDelete += parseFloat(this.userTransaction.money - this.userTransaction.transactionMoney);
+
+        if (this.moneyCalculationForDelete < 0){
+          this.interactionOfSaleTransactionDelete = true;
+        }
+      },
+      delteOfTransactionSelected(){
+        ApiCallService.deleteSelectedTransaction(this.userTransaction.id);
+      },
+      refreshTheView(){
+        this.$emit('refresh-the-view');
       }
     },
     watch: {
