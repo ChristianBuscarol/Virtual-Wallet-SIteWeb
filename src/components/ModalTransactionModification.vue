@@ -124,6 +124,15 @@
       },
       delteOfTransactionSelected(){
         ApiCallService.deleteSelectedTransaction(this.userTransaction.id);
+
+        this.cancelOfPurchaseTransactionDelete();
+        this.cancelOfSaleTransactionDelete();
+      },
+      cancelOfPurchaseTransactionDelete(){
+        this.interactionOfPurchaseTransactionDelete = false;
+      },
+      cancelOfSaleTransactionDelete(){
+        this.interactionOfSaleTransactionDelete = false;
       },
       refreshTheView(){
         this.$emit('refresh-the-view');
