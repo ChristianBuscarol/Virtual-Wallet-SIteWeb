@@ -183,6 +183,8 @@
           this.transactionInfo.transactionInfoLevel = 4;
         }
         
+        console.log('La lista de las porciones de criptomonedas disponibles del usuario es la siguiente: ');
+        console.log(this.unitCoinAmount);
         this.transactionInfoCoinAmountAssignment();
         this.openTransactionModificationModal();
       },
@@ -227,6 +229,11 @@
         this.transactionInfo.transactionMoney += parseFloat(this.userSalesHistory[this.transactionInfoIndex].money);
       },
       openTransactionModificationModal(){
+        console.log('La cantidad de compras realizadas por el usuario es: ');
+        console.log(this.userPurchasesHistory.length);
+        console.log('Y la cantidad de ventas realizadas por el usuario es:');
+        console.log(this.userSalesHistory.length);
+        
         this.$emit('open-transaction-modification-modal', this.transactionInfo)
       }
     },
