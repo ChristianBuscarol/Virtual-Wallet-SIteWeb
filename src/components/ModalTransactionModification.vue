@@ -2,24 +2,67 @@
   <body>
     <div v-show="modalVisibility" ref="modalRendering" class="ModalRendering">
       <div ref="modalContent" class="ModalContent" @click.stop>
-        <div class="ModalPurchaseTransactionModification" v-if="userTransaction.transactionInfoLevel == 1">
-          <h3>Hola a todos!...</h3>
+        <div class="ModalTransactionModification" v-if="userTransaction.transactionInfoLevel == 1 || userTransaction.transactionInfoLevel == 3">
+          <div v-if="userTransaction.transactionInfoLevel == 1" class="PurchaseTransactionInfo">
+            <h3>Selected Transaction:</h3>
+            <h4>Action: <strong>'Purchase'</strong></h4>
+            <h4>Coin purchased: {{ this.transactionInfoLevel.crypto_code }}</h4>
+            <h4>Amount: {{ this.transactionInfoLevel.crypto_amount }}</h4>
+            <h4>Money spent: {{ this.transactionInfoLevel.transactionMoney }}</h4>
+            <h4>DateTime: {{ this.transactionInfoLevel.datetime }}</h4>
+          </div>
+          
+          <div v-if="userTransaction.transactionInfoLevel == 3" class="SaleTransactionInfo">
+            <h3>Selected Transaction:</h3>
+            <h4>Action: <strong>'Sale'</strong></h4>
+            <h4>Coin sold: {{ this.transactionInfoLevel.crypto_code }}</h4>
+            <h4>Amount: {{ this.transactionInfoLevel.crypto_amount }}</h4>
+            <h4>Money earned: {{ this.transactionInfoLevel.transactionMoney }}</h4>
+            <h4>DateTime: {{ this.transactionInfoLevel.datetime }}</h4>
+          </div>
+
+          <div class="ModificationOptionsBox">
+            <h3>Modification options...</h3>
+
+            <select v-model="transactionModification.action">
+              <option value="purchase" selected>Purchase</option>
+              <option value="sale">Sell</option>
+            </select>
+
+            <label for="coinSelection">Choose the 'Coin': 
+              <select name="coinSelection" v-model="transactionModification.crypto_code">
+                <option value="Bitcoin">Bitcoin</option>
+                <option value="Dogecoin">Dogecoin</option>
+                <option value="Ethereum">Ethereum</option>
+                <option value="Litecoin">Litecoin</option>
+                <option value="Solana">Solana</option>
+                <option value="USDC">USDC</option>
+              </select>
+            </label>
+          </div>
+
+          <label for="coinPartSelection">Coin amount: <input type="number" v-model="transactionModification.crypto_amount" min="0.00001" name="coinPartSelection" class="coinPortionModification" placeholder="Put the coin part here to mod..."></label>
+
+          <label>Date: <input type="date" v-model="dateSelected" class="dateModification" placeholder="Put the date here to mod..."></label>
+
+          <label>Time: <input type="time" v-model="timeSelected" class="timeModification" placeholder="Put the time here to mod..."></label>
+
+          <div class="ModificationButtonsBox">
+            <button type="button" @click="modificationOfTransactionSelected()" class="btnModificationAccepted">Yes</button>
+            <button type="button" @click="closeModalTransaction()" class="btnModificationDenied">No</button>
+          </div>
         </div>
 
         <div class="ModalPurchaseTransactionElimination" v-if="userTransaction.transactionInfoLevel == 2">
-          <h3>¿Are you sure you want to delete this transaction?</h3>
-          <button type="button" @click="delteOfTransactionSelected()" v-show="!interactionOfPurchaseTransactionDelete" :disabled="interactionOfPurchaseTransactionDelete" class="btnEliminationConfirmation">Yes</button>
-          <button type="button" @click="closeModalTransaction()" v-show="!interactionOfPurchaseTransactionDelete" :disabled="interactionOfPurchaseTransactionDelete" class="btnEliminationNegation">No</button>
+          <h3>¿Are you sure you want to delete this purchase?</h3>
+          <button type="button" @click="delteOfTransactionSelected()" v-show="!interactionOfPurchaseTransactionDelete" :disabled="interactionOfPurchaseTransactionDelete" class="btnDeleteAccepted">Yes</button>
+          <button type="button" @click="closeModalTransaction()" v-show="!interactionOfPurchaseTransactionDelete" :disabled="interactionOfPurchaseTransactionDelete" class="btnDeleteDenied">No</button>
           <h3 v-if="this.moneyCalculationForDelete < 0">The 'Deletion' of the selected transaction is't ready to be made for insufficient money.</h3>
           <button type="button" @click="closeModalTransaction()" v-show="interactionOfPurchaseTransactionDelete" :disabled="!interactionOfPurchaseTransactionDelete" class="btnCloseModal">CLose.</button>
         </div>
 
-        <div class="ModalSaleTransactionModification" v-if="userTransaction.transactionInfoLevel == 3">
-          <h3>Hola a todos!...</h3>
-        </div>
-
         <div class="ModalSaleTransactionElimination" v-if="userTransaction.transactionInfoLevel == 4">
-          <h3>¿Are you sure you want to delete this transaction?</h3>
+          <h3>¿Are you sure you want to delete this sale?</h3>
           <button type="button" @click="delteOfTransactionSelected()" v-show="!interactionOfSaleTransactionDelete" :disabled="interactionOfSaleTransactionDelete" class="btnEliminationConfirmation">Yes</button>
           <button type="button" @click="closeModalTransaction()" v-show="!interactionOfSaleTransactionDelete" :disabled="interactionOfSaleTransactionDelete" class="btnEliminationNegation">No</button>
           <h3 v-if="this.userTransaction.crypto_amount >= this.userTransaction.cryptoAmountAvailable">The 'Deletion' of the selected transaction is't ready to be made for insufficient coin part.</h3>
@@ -46,6 +89,9 @@
         modalVisibility: false,
         interactionOfPurchaseTransactionDelete: false,
         interactionOfSaleTransactionDelete: false,
+        moneyCalculationForDelete: 0,
+        dateSelected: '',
+        timeSelected: '',
         userTransaction: {
           transactionInfoLevel: 0,
           id: '',
@@ -57,7 +103,22 @@
           transactionMoney: 0,
           datetime: 0
         },
-        moneyCalculationForDelete: 0
+        urlCoins: [
+          'https://criptoya.com/api/satoshitango/btc/ars',
+          'https://criptoya.com/api/satoshitango/doge/ars',
+          'https://criptoya.com/api/satoshitango/eth/ars',
+          'https://criptoya.com/api/satoshitango/ltc/ars',
+          'https://criptoya.com/api/satoshitango/sol/ars',
+          'https://criptoya.com/api/satoshitango/usdc/ars'
+        ],
+        transactionModification: {
+          id: '',
+          action: '',
+          crypto_code: '',
+          crypto_amount: 0,
+          money: 0,
+          datetime: 0
+        }
       }
     },
     methods: {
@@ -133,6 +194,25 @@
       },
       cancelOfSaleTransactionDelete(){
         this.interactionOfSaleTransactionDelete = false;
+      },
+      modificationOfTransactionSelected(){
+        this.objectConstructorForTransactionMod();
+        console.log('El objeto que se prepara para la modificación de la transacción es el siguiente:');
+        console.log(this.transactionModification);
+      },
+      objectConstructorForTransactionMod(){
+        this.transactionModification.id = this.userTransaction.id;
+        this.prepareDateTimeSelectedForTransactionMod();
+      },
+      prepareDateTimeSelectedForTransactionMod(){
+        let wololoDateTime = (this.dateSelected + ' ' + this.timeSelected);
+
+        if (this.dateSelected > 0 && this.timeSelected > 0){
+          this.transactionModification.datetime = wololoDateTime;
+        }
+        else {
+          this.transactionModification.datetime = this.userTransaction.datetime;
+        }
       },
       refreshTheView(){
         this.$emit('refresh-the-view');
