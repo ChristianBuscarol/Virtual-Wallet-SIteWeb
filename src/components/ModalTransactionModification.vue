@@ -2,52 +2,55 @@
   <body>
     <div v-show="modalVisibility" ref="modalRendering" class="ModalRendering">
       <div ref="modalContent" class="ModalContent" @click.stop>
-        <div class="ModalTransactionModification" v-if="userTransaction.transactionInfoLevel == 1 || userTransaction.transactionInfoLevel == 3">
-          <div v-if="userTransaction.transactionInfoLevel == 1" class="PurchaseTransactionInfo">
+        <div class="ModalTransactionModification" v-if="this.transactionInfoLevel == 1 || this.transactionInfoLevel == 3">
+          <div v-if="this.transactionInfoLevel == 1" class="PurchaseTransactionInfo">
             <h3>Selected Transaction:</h3>
             <h4>Action: <strong>'Purchase'</strong></h4>
-            <h4>Coin purchased: {{ this.transactionInfoLevel.crypto_code }}</h4>
-            <h4>Amount: {{ this.transactionInfoLevel.crypto_amount }}</h4>
-            <h4>Money spent: {{ this.transactionInfoLevel.transactionMoney }}</h4>
-            <h4>DateTime: {{ this.transactionInfoLevel.datetime }}</h4>
+            <h4>Coin purchased: {{ this.userTransaction.crypto_code }}</h4>
+            <h4>Amount: {{ this.userTransaction.crypto_amount }}</h4>
+            <h4>Money spent: {{ this.userTransaction.transactionMoney }}</h4>
+            <h4>DateTime: {{ this.userTransaction.datetime }}</h4>
           </div>
           
-          <div v-if="userTransaction.transactionInfoLevel == 3" class="SaleTransactionInfo">
+          <div v-if="this.transactionInfoLevel == 3" class="SaleTransactionInfo">
             <h3>Selected Transaction:</h3>
             <h4>Action: <strong>'Sale'</strong></h4>
-            <h4>Coin sold: {{ this.transactionInfoLevel.crypto_code }}</h4>
-            <h4>Amount: {{ this.transactionInfoLevel.crypto_amount }}</h4>
-            <h4>Money earned: {{ this.transactionInfoLevel.transactionMoney }}</h4>
-            <h4>DateTime: {{ this.transactionInfoLevel.datetime }}</h4>
+            <h4>Coin sold: {{ this.userTransaction.crypto_code }}</h4>
+            <h4>Amount: {{ this.userTransaction.crypto_amount }}</h4>
+            <h4>Money earned: {{ this.userTransaction.transactionMoney }}</h4>
+            <h4>DateTime: {{ this.userTransaction.datetime }}</h4>
           </div>
 
           <div class="ModificationOptionsBox">
             <h3>Modification options...</h3>
 
-            <select v-model="transactionModification.action">
-              <option value="purchase" selected>Purchase</option>
-              <option value="sale">Sell</option>
-            </select>
-
+            <label for="actionSelected">Choose the 'Action'
+              <select name="actionSelected" v-model="transactionModification.action">
+                <option value="purchase" selected>Purchase</option>
+                <option value="sale">Sell</option>
+              </select>
+            </label><br>
+            
             <label for="coinSelection">Choose the 'Coin': 
               <select name="coinSelection" v-model="transactionModification.crypto_code">
-                <option value="Bitcoin">Bitcoin</option>
+                <option value="Bitcoin" selected>Bitcoin</option>
                 <option value="Dogecoin">Dogecoin</option>
                 <option value="Ethereum">Ethereum</option>
                 <option value="Litecoin">Litecoin</option>
                 <option value="Solana">Solana</option>
                 <option value="USDC">USDC</option>
               </select>
-            </label>
+            </label><br>
+
+            <label for="coinPartSelection">Coin amount: <input type="number" v-model="transactionModification.crypto_amount" step="0.1" min="0.00001" name="coinPartSelection" class="coinPortionModification" placeholder="Put the coin part here to mod..."></label><br>
+
+            <label>Date: <input type="date" v-model="dateSelected" class="dateModification" placeholder="Put the date here to mod..."></label>
+
+            <label>Time: <input type="time" v-model="timeSelected" class="timeModification" placeholder="Put the time here to mod..."></label>
           </div>
 
-          <label for="coinPartSelection">Coin amount: <input type="number" v-model="transactionModification.crypto_amount" min="0.00001" name="coinPartSelection" class="coinPortionModification" placeholder="Put the coin part here to mod..."></label>
-
-          <label>Date: <input type="date" v-model="dateSelected" class="dateModification" placeholder="Put the date here to mod..."></label>
-
-          <label>Time: <input type="time" v-model="timeSelected" class="timeModification" placeholder="Put the time here to mod..."></label>
-
           <div class="ModificationButtonsBox">
+            <h3>¿Wanna do this modification?</h3>
             <button type="button" @click="modificationOfTransactionSelected()" class="btnModificationAccepted">Yes</button>
             <button type="button" @click="closeModalTransaction()" class="btnModificationDenied">No</button>
           </div>
@@ -89,11 +92,13 @@
         modalVisibility: false,
         interactionOfPurchaseTransactionDelete: false,
         interactionOfSaleTransactionDelete: false,
+        interactionOfTransactionModification: false,
         moneyCalculationForDelete: 0,
-        dateSelected: '',
-        timeSelected: '',
+        dateSelected: 0,
+        timeSelected: 0,
+        transactionInfoLevel: 0,
+        unitCoinAmount: {},
         userTransaction: {
-          transactionInfoLevel: 0,
           id: '',
           action: '',
           crypto_code: '',
@@ -123,7 +128,7 @@
     },
     methods: {
       unitTransactionInfoReceived(newVal){
-        this.userTransaction.transactionInfoLevel = newVal.transactionInfoLevel;
+        this.transactionInfoLevel = newVal.transactionInfoLevel;
         this.userTransaction.id = newVal.id;
         this.userTransaction.action = newVal.action;
         this.userTransaction.crypto_code = newVal.crypto_code;
@@ -132,9 +137,12 @@
         this.userTransaction.money = newVal.money;
         this.userTransaction.transactionMoney = newVal.transactionMoney;
         this.userTransaction.datetime = newVal.datetime;
+        this.unitCoinAmount = newVal.unitCoinAmount;
 
         console.log('El objeto del Modal para la modificación o elimnación de la transacción seleccionada contiene la sieguiente info: ');
         console.log(this.userTransaction);
+        console.log('Y la lista de las porciones de monedas disponibles del usuario para su evaluación y uso es la siguiente: ');
+        console.log(this.unitCoinAmount);
         this.showModalTransaction();
         this.evaluateTypeTransactionDeletion();
       },
@@ -163,6 +171,7 @@
 
         this.refreshTheView('refresh-the-view');
       },
+      // De aquí para abajo se encontrarán todas las funciones dedicadas a la 'Eliminación' de la transacción seleccionada.
       evaluateTypeTransactionDeletion(){
         if (this.userTransaction.transactionInfoLevel == 2){
           this.confirmationOfPurchaseTransactionDelete();
@@ -195,6 +204,7 @@
       cancelOfSaleTransactionDelete(){
         this.interactionOfSaleTransactionDelete = false;
       },
+      // De aquí para abajo se encontrarán todas las funciones dedicadas a la 'Modificación' de la transacción seleccionada.
       modificationOfTransactionSelected(){
         this.objectConstructorForTransactionMod();
         console.log('El objeto que se prepara para la modificación de la transacción es el siguiente:');
@@ -214,6 +224,7 @@
           this.transactionModification.datetime = this.userTransaction.datetime;
         }
       },
+      // Este último método de aquí abajo (Antes del 'watch') es el encargado de emitir el evento que, una vez escuchado en el padre (La vista), se recargará dicha vista con todos sus componentes juntos (Esto permite volver a cargar los datos y reflejar los cambios realizados).
       refreshTheView(){
         this.$emit('refresh-the-view');
       }
@@ -254,7 +265,7 @@
 
   .ModalContent {
     background-color: #fff;
-    width: 40%;
+    width: 45%;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
@@ -264,6 +275,29 @@
 
   .ModalContent.show {
     transform: scale(1); /* Expande a su tamaño normal */
+  }
+
+  .ModalTransactionModification {
+    display: grid;
+    grid-template-columns: auto auto;
+    margin: 0 auto;
+    justify-content: space-around;
+  }
+
+  .PurchaseTransactionInfo,
+  .SaleTransactionInfo {
+    padding: 15px 30px 15px;
+    grid-column: 1/2;
+  }
+
+  .ModificationButtonsBox {
+    padding: 5px 5px 5px;
+    grid-column: 2/2;
+  }
+
+  .ModificationOptionsBox {
+    padding: 15px 30px 15px;
+    grid-column: 2/2;
   }
 
   .btnCloseModal {
