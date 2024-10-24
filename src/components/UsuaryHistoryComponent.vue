@@ -57,7 +57,8 @@
           cryptoAmountAvailable: 0,
           money: 0,
           transactionMoney: 0,
-          datetime: 0
+          datetime: 0,
+          unitCoinAmount: {}
         },
         unitCoinAmount: {
           bitcoinAmount: 0,
@@ -182,9 +183,10 @@
           this.moneyAssigmentFromSaleTransactionSelected();
           this.transactionInfo.transactionInfoLevel = 4;
         }
-        
-        console.log('La lista de las porciones de criptomonedas disponibles del usuario es la siguiente: ');
-        console.log(this.unitCoinAmount);
+        this.transactionInfo.unitCoinAmount = this.unitCoinAmount;
+
+        console.log('La lista de las porciones de criptomonedas disponibles del usuario que se envía al Modal de modificación y/o eliminación es la siguiente: ');
+        console.log(this.transactionInfo.unitCoinAmount);
         this.transactionInfoCoinAmountAssignment();
         this.openTransactionModificationModal();
       },
