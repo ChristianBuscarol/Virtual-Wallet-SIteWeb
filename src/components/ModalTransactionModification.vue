@@ -29,7 +29,7 @@
                 <option value="purchase" selected>Purchase</option>
                 <option value="sale">Sell</option>
               </select>
-            </label><br>
+            </label><br><br>
             
             <label for="coinSelection">Choose the 'Coin': 
               <select name="coinSelection" v-model="transactionModification.crypto_code">
@@ -40,9 +40,9 @@
                 <option value="Solana">Solana</option>
                 <option value="USDC">USDC</option>
               </select>
-            </label><br>
+            </label><br><br>
 
-            <label for="coinPartSelection">Coin amount: <input type="number" v-model="transactionModification.crypto_amount" step="0.1" min="0.00001" name="coinPartSelection" class="coinPortionModification" placeholder="Put the coin part here to mod..."></label><br>
+            <label for="coinPartSelection">Coin amount: <input type="number" v-model="transactionModification.crypto_amount" step="0.1" min="0.00001" name="coinPartSelection" class="coinPortionModification" placeholder="Put the coin part here to mod..."></label><br><br>
 
             <label>Date: <input type="date" v-model="dateSelected" class="dateModification" placeholder="Put the date here to mod..."></label>
 
@@ -56,20 +56,20 @@
           </div>
         </div>
 
-        <div class="ModalPurchaseTransactionElimination" v-if="userTransaction.transactionInfoLevel == 2">
-          <h3>¿Are you sure you want to delete this purchase?</h3>
-          <button type="button" @click="delteOfTransactionSelected()" v-show="!interactionOfPurchaseTransactionDelete" :disabled="interactionOfPurchaseTransactionDelete" class="btnDeleteAccepted">Yes</button>
-          <button type="button" @click="closeModalTransaction()" v-show="!interactionOfPurchaseTransactionDelete" :disabled="interactionOfPurchaseTransactionDelete" class="btnDeleteDenied">No</button>
-          <h3 v-if="this.moneyCalculationForDelete < 0">The 'Deletion' of the selected transaction is't ready to be made for insufficient money.</h3>
-          <button type="button" @click="closeModalTransaction()" v-show="interactionOfPurchaseTransactionDelete" :disabled="!interactionOfPurchaseTransactionDelete" class="btnCloseModal">CLose.</button>
-        </div>
+        <div class="ModalPurchaseTransactionElimination" v-if="this.transactionInfoLevel == 2 || this.transactionInfoLevel == 4">
+          <div v-if="this.transactionInfoLevel == 2" class="PurchaseDeleteInfo">
+            <h3>¿Are you sure you want to delete this purchase?</h3>
+            <h3 v-if="this.disabledOfTransactionDeletion == 1">The 'Deletion' of the selected transaction is't ready to be made for insufficient money.</h3>
+          </div>
 
-        <div class="ModalSaleTransactionElimination" v-if="userTransaction.transactionInfoLevel == 4">
-          <h3>¿Are you sure you want to delete this sale?</h3>
-          <button type="button" @click="delteOfTransactionSelected()" v-show="!interactionOfSaleTransactionDelete" :disabled="interactionOfSaleTransactionDelete" class="btnEliminationConfirmation">Yes</button>
-          <button type="button" @click="closeModalTransaction()" v-show="!interactionOfSaleTransactionDelete" :disabled="interactionOfSaleTransactionDelete" class="btnEliminationNegation">No</button>
-          <h3 v-if="this.userTransaction.crypto_amount >= this.userTransaction.cryptoAmountAvailable">The 'Deletion' of the selected transaction is't ready to be made for insufficient coin part.</h3>
-          <button type="button" @click="closeModalTransaction()" v-show="interactionOfSaleTransactionDelete" :disabled="!interactionOfSaleTransactionDelete" class="btnCloseModal">CLose.</button>
+          <div v-if="this.transactionInfoLevel == 4" class="SaleDeleteInfo">
+            <h3>¿Are you sure you want to delete this sale?</h3>
+            <h3 v-if="this.disabledOfTransactionDeletion == 1">The 'Deletion' of the selected transaction is't ready to be made for insufficient coin part.</h3>
+          </div>
+          
+          <button type="button" @click="delteOfTransactionSelected()" v-show="!interactionOfTransactionDelete" :disabled="interactionOfTransactionDelete" class="btnDeleteAccepted">Yes</button>
+          <button type="button" @click="closeModalTransaction()" v-show="!interactionOfTransactionDelete" :disabled="interactionOfTransactionDelete" class="btnDeleteDenied">No</button>
+          <button type="button" @click="closeModalTransaction()" v-show="interactionOfTransactionDelete" :disabled="!interactionOfTransactionDelete" class="btnCloseModal">CLose.</button>
         </div>
       </div>
     </div>
@@ -77,6 +77,7 @@
 </template>
 
 <script>
+  import axios from "axios";
   import ApiCallService from '@/services/ApiCallService';
 
   export default{
@@ -90,13 +91,16 @@
     data(){
       return{
         modalVisibility: false,
-        interactionOfPurchaseTransactionDelete: false,
-        interactionOfSaleTransactionDelete: false,
+        interactionOfTransactionDelete: false,
         interactionOfTransactionModification: false,
         moneyCalculationForDelete: 0,
         dateSelected: 0,
         timeSelected: 0,
         transactionInfoLevel: 0,
+        urlCoinIndex: 0,
+        unitCoinPrice: 0,
+        disabledOfTransactionDeletion: 0,
+        disabledOfTransactionMod: 0,
         unitCoinAmount: {},
         userTransaction: {
           id: '',
@@ -144,7 +148,9 @@
         console.log('Y la lista de las porciones de monedas disponibles del usuario para su evaluación y uso es la siguiente: ');
         console.log(this.unitCoinAmount);
         this.showModalTransaction();
-        this.evaluateTypeTransactionDeletion();
+        if (this.transactionInfoLevel == 2 || this.transactionInfoLevel == 4){
+          this.evaluateTypeTransactionDeletion();
+        }
       },
       showModalTransaction(){
         this.modalVisibility = true;
@@ -182,6 +188,7 @@
       },
       confirmationOfPurchaseTransactionDelete(){
         if (this.userTransaction.crypto_amount >= this.userTransaction.cryptoAmountAvailable){
+          this.disabledOfTransactionDeletion += 1;
           this.interactionOfPurchaseTransactionDelete = true;
         }
       },
@@ -189,20 +196,12 @@
         this.moneyCalculationForDelete += parseFloat(this.userTransaction.money - this.userTransaction.transactionMoney);
 
         if (this.moneyCalculationForDelete < 0){
+          this.disabledOfTransactionDeletion += 1;
           this.interactionOfSaleTransactionDelete = true;
         }
       },
       delteOfTransactionSelected(){
         ApiCallService.deleteSelectedTransaction(this.userTransaction.id);
-
-        this.cancelOfPurchaseTransactionDelete();
-        this.cancelOfSaleTransactionDelete();
-      },
-      cancelOfPurchaseTransactionDelete(){
-        this.interactionOfPurchaseTransactionDelete = false;
-      },
-      cancelOfSaleTransactionDelete(){
-        this.interactionOfSaleTransactionDelete = false;
       },
       // De aquí para abajo se encontrarán todas las funciones dedicadas a la 'Modificación' de la transacción seleccionada.
       modificationOfTransactionSelected(){
@@ -212,16 +211,55 @@
       },
       objectConstructorForTransactionMod(){
         this.transactionModification.id = this.userTransaction.id;
+        this.prepareIndexFromCoinSelected();
         this.prepareDateTimeSelectedForTransactionMod();
+        this.moneyCalculationFromCoinSelected();
+      },
+      prepareIndexFromCoinSelected(){
+        if (this.transactionModification.crypto_code == 'Dogecoin'){
+          this.urlCoinIndex += 1;
+        }
+        else if (this.transactionModification.crypto_code == 'Ethereum'){
+          this.urlCoinIndex += 2;
+        }
+        else if (this.transactionModification.crypto_code == 'Litecoin'){
+          this.urlCoinIndex += 3;
+        }
+        else if (this.transactionModification.crypto_code == 'Solana'){
+          this.urlCoinIndex += 4;
+        }
+        else if (this.transactionModification.crypto_code == 'USDC'){
+          this.urlCoinIndex += 5;
+        }
+
+        this.obtainPrice();
+      },
+      async obtainPrice(){
+        let response = await axios.get(this.urlCoins[this.urlCoinIndex]);
+        this.unitCoinPrice = response.data.totalAsk;
+      },
+      moneyCalculationFromCoinSelected(){
+        this.transactionModification.money += parseFloat(this.transactionModification.crypto_amount * this.unitCoinPrice);
       },
       prepareDateTimeSelectedForTransactionMod(){
-        let wololoDateTime = (this.dateSelected + ' ' + this.timeSelected);
-
-        if (this.dateSelected > 0 && this.timeSelected > 0){
-          this.transactionModification.datetime = wololoDateTime;
+        if (this.dateSelected > 0 && this.timeSelected > 0 || this.dateSelected != null && this.timeSelected != null){
+          this.transactionModification.datetime = (this.dateSelected + ' ' + this.timeSelected);
         }
         else {
           this.transactionModification.datetime = this.userTransaction.datetime;
+        }
+      },
+      evaluationOfModificationInfo(){
+
+      },
+      evaluateTransactionCoinChange(){
+        if (this.transactionModification.crypto_code != this.userTransaction.crypto_code){
+
+        }
+      },
+      evaluateTransactionActionChange(){
+        if (this.transactionModification.action != this.userTransaction.action){
+
         }
       },
       // Este último método de aquí abajo (Antes del 'watch') es el encargado de emitir el evento que, una vez escuchado en el padre (La vista), se recargará dicha vista con todos sus componentes juntos (Esto permite volver a cargar los datos y reflejar los cambios realizados).
