@@ -49,10 +49,15 @@
             <label>Time: <input type="time" v-model="timeSelected" class="timeModification" placeholder="Put the time here to mod..."></label>
           </div>
 
-          <div class="ModificationButtonsBox">
+          <div class="ModificationButtonsBox" v-if="this.disabledOfTransactionMod == 0">
             <h3>¿Wanna do this modification?</h3>
-            <button type="button" @click="modificationOfTransactionSelected()" class="btnModificationAccepted">Yes</button>
-            <button type="button" @click="closeModalTransaction()" class="btnModificationDenied">No</button>
+            <button type="button" @click="modificationOfTransactionSelected()" v-show="!interactionOfTransactionModification" :disabled="interactionOfTransactionModification" class="btnModificationAccepted">Yes</button>
+            <button type="button" @click="closeModalTransaction()" v-show="!interactionOfTransactionModification" :disabled="interactionOfTransactionModification" class="btnModificationDenied">No</button>
+          </div>
+
+          <div class="" v-if="this.disabledOfTransactionMod > 0">
+            <h3></h3>
+            <button type="button" @click="closeModalTransaction()" v-show="interactionOfTransactionModification" :disabled="!interactionOfTransactionModification" class="btnCloseModal">CLose.</button>
           </div>
         </div>
 
@@ -101,6 +106,7 @@
         unitCoinPrice: 0,
         disabledOfTransactionDeletion: 0,
         disabledOfTransactionMod: 0,
+        oldCoinIndex: 0,
         unitCoinAmount: {},
         userTransaction: {
           id: '',
@@ -147,9 +153,27 @@
         console.log(this.userTransaction);
         console.log('Y la lista de las porciones de monedas disponibles del usuario para su evaluación y uso es la siguiente: ');
         console.log(this.unitCoinAmount);
+        this.prepareIndexForCoinChange();
         this.showModalTransaction();
         if (this.transactionInfoLevel == 2 || this.transactionInfoLevel == 4){
           this.evaluateTypeTransactionDeletion();
+        }
+      },
+      prepareIndexForCoinChange(){
+        if (this.userTransaction.crypto_code == 'Dogecoin'){
+          this.oldCoinIndex += 1;
+        }
+        else if (this.userTransaction.crypto_code == 'Ethereum'){
+          this.oldCoinIndex += 2;
+        }
+        else if (this.userTransaction.crypto_code == 'Litecoin'){
+          this.oldCoinIndex += 3;
+        }
+        else if (this.userTransaction.crypto_code == 'Solana'){
+          this.oldCoinIndex += 4;
+        }
+        else if (this.userTransaction.crypto_code == 'USDC'){
+          this.oldCoinIndex += 5;
         }
       },
       showModalTransaction(){
@@ -250,16 +274,58 @@
         }
       },
       evaluationOfModificationInfo(){
-
+        if (this.transactionInfoLevel == 1){
+          this.evaluatePurchaseTransactionActionChange();
+        }
+        else if (this.transactionInfoLevel == 3){
+          this.evaluateSaleTransactionActionChange();
+        }
       },
-      evaluateTransactionCoinChange(){
-        if (this.transactionModification.crypto_code != this.userTransaction.crypto_code){
+      evaluatePurchaseTransactionActionChange(){
+        if (this.transactionModification.action != this.userTransaction.action){
+          this.evaluateTransactionCoinChange();
+        }
+        else if (this.transactionModification.action == this.userTransaction.action){
 
         }
       },
-      evaluateTransactionActionChange(){
+      evaluateSaleTransactionActionChange(){
         if (this.transactionModification.action != this.userTransaction.action){
 
+        }
+        else if (this.transactionModification.action == this.userTransaction.action){
+          this.evaluatePossibleIssueWhithUserMoney();
+        }
+      },
+      evaluateTransactionCoinChange(){
+        if (this.transactionModification.crypto_code == this.userTransaction.crypto_code){
+          this.evaluateSameCoinPortionForTransactionMod();
+        }
+        else if (this.transactionModification.crypto_code != this.userTransaction.crypto_code){
+          this.evaluateDifferentCoinPortionForTransactionMod();
+        }
+      },
+      evaluatePossibleIssueWhithUserMoney(){
+        if (this.transactionModification.money > this.userTransaction.money){
+          this.interactionOfTransactionModification = true;
+          this.disabledOfTransactionMod = 1;
+        }
+      },
+      evaluatePossibleIssueWhithUserMoneyAndCoinChange(){
+        if (this.transactionModification.money > this.userTransaction.money && this.transactionModification.crypto_amount < this.unitCoinAmount[oldCoinIndex]){
+
+        }
+      },
+      evaluateSameCoinPortionForTransactionMod(){
+        if (this.transactionModification.crypto_amount > this.unitCoinAmount[urlCoinIndex]){
+          this.interactionOfTransactionModification = true;
+          this.disabledOfTransactionMod = 3;
+        }
+      },
+      evaluateDifferentCoinPortionForTransactionMod(){
+        if (this.unitCoinAmount[this.oldCoinIndex] < this.userTransaction.crypto_amount && this.transactionModification.crypto_amount > this.unitCoinAmount[urlCoinIndex]){
+          this.interactionOfTransactionModification = true;
+          this.disabledOfTransactionMod = 4;
         }
       },
       // Este último método de aquí abajo (Antes del 'watch') es el encargado de emitir el evento que, una vez escuchado en el padre (La vista), se recargará dicha vista con todos sus componentes juntos (Esto permite volver a cargar los datos y reflejar los cambios realizados).
