@@ -53,11 +53,18 @@
             <h3>¿Wanna do this modification?</h3>
             <button type="button" @click="modificationOfTransactionSelected()" v-show="!interactionOfTransactionModification" :disabled="interactionOfTransactionModification" class="btnModificationAccepted">Yes</button>
             <button type="button" @click="closeModalTransaction()" v-show="!interactionOfTransactionModification" :disabled="interactionOfTransactionModification" class="btnModificationDenied">No</button>
+            
+          </div>
+
+          <div class="" v-if="this.disabledOfTransactionMod == 3">
+            <h3></h3>
+            <button type="button" @click="closeModalTransaction()">Close.</button>
           </div>
 
           <div class="" v-if="this.disabledOfTransactionMod > 0">
-            <h3></h3>
-            <button type="button" @click="closeModalTransaction()" v-show="interactionOfTransactionModification" :disabled="!interactionOfTransactionModification" class="btnCloseModal">CLose.</button>
+            <h3 v-if="this.disabledOfTransactionMod == 1">Transacción ha sido denegada por cantidad insuficiente de dinero para realizar la modificación...</h3>
+            <h3 v-if="this.disabledOfTransactionMod == 2">Transacción ha sido denegada por cantidad insuficiente de monedas para realizar la modificación...</h3>
+            <button type="button" @click="closeModalTransaction()" class="btnCloseModal">CLose.</button>
           </div>
         </div>
 
@@ -137,6 +144,7 @@
       }
     },
     methods: {
+      // De aquí para abajo se encontrara tanto la apertura como el cierre del Modal, así como la preparación y uso de la información recibida en el componente y entre algunas otras utilidades más.
       unitTransactionInfoReceived(newVal){
         this.transactionInfoLevel = newVal.transactionInfoLevel;
         this.userTransaction.id = newVal.id;
@@ -229,15 +237,13 @@
       },
       // De aquí para abajo se encontrarán todas las funciones dedicadas a la 'Modificación' de la transacción seleccionada.
       modificationOfTransactionSelected(){
+        this.transactionModification.id = this.userTransaction.id;
         this.objectConstructorForTransactionMod();
-        console.log('El objeto que se prepara para la modificación de la transacción es el siguiente:');
-        console.log(this.transactionModification);
       },
       objectConstructorForTransactionMod(){
-        this.transactionModification.id = this.userTransaction.id;
         this.prepareIndexFromCoinSelected();
         this.prepareDateTimeSelectedForTransactionMod();
-        this.moneyCalculationFromCoinSelected();
+        this.evaluationOfModificationInfo();
       },
       prepareIndexFromCoinSelected(){
         if (this.transactionModification.crypto_code == 'Dogecoin'){
@@ -261,6 +267,8 @@
       async obtainPrice(){
         let response = await axios.get(this.urlCoins[this.urlCoinIndex]);
         this.unitCoinPrice = response.data.totalAsk;
+
+        this.moneyCalculationFromCoinSelected();
       },
       moneyCalculationFromCoinSelected(){
         this.transactionModification.money += parseFloat(this.transactionModification.crypto_amount * this.unitCoinPrice);
@@ -283,50 +291,48 @@
       },
       evaluatePurchaseTransactionActionChange(){
         if (this.transactionModification.action != this.userTransaction.action){
-          this.evaluateTransactionCoinChange();
-        }
-        else if (this.transactionModification.action == this.userTransaction.action){
-
-        }
-      },
-      evaluateSaleTransactionActionChange(){
-        if (this.transactionModification.action != this.userTransaction.action){
-
+          this.evaluatePossibleIssueWhithUserMoneyAndCoinChange();
         }
         else if (this.transactionModification.action == this.userTransaction.action){
           this.evaluatePossibleIssueWhithUserMoney();
         }
       },
-      evaluateTransactionCoinChange(){
-        if (this.transactionModification.crypto_code == this.userTransaction.crypto_code){
-          this.evaluateSameCoinPortionForTransactionMod();
+      evaluateSaleTransactionActionChange(){
+        if (this.transactionModification.action != this.userTransaction.action){
+          this.evaluatePossibleIssueWhithUserMoney();
         }
-        else if (this.transactionModification.crypto_code != this.userTransaction.crypto_code){
-          this.evaluateDifferentCoinPortionForTransactionMod();
+        else if (this.transactionModification.action == this.userTransaction.action){
+          this.evaluatePossibleIssueWhithUserMoneyAndCoinChange();
         }
       },
       evaluatePossibleIssueWhithUserMoney(){
         if (this.transactionModification.money > this.userTransaction.money){
           this.interactionOfTransactionModification = true;
           this.disabledOfTransactionMod = 1;
+        } else {
+          this.interactionOfTransactionModification = true;
+          this.disabledOfTransactionMod = 3;
+          console.log('El valor de la moneda seleccionada para la comparación y posterior modificación de la transacción es:');
+          console.log(this.unitCoinAmount[oldCoinIndex]);
+          console.log('El objeto que se prepara para la modificación de la compra seleccionada es el siguiente:');
+          console.log(this.transactionModification);
         }
       },
       evaluatePossibleIssueWhithUserMoneyAndCoinChange(){
-        if (this.transactionModification.money > this.userTransaction.money && this.transactionModification.crypto_amount < this.unitCoinAmount[oldCoinIndex]){
-
-        }
-      },
-      evaluateSameCoinPortionForTransactionMod(){
-        if (this.transactionModification.crypto_amount > this.unitCoinAmount[urlCoinIndex]){
+        if (this.transactionModification.crypto_amount > this.unitCoinAmount[oldCoinIndex]){
+          this.interactionOfTransactionModification = true;
+          this.disabledOfTransactionMod = 2;
+        } else {
           this.interactionOfTransactionModification = true;
           this.disabledOfTransactionMod = 3;
+          console.log('El valor de la moneda seleccionada para la comparación y posterior modificación de la transacción es:');
+          console.log(this.unitCoinAmount[oldCoinIndex]);
+          console.log('El objeto que se prepara para la modificación de la venta seleccionada es el siguiente:');
+          console.log(this.transactionModification);
         }
       },
-      evaluateDifferentCoinPortionForTransactionMod(){
-        if (this.unitCoinAmount[this.oldCoinIndex] < this.userTransaction.crypto_amount && this.transactionModification.crypto_amount > this.unitCoinAmount[urlCoinIndex]){
-          this.interactionOfTransactionModification = true;
-          this.disabledOfTransactionMod = 4;
-        }
+      modificationOfTransactionSelected(){
+        ApiCallService.patchSelectedTransaction();
       },
       // Este último método de aquí abajo (Antes del 'watch') es el encargado de emitir el evento que, una vez escuchado en el padre (La vista), se recargará dicha vista con todos sus componentes juntos (Esto permite volver a cargar los datos y reflejar los cambios realizados).
       refreshTheView(){
