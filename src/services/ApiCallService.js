@@ -26,8 +26,8 @@ export default{
   postNewTransaction(transactionInfo){
     return apiClient.post('', transactionInfo);
   },
-  patchSelectedTransaction(transactionId){
-    return apiClient.patch('/' + transactionId);
+  patchSelectedTransaction(transactionId, transactionInfo){
+    return apiClient.patch('/' + transactionId, transactionInfo);
   },
   deleteSelectedTransaction(transactionId){
     return apiClient.delete('/' + transactionId);
