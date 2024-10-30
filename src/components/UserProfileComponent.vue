@@ -64,7 +64,7 @@
       },
       firstConnectionMoneyGift(){
         // Este va a ser un pequeño regalo para el usuario en caso de conectarse por °1 vez y no haber hecho transacciones aún.
-        this.dataUserProfile.userWallet = 1000000;
+        this.dataUserProfile.userWallet = 1500000;
       },
       fillingUserHistoryArraySpace(response){
         for(let i = 0; i < response.data.length; i++){
