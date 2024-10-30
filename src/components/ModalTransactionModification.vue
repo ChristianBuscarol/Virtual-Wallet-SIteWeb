@@ -118,8 +118,8 @@
         deleteConfirmation: false,
         surplusOfCoinAmount: false,
         moneyCalculationForDelete: 0,
-        dateSelected: 0,
-        timeSelected: 0,
+        dateSelected: new Date(),
+        timeSelected: new Date(),
         transactionInfoLevel: 0,
         urlCoinIndex: 0,
         unitCoinPrice: 0,
@@ -317,11 +317,11 @@
         this.transactionModification.money = totalCost;
       },
       prepareDateTimeSelectedForTransactionMod(){
-        let prepareDateTime = new Date().toISOString();
+        let prepareDateTime = new Date(this.dateSelected + ' ' + this.timeSelected).toISOString();
         console.log('El tiempo preparado para la modificación de la transacción seleccionada es el siguiente:');
         console.log(prepareDateTime);
 
-        if (this.dateSelected > 0 && this.timeSelected > 0 || this.dateSelected != null && this.timeSelected != null){
+        if (prepareDateTime != null || prepareDateTime != undefined){
           this.transactionModification.datetime = prepareDateTime;
         }
         else {
