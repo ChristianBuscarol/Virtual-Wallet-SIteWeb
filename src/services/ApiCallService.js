@@ -1,9 +1,21 @@
 import axios from "axios";
 
 /*
+  --------------- (Url base de Agustín Ruatta) ---------------
   baseURL: 'https://laboratorio3-f36a.restdb.io/rest/transactions',
 	headers: {'x-apikey': '64bdbb6f86d8c5e18ded91e3'}
   -----------------------------------------------------------------
+  getUserTransactionsInfo(userId){
+    return apiClient.get(`q={"user_id": "${userId}"}`);
+  },
+  -----------------------------------------------------------------
+  .catch(error => {
+      if (error.response && error.response.status === '404'){
+        error404Manipulation();
+      }
+    });
+  -----------------------------------------------------------------
+  -------------------- (Url base de Emiliano) --------------------
   baseURL: 'http://localhost:8080/rest/transactions',
   headers: {
     'Access-Control-Allow-Origin': '*'
@@ -22,15 +34,15 @@ import axios from "axios";
 */
 
 const apiClient = axios.create({
-	baseURL: 'https://laboratorio3-5459.restdb.io/rest/transactions',
+	baseURL: 'https://laboratorio3-f36a.restdb.io/rest/transactions',
 	headers: {
-    'x-apikey': '64a57c2b86d8c50fe6ed8fa5'
+    'x-apikey': '60eb09146661365596af552f'
   }
 });
 
 export default{
   getUserTransactionsInfo(userId){
-    return apiClient.get(`q={"user_id": "${userId}"}`);
+    return apiClient.get(`q={"user_id":"${userId}"}`);
   },
   postNewTransaction(transactionInfo){
     return apiClient.post('', transactionInfo);
