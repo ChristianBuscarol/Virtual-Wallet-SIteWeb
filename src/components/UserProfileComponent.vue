@@ -51,16 +51,19 @@
       },
       async consultingApiForUserMovements(){
         // Esta función llamará a la Api para pedir la información del usuario requerida según el Id que le pasamos como parámetro y después, llamamos a otra función para analizar la información que conseguimos y a la vez le pasamos como parámetro también.
-        let response = await ApiCallService.getUserTransactionsInfo(this.dataUserProfile.userId);
-
-        this.evaluatingUserFirstConnection(response);
-      },
-      evaluatingUserFirstConnection(response){
-        if(response.data != null || response.data != undefined){
-          this.fillingUserHistoryArraySpace(response);
-        } else{
-          this.firstConnectionMoneyGift();
-        }
+        await ApiCallService.getUserTransactionsInfo(this.dataUserProfile.userId).then(response => {
+          if(response.data != null || response.data != undefined){
+            this.fillingUserHistoryArraySpace(response);
+          } else {
+            this.firstConnectionMoneyGift();
+          }
+        }).catch(error => {
+          if (error.response && error.response.status === '404'){
+            console.log('El error de conexión con la "url" que salió es el siguiente:');
+            console.log(error);
+            this.firstConnectionMoneyGift();
+          }
+        });
       },
       firstConnectionMoneyGift(){
         // Este va a ser un pequeño regalo para el usuario en caso de conectarse por °1 vez y no haber hecho transacciones aún.
@@ -78,7 +81,7 @@
           if(this.historyOfUserMovementsTransactions[i].action == 'purchase'){
             this.historyOfPurchaseTransactions.push(this.historyOfUserMovementsTransactions[i]);
           }
-          else if(this.historyOfUserMovementsTransactions[i].action == 'sell'){
+          else if(this.historyOfUserMovementsTransactions[i].action == 'sale'){
             this.historyOfSaleTransactions.push(this.historyOfUserMovementsTransactions[i]);
           }
         }
