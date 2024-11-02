@@ -42,7 +42,14 @@ const apiClient = axios.create({
 
 export default{
   getUserTransactionsInfo(userId){
-    return apiClient.get(`q={"user_id":"${userId}"}`);
+    const apiInfoClient = axios.create({
+      baseURL: 'https://laboratorio3-f36a.restdb.io/rest/transactions?q={"user_id":"' + userId + '"}',
+      headers: {
+        'x-apikey': '60eb09146661365596af552f'
+      }
+    });
+
+    return apiInfoClient.get();
   },
   postNewTransaction(transactionInfo){
     return apiClient.post('', transactionInfo);
