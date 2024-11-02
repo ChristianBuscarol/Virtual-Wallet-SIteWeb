@@ -53,6 +53,8 @@
         // Esta función llamará a la Api para pedir la información del usuario requerida según el Id que le pasamos como parámetro y después, llamamos a otra función para analizar la información que conseguimos y a la vez le pasamos como parámetro también.
         await ApiCallService.getUserTransactionsInfo(this.dataUserProfile.userId).then(response => {
           if(response.data != null || response.data != undefined){
+            console.log('La información del usuario que se tráe desde Axios es la siguiente:');
+            console.log(response.data);
             this.fillingUserHistoryArraySpace(response);
           } else {
             this.firstConnectionMoneyGift();
