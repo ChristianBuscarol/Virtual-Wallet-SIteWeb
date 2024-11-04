@@ -56,7 +56,9 @@
           crypto_amount: 0,
           cryptoAmountAvailable: 0,
           money: 0,
-          datetime: 0
+          transactionMoney: 0,
+          datetime: 0,
+          unitCoinAmount: {}
         },
         unitCoinAmount: {
           bitcoinAmount: 0,
@@ -164,6 +166,7 @@
       transactionInfoObjectConstructor(){
         if(this.transactionObjectLevel == 1){
           this.searchOfPurchaseTransactionSelected();
+          this.moneyAssigmentFromPurchaseTransactionSelected();
           this.transactionInfo.transactionInfoLevel = 1;
         }
         else if(this.transactionObjectLevel == 2){
@@ -172,13 +175,18 @@
         }
         else if(this.transactionObjectLevel == 3){
           this.searchOfSaleTransactionSelected();
+          this.moneyAssigmentFromSaleTransactionSelected();
           this.transactionInfo.transactionInfoLevel = 3;
         }
         else if(this.transactionObjectLevel == 4){
           this.searchOfSaleTransactionSelected();
+          this.moneyAssigmentFromSaleTransactionSelected();
           this.transactionInfo.transactionInfoLevel = 4;
         }
-        
+        this.transactionInfo.unitCoinAmount = this.unitCoinAmount;
+
+        console.log('La lista de las porciones de criptomonedas disponibles del usuario que se envía al Modal de modificación y/o eliminación es la siguiente: ');
+        console.log(this.transactionInfo.unitCoinAmount);
         this.transactionInfoCoinAmountAssignment();
         this.openTransactionModificationModal();
       },
@@ -216,7 +224,18 @@
           this.transactionInfo.cryptoAmountAvailable += parseFloat(this.unitCoinAmount.usdcAmount);
         }
       },
+      moneyAssigmentFromPurchaseTransactionSelected(){
+        this.transactionInfo.transactionMoney += parseFloat(this.userPurchasesHistory[this.transactionInfoIndex].money);
+      },
+      moneyAssigmentFromSaleTransactionSelected(){
+        this.transactionInfo.transactionMoney += parseFloat(this.userSalesHistory[this.transactionInfoIndex].money);
+      },
       openTransactionModificationModal(){
+        console.log('La cantidad de compras realizadas por el usuario es: ');
+        console.log(this.userPurchasesHistory.length);
+        console.log('Y la cantidad de ventas realizadas por el usuario es:');
+        console.log(this.userSalesHistory.length);
+        
         this.$emit('open-transaction-modification-modal', this.transactionInfo)
       }
     },

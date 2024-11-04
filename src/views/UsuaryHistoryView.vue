@@ -5,7 +5,7 @@
   </header>
   <body>
     <UsuaryHistoryComponent @open-transaction-modification-modal="prepareTransactionInfoForModModal" :receivedUserHistoryData="emitUserTransactionsHistory"/>
-    <ModalTransactionModification :receivedTransactionInfo="emitUserUnitTransactionInfo"></ModalTransactionModification>
+    <ModalTransactionModification @refresh-the-view="refreshTheView" :receivedTransactionInfo="emitUserUnitTransactionInfo"></ModalTransactionModification>
   </body>
   <footer class="HistoryFooterBox">
 
@@ -40,6 +40,9 @@
       },
       prepareTransactionInfoForModModal(transactionInfo){
         this.emitUserUnitTransactionInfo = transactionInfo;
+      },
+      refreshTheView(){
+        window.location.reload();
       }
     },
     mounted(){
