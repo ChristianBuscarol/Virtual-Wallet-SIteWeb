@@ -1,10 +1,6 @@
 <template>
-  <div class="UserProfile">
-    <header>
-      <h4>Actual usuary acount:</h4>
-      <p><strong>Name: {{ vShowUserName }}</strong></p>
-      <p><strong>Available money: {{ vShowMoneyUser }}</strong></p>
-    </header>
+  <div class="HeaderBox">
+    <p><strong>Name: {{ vShowUserName }}</strong></p>  <p><strong>Money: {{ vShowMoneyUser }}</strong></p>
   </div>
 </template>
 
@@ -191,14 +187,14 @@
         if(this.dataUserProfile.userName != ''){
           return this.dataUserProfile.userName;
         } else {
-          return 'Esperando el ingreso de Datos para verificación...';
+          return '_/-(°o°)-/_';
         }
       },
       vShowMoneyUser(){
         if(this.dataUserProfile.userWallet != 0){
           return this.dataUserProfile.userWallet;
         } else {
-          return 'Esperando el ingreso de Datos para consultar a la Api...';
+          return '-/_(°¬°)_/-';
         }
       }
     },
@@ -215,6 +211,16 @@
   }
 </script>
 
-<style scoped>
+<!---
+  align-items: center; /* Centra el div verticalmente */
+-->
 
+<style scoped>
+  .HeaderBox {
+    justify-content: flex-end;
+    background-color: lightgray;
+    width: 300px;
+    margin: 10px;
+    padding: 15px;
+  }
 </style>
