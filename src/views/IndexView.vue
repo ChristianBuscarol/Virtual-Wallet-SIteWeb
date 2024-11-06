@@ -1,6 +1,6 @@
 <template>
   <header class="IndexHeaderBox">
-    <div class="Header-Box">
+    <div class="HeaderBox">
       <h1>Trinance Interactive Corp.</h1>
       <UserProfileComponent :receivedData="emitUserDataReceived"/>
     </div>
@@ -9,16 +9,10 @@
     <EntryFormComponent @user-register="userCheck"/>
   </div>
   <footer class="IndexFooterBox">
-      <div class="Footer-Box">
-        <img src="../assets/CoinRainGif.gif" alt="Coin Rain..." id="EntryFormGifs">
-        <ul>
-          <li>Ingrese los 2 únicos Datos necesarios para poder continuar por la plataforma...</li>
-          <li>Una vez ingresado evalúe las pocas pero diferentes monedas virtuales en busca del mejor precio...</li>
-          <li>Compre y venda en el momento adecuado para generar ganancias...</li>
-          <li>Analice, interactúe y disfruta del proceso...</li>
-        </ul>
-        <img src="../assets/PenguinCheckingMoney.webp" alt="A cute penguin checking and counting his money" id="EntryFormGifs">
-        <p>For educational purpose i made this proyect for a university final... So, i deserve the rights to eat onions while you travel whit a racoon...</p>
+      <div class="FooterBox">
+        <img src="../assets/CoinRainGif.gif" alt="Coin rain..." class="EntryFormGifs" id="CoinRain">
+        <h3>For educational purpose i made this proyect for a university test... So, i deserve the rights to eat onions while you travel whit a racoon...</h3>
+        <img src="../assets/RainCoinGif.gif" alt="Another coin rain" class="EntryFormGifs" id="RainCoin">
       </div>
     </footer>
 </template>
@@ -48,9 +42,15 @@
 </script>
 
 <style scoped>
-  #EntryFormGifs{
+  .IndexFooterBox{
+    display: grid;
+    margin: 0 auto;
+    grid-template-columns: auto auto auto;
+    justify-content: space-around;
+  }
+
+  .EntryFormGifs{
     width: 125px;
     height: 125px;
   }
-  
 </style>
