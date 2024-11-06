@@ -173,7 +173,7 @@
 
   .InfoBox {
     grid-column: 2/2;
-    text-align: right;
+    text-align: center;
     align-items: center;
     padding: 15px;
     margin: 15px;
@@ -181,11 +181,11 @@
 
   .LogginButtonsBox {
     padding: 10px;
-    float: unset;
     text-align: center;
   }
 
   #btnValidarIngreso{
+    cursor: pointer;
     width: 90px;  /* Ancho del botón */
     height: 50px; /* Alto del botón */
     border: 1px solid gold;  /* Borde dorado.*/
@@ -194,6 +194,8 @@
     color: #fff;  /* Color de texto */
     text-transform: uppercase; /* Convierte el texto a mayúsculas */
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; /* Fuente */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
   }
 
   #btnValidarIngreso:hover{
@@ -202,6 +204,8 @@
     color: #000000;  /* Color de texto */
     font-weight: bold;     /* Negrita */
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; /* Fuente */
+    cursor: pointer; /* Cambia el cursor a una mano al pasar */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5); /* Sombra más intensa al pasar el cursor */
   }
 
   #registroNombre, #registroId {
