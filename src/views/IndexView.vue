@@ -12,11 +12,11 @@
     <div class="CoinRain">
       <img src="../assets/CoinRainGif.gif" alt="Coin rain..." id="EntryFormGifs">
     </div>
-    <div class="RainCoin">
-      <img src="../assets/RainCoinGif.gif" alt="Another coin rain" id="EntryFormGifs">
-    </div>
     <div class="FooterCredits">
       <h3>For educational purpose i made this proyect for a university test... So, i deserve the rights to eat onions while you travel whit a racoon...</h3>
+    </div>
+    <div class="RainCoin">
+      <img src="../assets/RainCoinGif.gif" alt="Another coin rain" id="EntryFormGifs">
     </div>
   </footer>
 </template>
@@ -47,28 +47,22 @@
 
 <style scoped>
   .IndexFooterBox{
-    display: grid;
-    margin: 0 auto;
-    grid-template-columns: auto auto auto;
-    justify-content: space-around;
+    display: flex;
+    justify-content: space-between; /* Distribuye los contenedores */
+    align-items: center;  /* Alinea verticalmente */
     padding: 10px;
   }
 
   .CoinRain {
-    grid-column: 1/3;
-    width: 125px;
-    height: 125px;
+    text-align: left;
   }
 
   .FooterCredits {
-    width: 400px;
-    grid-column: 2/3;
     text-align: center;
-    padding: 10px;
   }
 
   .RainCoin {
-    grid-column: 3/3;
+    text-align: right;
   }
 
   #EntryFormGifs{
