@@ -11,7 +11,7 @@
 
       <!--Sector de información para el usuario aquí abajo-->
       <div class="InfoBox">
-        <h3>Estado de entrada: '{{ stateMessage }}'</h3><br>
+        <h3>'{{ stateMessage }}'</h3><br>
         <h3>Intentos realizados: <strong>°{{ this.entryAttempts }}</strong> --- Cantidad máxima de intentos: °3</h3>
         <p v-show="vShowMessage"><strong>Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</strong></p>
       </div>
@@ -30,7 +30,7 @@
     name: 'EntryFormComponent',
     data() {
       return{
-        stateMessage: "Se requiere del formulario completo para continuar por el sitio web...",
+        stateMessage: "'Nombre' y 'ID' deben ser ingresados para poder continuar...",
         idLetters: 0,
         idNumbers: 0,
         nameLetters: 0,
@@ -85,7 +85,7 @@
             this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo...";
           }
           else{
-            this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
+            this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato ingresado es correcto y sea bienvenido/a a continuar por la aplicación...",
             this.attemptIncrement();
             this.userRegisterValidation();
             this.dateValidation = false,
