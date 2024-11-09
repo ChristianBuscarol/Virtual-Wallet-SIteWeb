@@ -1,8 +1,7 @@
 <template>
   <div class="HeaderContent">
-    <p class="UserInfoText"><strong>Name: <br>{{ vShowUserName }}</strong></p>
-    <p class="UserInfoText"><strong>Money: <br>{{ vShowMoneyUser }}</strong></p>
-    <button class="btnCloseSession">Log Out.</button>
+    <p class="UserInfoText"><strong>Name: {{ vShowUserName }}</strong></p>  <p class="UserInfoText"><strong>Money: {{ vShowMoneyUser }}</strong></p>
+    <button @click="btnCloseSession()" class="btnCloseSession">Log Out.</button>
   </div>
 </template>
 
@@ -182,6 +181,9 @@
       },
       emitUserInfoForUserHistory(){
         this.$emit('emit-user-info-for-user-history', this.historyOfUserMovementsTransactions);
+      },
+      btnCloseSession(){
+
       }
     },
     computed: {
@@ -189,14 +191,14 @@
         if(this.dataUserProfile.userName != ''){
           return this.dataUserProfile.userName;
         } else {
-          return '_/-(°o°)-/_';
+          return '(°o°)';
         }
       },
       vShowMoneyUser(){
         if(this.dataUserProfile.userWallet != 0){
           return this.dataUserProfile.userWallet;
         } else {
-          return '-/_(°¬°)_/-';
+          return '(°¬°)';
         }
       }
     },
@@ -215,15 +217,37 @@
 
 <style scoped>
  .HeaderContent{
+  width: 200px;
   display: flex;
   padding: 10px;
+  justify-content: center;
  }
 
  .UserInfoText{
   text-align: left;
+  margin: 10px;
  }
 
  .btnCloseSession{
   text-align: right;
+  align-items: center;
+  width: 45px;
+  height: 50px;
+  margin: 5px;
+  border-radius: 15%;
+  font-weight: bold;     /* Negrita */
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+ }
+
+ .btnCloseSession:hover{
+  border: 1px solid white;
+  background-color: black;
+  color: white;
+  box-shadow: 4px 6px 8px white(0, 0, 0, 0.3); /* Sombra del botón */
+  text-transform: uppercase; /* Convierte el texto a mayúsculas */
  }
 </style>
