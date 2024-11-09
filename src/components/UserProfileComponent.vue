@@ -1,6 +1,8 @@
 <template>
-  <div class="HeaderBox">
-    <p><strong>Name: {{ vShowUserName }}</strong></p>  <p><strong>Money: {{ vShowMoneyUser }}</strong></p>
+  <div class="HeaderContent">
+    <p class="UserInfoText"><strong>Name: <br>{{ vShowUserName }}</strong></p>
+    <p class="UserInfoText"><strong>Money: <br>{{ vShowMoneyUser }}</strong></p>
+    <button class="btnCloseSession">Log Out.</button>
   </div>
 </template>
 
@@ -211,16 +213,17 @@
   }
 </script>
 
-<!---
-  align-items: center; /* Centra el div verticalmente */
--->
-
 <style scoped>
-  .HeaderBox {
-    justify-content: flex-end;
-    background-color: lightgray;
-    width: 300px;
-    margin: 10px;
-    padding: 15px;
-  }
+ .HeaderContent{
+  display: flex;
+  padding: 10px;
+ }
+
+ .UserInfoText{
+  text-align: left;
+ }
+
+ .btnCloseSession{
+  text-align: right;
+ }
 </style>
