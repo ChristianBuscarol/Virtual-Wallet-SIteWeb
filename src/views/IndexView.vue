@@ -85,19 +85,16 @@
 
   .HeaderImage {
     text-align: left;
-    border: 1px solid black;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
   }
 
   .HeaderTittle {
     width: 250px;
     text-align: center;
     text-decoration: underline;
-    border: 1px solid black;
   }
 
   .HeaderUserInfo {
-    width: 250px;
     text-align: right;
-    border: 1px solid black;
   }
 </style>
