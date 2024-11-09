@@ -1,7 +1,8 @@
 <template>
   <header class="HistoryHeaderBox">
-    <h3>Records table of the usuary: </h3>
-    <UserProfileComponent @emit-user-info-for-user-history="prepareUserTransactionsHistory" :receivedData="emitUserDataReceived"/>
+    <img src="../assets/PenguinCheckingMoney.webp" alt="A cute penguin counting anda checking his money" class="HeaderImage" id="HeaderImageGif">
+    <h1 class="TransactionHistoryTittle">Trinance: 'User Transaction History Page'</h1>
+    <UserProfileComponent @emit-user-info-for-user-history="prepareUserTransactionsHistory" :receivedData="emitUserDataReceived" class="HeaderUserInfo"/>
   </header>
   <body>
     <UsuaryHistoryComponent @open-transaction-modification-modal="prepareTransactionInfoForModModal" :receivedUserHistoryData="emitUserTransactionsHistory"/>
@@ -52,5 +53,30 @@
 </script>
 
 <style scoped>
+  .HistoryHeaderBox{
+    background-color: lightskyblue;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;  /* Alinea verticalmente */
+  }
 
+  .HeaderImageGif{
+    text-align: left;
+  }
+
+  #HeaderImageGif{
+    width: 150px;
+    height: 150px;
+    margin-left: 5px;
+  }
+
+  .TransactionHistoryTittle{
+    width: 250px;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .HeaderUserInfo{
+    text-align: right;
+  }
 </style>
