@@ -2,8 +2,9 @@
   <div class="catalogue">
     <header>
       <div class="CoinCatalogue">
-        <h1>This is an catalogue page</h1>
-        <UserProfileComponent @emit-user-info-to-modal="sendUserInfoToModal" :receivedData="emitedLocalStorageUserData"/>
+        <img src="../assets/LittleAnimation.webp" alt="A little animation in the header section..." class="HeaderImage" id="HeaderImageGif">
+        <h1 class="CatalogueTittle">Trinance: 'Coin Catalogue Page'</h1>
+        <UserProfileComponent @emit-user-info-to-modal="sendUserInfoToModal" :receivedData="emitedLocalStorageUserData" class="HeaderUserInfo"/>
       </div>
     </header>
     <body>
@@ -60,5 +61,29 @@
 </script>
 
 <style scoped>
+  .CoinCatalogue{
+    background-color: lightskyblue;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;  /* Alinea verticalmente */
+  }
 
+  #HeaderImageGif{
+    width: 180px;
+    height: 150px;
+  }
+
+  .HeaderImage{
+    text-align: left;
+  }
+
+  .CatalogueTittle{
+    width: 250px;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .HeaderUserInfo{
+    text-align: right;
+  }
 </style>
