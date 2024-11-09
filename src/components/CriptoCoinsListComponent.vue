@@ -20,8 +20,8 @@
 
         <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
       <div class="ListDisplayBox">
-        <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)">
-          <img :src="Coin.image" class="Coin-Circle" alt="GifCoinListPart">
+        <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)" id="GifCoinListPart">
+          <img :src="Coin.image" class="Coin-Circle" alt="A gif of the Coin list part">
         </div>
       </div>
     </div>
@@ -227,13 +227,14 @@
   .SelectedCoinBox{
     display: flex;
     grid-column: 1/2;
-    border: 2px solid black;
     padding: 5px;
-    margin-left: 80px;
+    margin-left: 100px;
   }
 
   .InfoSelectedCoinBox{
     text-align: center;
+    border: 1px dashed black;
+    padding: 10px;
   }
 
   .TransactionsButtonsBox{
@@ -242,15 +243,21 @@
     margin-left: 20px;
   }
 
+  #GifCoinListPart{
+    border: 1px dotted black;
+    padding: 5px;
+    margin: 10px;
+    margin-bottom: 10px;
+  }
+
   .ListDisplayBox{
     grid-column: 2/2;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     width: 400px;
     height: 250px;
-    border: 2px solid black;
-    margin-right: 80px;
-    margin-top: 50px;
+    margin-right: 100px;
+    margin-top: 30px;
   }
 
   .interactionButton{
@@ -288,7 +295,7 @@
 
   #btnValidateSale:hover{
     border: 1px solid white;
-    background-color: red;
+    background-color: rgb(151, 16, 106);
     color: white;
     box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5); /* Sombra más intensa al pasar el cursor */
   }
