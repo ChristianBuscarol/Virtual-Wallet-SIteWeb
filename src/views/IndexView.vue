@@ -1,9 +1,8 @@
 <template>
   <header class="IndexHeaderBox">
-    <div class="HeaderBox">
-      <h1>Trinance Interactive Corp.</h1>
-      <UserProfileComponent :receivedData="emitUserDataReceived"/>
-    </div>
+    <img src="../assets/PenguinWihtBitcoin.webp" alt="A penguin whit a bit CriptoCoin" class="HeaderImage" id="HeaderImageGif">
+    <h1 class="HeaderTittle">Trinance Interactive Corp.</h1>
+    <UserProfileComponent :receivedData="emitUserDataReceived" class="HeaderUserInfo"/>
   </header>
   <div class="EntryForm">
     <EntryFormComponent @user-register="userCheck"/>
@@ -70,7 +69,35 @@
     height: 125px;
   }
 
+  #HeaderImageGif{
+    width: 150px;
+    height: 150px;
+  }
+
   .IndexHeaderBox {
+    background-color: lightskyblue;
+    padding: 10px;
+    margin: 10px;
     display: flex;
+    justify-content: space-between;
+    align-items: center;  /* Alinea verticalmente */
+  }
+
+  .HeaderImage {
+    text-align: left;
+    border: 1px solid black;
+  }
+
+  .HeaderTittle {
+    width: 250px;
+    text-align: center;
+    text-decoration: underline;
+    border: 1px solid black;
+  }
+
+  .HeaderUserInfo {
+    width: 250px;
+    text-align: right;
+    border: 1px solid black;
   }
 </style>
