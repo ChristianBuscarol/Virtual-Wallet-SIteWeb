@@ -155,7 +155,6 @@
 
   .EntryFormInteraction {
     display: grid;
-    margin: 0 auto;
     grid-template-columns: auto auto;
     justify-content: space-around;
     padding: 20px;
