@@ -3,7 +3,7 @@
     <div class="UsuaryHistoryTransactions">
       <!--En el 'Div' de acá abajo se renderizará el historial de compras de criptomonedas del usuario mediante el lado izquierdo de la pantalla.-->
       <div class="ShoppingHistoryBox">
-        <h3>Table of purchased CriptoCoins...</h3>
+        <h3 id="PurchaseHistoryTittle">Table of purchased CriptoCoins...</h3>
         <div class="UnitPurchaseTransaction" v-for="(UserP, index) in userPurchasesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
           <h4>CriptoCoin purchased: {{ UserP.crypto_code }}</h4>
           <h4>Money spent on the transaction: {{ UserP.money }}</h4>
@@ -17,7 +17,7 @@
 
       <!--En el 'Div' de acá abajo se renderizará el historial de ventas de criptomonedas del usuario mediante el lado derecho de la pantalla.-->
       <div class="SalesHistoryBox">
-        <h3>Table of CriptoCoins sold...</h3>
+        <h3 id="SaleHistoryTittle">Table of CriptoCoins sold...</h3>
         <div class="UnitSaleTransaction" v-for="(UserS, index) in userSalesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
           <h4>CriptoCoin sold: {{ UserS.crypto_code }}</h4>
           <h4>Money earned on the transaction: {{ UserS.money }}</h4>
@@ -92,7 +92,7 @@
           if(this.userTransactionHistory[i].action == 'purchase'){
             this.userPurchasesHistory.push(this.userTransactionHistory[i]);
           }
-          else if(this.userTransactionHistory[i].action == 'sell'){
+          else if(this.userTransactionHistory[i].action == 'sale'){
             this.userSalesHistory.push(this.userTransactionHistory[i]);
           }
         }
@@ -270,17 +270,75 @@
     text-align: center;
   }
 
+  #PurchaseHistoryTittle{
+    text-decoration: underline;
+  }
+
+  #SaleHistoryTittle{
+    text-decoration: underline;
+  }
+
   .UnitSaleTransaction{
-    background-color: lightgray;
-    border: 1px solid black;
+    border: 1px solid red;
+    color: red;
+    border-radius: 10%;
+    font-weight: bold; 
     padding: 10px;
     margin: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del div */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .UnitSaleTransaction:hover{
+    background-color: lightsalmon;
+    border: 1px solid black;
+    color: black;
+    box-shadow: 4px 6px 8px rgb(221, 29, 29); /* Sombra del div */
   }
 
   .UnitPurchaseTransaction{
-    background-color: lightgray;
-    border: 1px solid black;
+    border: 1px solid blue;
+    color: blue;
+    border-radius: 10%;
+    font-weight: bold; 
     padding: 10px;
     margin: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del div */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .UnitPurchaseTransaction:hover{
+    background-color: lightblue;
+    border: 1px solid black;
+    color: black;
+    box-shadow: 4px 6px 8px rgb(81, 84, 240); /* Sombra del div */
+  }
+
+  #btnEditPurchasedCoin, #btnDeletePurchasedCoin, #btnEditCoinSold, #btnDeleteCoinSold{
+    width: 90px;
+    height: 40px;
+    margin: 5px;
+    font-weight: bold; 
+    cursor: pointer;
+    border-radius: 10px;  /* Bordes redondeados */
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #btnEditPurchasedCoin:hover, #btnDeletePurchasedCoin:hover{
+    border: 1px solid black;
+    background-color: rgb(59, 245, 235);
+    color: black;
+    box-shadow: 2px 6px 8px rgb(255, 255, 255); /* Sombra del botón */
+  }
+
+  #btnEditCoinSold:hover, #btnDeleteCoinSold:hover{
+    border: 1px solid black;
+    background-color: rgba(239, 241, 97, 0.774);
+    color: black;
+    box-shadow: 2px 6px 8px rgb(255, 255, 255); /* Sombra del botón */
   }
 </style>
