@@ -28,7 +28,7 @@
             <label for="actionSelected">Choose the 'Action'
               <select name="actionSelected" v-model="transactionModification.action">
                 <option value="purchase">Purchase</option>
-                <option value="sell">Sell</option>
+                <option value="sale">Sale</option>
               </select>
             </label><br><br>
             
@@ -221,7 +221,10 @@
         if(this.$refs.modalRendering && this.$refs.modalContent){
           this.$nextTick(() => {
             this.$refs.modalRendering.classList.add('show');
-            this.$refs.modalContent.classList.add('show');
+
+            setTimeout(() => {
+              this.$refs.modalContent.classList.add('show');
+            },500);
           });
         }
       },
