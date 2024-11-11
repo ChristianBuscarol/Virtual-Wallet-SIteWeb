@@ -50,16 +50,8 @@
         // Esta función llamará a la Api para pedir la información del usuario requerida según el Id que le pasamos como parámetro y después, llamamos a otra función para analizar la información que conseguimos y a la vez le pasamos como parámetro también.
         await ApiCallService.getUserTransactionsInfo(this.dataUserProfile.userId).then(response => {
           if(response.data != null || response.data != undefined){
-            console.log('La información del usuario que se tráe desde Axios es la siguiente:');
-            console.log(response.data);
             this.fillingUserHistoryArraySpace(response);
           } else {
-            this.firstConnectionMoneyGift();
-          }
-        }).catch(error => {
-          if (error.response && error.response.status === '404'){
-            console.log('El error de conexión con la "url" que salió es el siguiente:');
-            console.log(error);
             this.firstConnectionMoneyGift();
           }
         });
@@ -183,7 +175,32 @@
         this.$emit('emit-user-info-for-user-history', this.historyOfUserMovementsTransactions);
       },
       btnCloseSession(){
-
+        if(this.dataUserProfile.userName != '' && this.dataUserProfile.userId != ''){
+          this.emptyTheUserInfo();
+          this.removeLocalStorageItems();
+          this.changeTheView();
+        }
+      },
+      emptyTheUserInfo(){
+        this.dataUserProfile.userName = null;
+        this.dataUserProfile.userId = null;
+        this.dataUserProfile.userWallet = 0;
+        this.dataUserProfile.totalMoneySpent = 0;
+        this.dataUserProfile.totalMoneyEarned = 0;
+        this.dataUserProfile.totalCoinsPurchased = 0;
+        this.dataUserProfile.totalCoinsSold = 0;
+        this.dataUserProfile.unitCoinAmount.bitcoinAmount = 0;
+        this.dataUserProfile.unitCoinAmount.dogecoinAmount = 0;
+        this.dataUserProfile.unitCoinAmount.ethereumAmount = 0;
+        this.dataUserProfile.unitCoinAmount.litecoinAmount = 0;
+        this.dataUserProfile.unitCoinAmount.solanaAmount = 0;
+        this.dataUserProfile.unitCoinAmount.usdcAmount = 0;
+      },
+      removeLocalStorageItems(){
+        localStorage.removeItem('userData');
+      },
+      changeTheView(){
+        window.location.href = '/';
       }
     },
     computed: {
