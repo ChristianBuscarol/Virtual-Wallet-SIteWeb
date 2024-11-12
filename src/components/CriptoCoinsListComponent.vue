@@ -129,7 +129,7 @@
         if(this.functionParameterEvent == 1){
           this.infoSelectedCoin.typeTransaction = 'purchase'
         } else if (this.functionParameterEvent == 2){
-          this.infoSelectedCoin.typeTransaction = 'sell'
+          this.infoSelectedCoin.typeTransaction = 'sale'
         }
       },
       coinAmountLoading(){
