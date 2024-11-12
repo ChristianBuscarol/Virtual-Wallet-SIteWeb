@@ -1,46 +1,52 @@
 <template>
   <body>
-    <div v-if="modalVisibility == true" class="ModalRendering">
-      <div class="ModalContent" @click.stop>
-        <!--Info del usuario para el modal aquí abajo.-->
-        <div class="ModalUserInfoBox">
-          <h3>{{ this.infoSelectedCoinReceived.userName }}</h3>
-          <h3>Money ready for this transaction: {{ this.infoSelectedCoinReceived.userMoneyAvailable }}</h3>
-        </div>
-
-        <!--Info de la moneda seleccionada para el modal aquí abajo.-->
-        <div class="ModalSelectedCoinInfoBox">
-          <h3>Coin selected for the transaction: {{ this.infoSelectedCoinReceived.coinTittle }}</h3>
-          <h3>Coin image display:</h3>
-          <img :src="this.infoSelectedCoinReceived.coinImage" alt="GifSelectedCoin" class="Coin-Circle">
-          <h3>Price: {{ this.infoSelectedCoinReceived.coinPrice }}</h3>
-        </div>
-
-        <!--Pequeño sector de información para el usuario según el tipo de transacción que ha elegido.-->
-        <div class="ModalTransactionInfoBox">
-          <div v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">
-            <h3>Type of transaction: Purchase!...</h3>
-            <h3 for="coinAmountEntry">Coin limit to buy: {{ showCoinLimit }}</h3>
-            <h3 v-if="this.showWarningMessageByNumber == 1">The 'purchase' is ready to be made...</h3>
+    <div v-show="modalVisibility" ref="modalRendering" class="ModalRendering">
+      <div ref="modalContent" class="ModalContent" @click.stop>
+        <div class="OperationInteractionBox" v-if="this.showWarningMessageByNumber >= 0 && this.showWarningMessageByNumber < 5">
+          <!--Info del usuario para el modal aquí abajo.-->
+          <div class="ModalUserInfoBox">
+            <h3>{{ this.infoSelectedCoinReceived.userName }}</h3>
+            <h3>Money ready for this transaction: {{ this.infoSelectedCoinReceived.userMoneyAvailable }}</h3>
           </div>
-          
-          <div v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">
-            <h3>Type of transaction: Sell!...</h3>
-            <h3 for="coinAmountEntry">Coin portion ready to sold: {{ this.infoSelectedCoinReceived.userCoinPartAvailable }}</h3>
-            <h3>Proceeds from sale: {{ showProceedsFromSale }}</h3>
-            <h3 v-if="this.showWarningMessageByNumber == 3">The 'sale' is ready to be made...</h3>
+
+          <!--Info de la moneda seleccionada para el modal aquí abajo.-->
+          <div class="ModalSelectedCoinInfoBox">
+            <h3>Coin selected for the transaction: {{ this.infoSelectedCoinReceived.coinTittle }}</h3>
+            <h3>Coin image:</h3>
+            <img :src="this.infoSelectedCoinReceived.coinImage" alt="GifSelectedCoin" class="Coin-Circle">
+            <h3>Unit price: {{ this.infoSelectedCoinReceived.coinPrice }}</h3>
           </div>
-        </div>
+
+          <!--Pequeño sector de información para el usuario según el tipo de transacción que ha elegido.-->
+          <div class="ModalTransactionInfoBox">
+            <div v-if="infoSelectedCoinReceived.typeTransaction == 'purchase'">
+              <h3>Type of transaction: Purchase!...</h3>
+              <h3 for="coinAmountEntry">Coin limit to buy: {{ showCoinLimit }}</h3>
+              <h3 v-if="this.showWarningMessageByNumber == 1">The 'purchase' is ready to be made...</h3>
+            </div>
+            
+            <div v-if="infoSelectedCoinReceived.typeTransaction == 'sell'">
+              <h3>Type of transaction: Sell!...</h3>
+              <h3 for="coinAmountEntry">Coin portion ready to sold: {{ this.infoSelectedCoinReceived.userCoinPartAvailable }}</h3>
+              <h3>Proceeds from sale: {{ showProceedsFromSale }}</h3>
+              <h3 v-if="this.showWarningMessageByNumber == 3">The 'sale' is ready to be made...</h3>
+            </div>
+          </div>
         
-        <!--Sector de interacción para realizar la transacción aquí abajo.-->
-        <div class="ModalInteractionBox">
-          <h3>Transaction cost: {{ showTransactionCost() }}</h3>
-          <h3 v-if="this.showWarningMessageByNumber == 2">The money available isn't enough to do this transaction.</h3>
-          <h3 v-else-if="this.showWarningMessageByNumber == 4">The coin part available isn't enough to do this tranasaction.</h3>
-          <input type="number" v-model="coinPartToTrade" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" :disabled="confirmationOfTransactionInteraction" placeholder="Enter coin amount here...">
-          <button type="button" class="PaymentConfirmation" @click="requestBodyObjectFilled()" v-show="!enableFirstTransactionButton" :disabled="enableFirstTransactionButton" id="btnPaymentConfirmation">Prepare transaction.</button><br><br>
-          <button type="button" class="PaymentConfirmation" @click="transactionPostingOperation()" v-show="!lastConfirmationButton" :disabled="lastConfirmationButton">¿Sure?...</button>
-          <button type="button" class="ClosingModal" @click="changingVisibilityVariableOnFalse()" id="btnValidateSale">Cancel.</button>
+          <!--Sector de interacción para realizar la transacción aquí abajo.-->
+          <div class="ModalInteractionBox">
+            <h3>Transaction cost: {{ showTransactionCost() }}</h3>
+            <h3 v-if="this.showWarningMessageByNumber == 2">The money available isn't enough to do this transaction.</h3>
+            <h3 v-else-if="this.showWarningMessageByNumber == 4">The coin part available isn't enough to do this tranasaction.</h3>
+            <input type="number" v-model="coinPartToTrade" name="coinAmountEntry" step="0.1" min="0.00001" id="coinRecordAmount" :disabled="confirmationOfTransactionInteraction" placeholder="Enter coin amount here...">
+            <button type="button" class="buttonInteraction" @click="requestBodyObjectFilled()" v-show="!enableFirstTransactionButton" :disabled="enableFirstTransactionButton" id="btnPrepareOperation">Prepare transaction.</button><br><br>
+            <button type="button" class="buttonInteraction" @click="transactionPostingOperation()" v-show="!lastConfirmationButton" :disabled="lastConfirmationButton" id="btnOperationConfirmation">¿Sure?...</button>
+            <button type="button" class="buttonInteraction" @click="changingVisibilityVariableOnFalse()" id="btnCancelOperation">Cancel</button>
+          </div>
+        </div>
+
+        <div class="TransactionDone" v-if="this.showWarningMessageByNumber == 5">
+
         </div>
       </div>
     </div>
@@ -101,25 +107,25 @@
         this.infoSelectedCoinReceived.coinPrice = newVal.coinPrice;
         this.infoSelectedCoinReceived.typeTransaction = newVal.typeTransaction;
         
-        this.changingVisibilityVariableOnTrue();
+        this.showModalTransaction();
       },
-      changingVisibilityVariableOnTrue(){
+      showModalTransaction(){
         this.modalVisibility = true;
 
-        this.showModalTransaction();
+        if(this.$refs.modalRendering && this.$refs.modalContent){
+          this.$nextTick(() => {
+            this.$refs.modalRendering.classList.add('show');
+
+            setTimeout(() => {
+              this.$refs.modalContent.classList.add('show');
+            },500);
+          });
+        }
       },
       changingVisibilityVariableOnFalse(){
         this.modalVisibility = false;
 
         this.closeModalTransaction();
-      },
-      showModalTransaction(){
-        this.$nextTick(() => {
-          if(this.$refs.ModalRendering && this.$refs.ModalContent){
-            this.$refs.ModalRendering.classList.add('show');
-            this.$refs.ModalContent.classList.add('show');
-          }
-        });
       },
       closeModalTransaction(){
         if(this.$refs.ModalRendering && this.$refs.modalOverlay){
@@ -132,14 +138,6 @@
       },
       emptyingSelectedCoinInfoObect(){
         this.infoSelectedCoinReceived = null;
-      },
-      checkingPaymentController(){
-        if(this.coinPartToTrade == 0){
-          this.paymentController = false;
-        }
-        else if (this.coinPartToTrade > 0){
-          this.paymentController = false;
-        }
       },
       requestBodyObjectFilled(){
         let transactionTime = new Date();
@@ -154,7 +152,7 @@
         if(this.infoSelectedCoinReceived.typeTransaction == 'purchase'){
           this.transactionMoneySpentCalculated();
         }
-        else if(this.infoSelectedCoinReceived.typeTransaction == 'sell'){
+        else if(this.infoSelectedCoinReceived.typeTransaction == 'sale'){
           this.transactionCoinPartSoldCalculation();
         }
       },
@@ -259,7 +257,7 @@
     border-color: black;
   }
 
-  .ModalRendering{
+  .ModalRendering {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -268,56 +266,86 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.6); /* Fondo opaco */
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 1.0s ease-in-out, visibility 1.0s ease-in-out;
-    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.6); /* Fondo oscuro */
+    opacity: 0; /* Comienza oculto */
+    visibility: hidden; /* No visible */
+    transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+  }
+
+  .ModalRendering.show {
+    opacity: 1; /* Se hace visible */
     visibility: visible;
   }
 
-  .ModalContent{
+  .ModalContent {
     background-color: #fff;
-    width: 40%; /* Ocupa un tercio de la pantalla */
+    width: 45%;
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: scale(0);
-    transition: transform 1.0s ease-in-out, opacity 1.0s ease-in-out;
-    transform: scale(1); /* Se expande a tamaño completo */
-    display: grid;
-    grid-template-columns: auto auto;
+    transform: scale(0.5); /* Comienza más pequeño */
+    transition: transform 1s ease-in-out; /* Animación de expansión */
+  }
+
+  .ModalContent.show {
+    transform: scale(1); /* Expande a su tamaño normal */
+  }
+
+  .OperationInteractionBox{
+    display: flex;
+    position: fixed;
     margin: 0 auto;
     justify-content: space-around;
   }
 
   .ModalUserInfoBox {
-    grid-column: 1/2;
+    text-align: left;
   }
 
   .ModalSelectedCoinInfoBox {
-    grid-column: 1/2;
+    text-align: left;
   }
 
   .ModalTransactionInfoBox {
-    grid-column: 2/2;
+    text-align: right;
   }
 
   .ModalInteractionBox {
-    grid-column: 2/2;
+    text-align: right;
   }
 
-  .ClosingModal {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+  .buttonInteraction {
+    width: 80px;
+    height: 40px;
+    margin: 5px;
+    border-radius: 10px;  /* Bordes redondeados */
+    border: 1px solid black;
+    background-color: lightgrey;
+    color: black;
     font-weight: bold;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
   }
 
-  .ClosingModal:hover,
-  .ClosingModal:focus {
+  #btnPrepareOperation:hover{
+    border: 1px solid black;
+    background-color: darkturquoise;
     color: black;
-    text-decoration: none;
+    box-shadow: 2px 6px 8px rgba(36, 184, 6, 0.753); /* Sombra del botón */
+  }
+
+  #btnOperationConfirmation:hover{
+    border: 1px solid black;
+    background-color: chartreuse;
+    color: black;
+    box-shadow: 2px 6px 8px blue; /* Sombra del botón */
+  }
+
+  #btnCancelOperation:hover{
+    border: 1px solid white;
+    background-color: black;
+    color: white;
+    box-shadow: 2px 6px 8px rgba(96, 17, 148, 0.74); /* Sombra del botón */
   }
 </style>
