@@ -214,7 +214,6 @@
         let response = await axios.get(this.urlCoins[this.urlCoinIndex]);
         this.unitCoinPrice = response.data.totalAsk;
       },
-      
       showModalTransaction(){
         this.modalVisibility = true;
 
@@ -224,7 +223,7 @@
 
             setTimeout(() => {
               this.$refs.modalContent.classList.add('show');
-            },500);
+            }, 500);
           });
         }
       },
