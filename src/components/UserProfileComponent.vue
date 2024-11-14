@@ -49,16 +49,20 @@
       async consultingApiForUserMovements(){
         // Esta función llamará a la Api para pedir la información del usuario requerida según el Id que le pasamos como parámetro y después, llamamos a otra función para analizar la información que conseguimos y a la vez le pasamos como parámetro también.
         await ApiCallService.getUserTransactionsInfo(this.dataUserProfile.userId).then(response => {
-          if(response.data != null || response.data != undefined){
+          if(response.data.length > 0){
             this.fillingUserHistoryArraySpace(response);
-          } else {
+          } 
+          else if (response.data.length == 0) {
             this.firstConnectionMoneyGift();
           }
+
+          console.log('La información del usuario que se obtuvo de la llamada a la Api es la siguiente:');
+          console.log(response);
         });
       },
       firstConnectionMoneyGift(){
         // Este va a ser un pequeño regalo para el usuario en caso de conectarse por °1 vez y no haber hecho transacciones aún.
-        this.dataUserProfile.userWallet = 1500000;
+        this.dataUserProfile.userWallet += 1500000;
       },
       fillingUserHistoryArraySpace(response){
         for(let i = 0; i < response.data.length; i++){
