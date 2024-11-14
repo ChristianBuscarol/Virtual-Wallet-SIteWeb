@@ -18,7 +18,7 @@
         </div>
       </div>
 
-        <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
+      <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
       <div class="ListDisplayBox">
         <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)" id="GifCoinListPart">
           <img :src="Coin.image" class="Coin-Circle" alt="A gif of the Coin list part">
