@@ -5,8 +5,8 @@
         <!--De aquí para abajo se encontrarán toda la infomación, 'input' y botones referidos hacia la modificación de la transacción seleccionada...-->
         <div class="ModalTransactionModification" v-if="this.transactionInfoLevel == 1 || this.transactionInfoLevel == 3">
           <div v-if="this.transactionInfoLevel == 1" class="PurchaseTransactionInfo">
-            <h3>Selected Transaction:</h3>
-            <h4>Action: <strong>'Purchase'</strong></h4>
+            <h3 class="ModificationTittle">Selected Transaction:</h3>
+            <h4>Action: <strong>'PURCHASE'</strong></h4>
             <h4>Coin purchased: {{ this.userTransaction.crypto_code }}</h4>
             <h4>Amount: {{ this.userTransaction.crypto_amount }}</h4>
             <h4>Money spent: {{ this.userTransaction.transactionMoney }}</h4>
@@ -14,8 +14,8 @@
           </div>
           
           <div v-if="this.transactionInfoLevel == 3" class="SaleTransactionInfo">
-            <h3>Selected Transaction:</h3>
-            <h4>Action: <strong>'Sale'</strong></h4>
+            <h3 class="ModificationTittle">Selected Transaction</h3>
+            <h4>Action: <strong>'SALE'</strong></h4>
             <h4>Coin sold: {{ this.userTransaction.crypto_code }}</h4>
             <h4>Amount: {{ this.userTransaction.crypto_amount }}</h4>
             <h4>Money earned: {{ this.userTransaction.transactionMoney }}</h4>
@@ -65,7 +65,7 @@
           <div class="" v-if="this.disabledOfTransactionMod == 1 || this.disabledOfTransactionMod == 2">
             <h3 v-if="this.disabledOfTransactionMod == 1">The transaction has been denied due to insufficient amount of money to make the modification...</h3>
             <h3 v-if="this.disabledOfTransactionMod == 2">The transaction has been denied due to insufficient amount of coins to make the modification...</h3>
-            <button type="button" @click="closeModalTransaction()" v-show="!modificationCancel" :disabled="modificationCancel" class="btnCloseModal">CLose.</button>
+            <button type="button" @click="closeModalTransaction()" v-show="!modificationCancel" :disabled="modificationCancel" class="btnCloseModal">CLose</button>
           </div>
         </div>
 
@@ -84,12 +84,15 @@
           <div v-if="this.transactionInfoLevel == 2 || this.transactionInfoLevel == 4 && this.disabledOfTransactionDeletion == 0" class="DeletionButtonsBox">
             <button type="button" @click="deleteOfTransactionSelected()" v-show="!deleteConfirmation" :disabled="deleteConfirmation" class="btnDeleteAccepted">Yes</button>
             <button type="button" @click="closeModalTransaction()" v-show="!deleteConfirmation" :disabled="deleteConfirmation" class="btnDeleteDenied">No</button>
-            <button type="button" @click="closeModalTransaction()" v-show="deleteConfirmation" :disabled="!deleteConfirmation" class="btnCloseModal">CLose.</button>
+            <button type="button" @click="closeModalTransaction()" v-show="deleteConfirmation" :disabled="!deleteConfirmation" class="btnCloseModal">CLose</button>
           </div>
 
-          <div v-if="this.disabledOfTransactionDeletion == 2">
-            <h3>The deletion of the selected transaction has been completed successfully</h3>
-            <button type="button" @click="closeModalTransaction()" v-show="!deletionDone" :disabled="deletionDone" class="btnDeleteDenied">Close.</button>
+          <div class="LastContentToShow" v-if="this.disabledOfTransactionDeletion == 2">
+            <img class="DogeAndPenguin" src="../assets/PenguinAndDoge.webp" alt="Doge dog saluting penguin...">
+            <div class="LastBoxInfo">
+              <h3>The deletion of the selected transaction has been completed successfully</h3>
+              <button type="button" @click="closeModalTransaction()" v-show="!deletionDone" :disabled="deletionDone" class="btnCloseModal">Close</button>
+            </div>
           </div>
         </div>
       </div>
@@ -439,7 +442,7 @@
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: scale(0.8); /* Comienza más pequeño */
+    transform: scale(0.5); /* Comienza más pequeño */
     transition: transform 1s ease-in-out; /* Animación de expansión */
   }
 
@@ -463,6 +466,7 @@
   .ModificationButtonsBox {
     padding: 5px 5px 5px;
     grid-column: 2/2;
+    text-align: center;
   }
 
   .ModificationOptionsBox {
@@ -470,11 +474,88 @@
     grid-column: 2/2;
   }
 
-  .btnCloseModal {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+  .DeletionButtonsBox, .PurchaseDeleteInfo, .SaleDeleteInfo{
+    text-align: center;
+  }
+
+  .LastContentToShow{
+    display: grid;
+    grid-template-columns: auto auto;
+    margin: 0 auto;
+    justify-content: space-around;
+  }
+
+  .LastBoxInfo{
+    grid-column: 2/2;
+    text-align: center;
+  }
+
+  .btnDeleteAccepted, .btnDeleteDenied, .btnModificationAccepted, .btnModificationDenied{
     font-weight: bold;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
     cursor: pointer;
+    margin: 5px;
+  }
+
+  .btnDeleteAccepted, .btnDeleteDenied{
+    border: 1px solid green;
+    background-color: white;
+    color: black;
+    box-shadow: 2px 4px 6px lightyellow; /* Sombra del botón */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .btnModificationAccepted, .btnModificationDenied {
+    border: 1px solid brown;
+    background-color: beige;
+    color: black;
+    box-shadow: 2px 4px 6px lavender;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .btnModificationAccepted:hover, .btnModificationDenied:hover {
+    border: 1px solid beige;
+    background-color: darkred;
+    color: white;
+    box-shadow: 2px 6px 8px rgb(39, 39, 226);
+  }
+
+  .btnDeleteAccepted:hover, .btnDeleteDenied:hover {
+    border: 1px solid navy;
+    background-color: gold;
+    color: black;
+    box-shadow: 2px 6px 8px fuchsia;
+  }
+
+  .btnCloseModal {
+    margin: 5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 10px;  /* Bordes redondeados */
+    border: 1px solid black;
+    background-color: lightgrey;
+    color: black;
+    box-shadow: 2px 4px 6px darkgrey; /* Sombra del botón */
+  }
+
+  .btnCloseModal:hover{
+    font-weight: bold;
+    border: 1px solid lightgrey;
+    background-color: black;
+    color: white;
+    box-shadow: 2px 6px 8px limegreen;
+  }
+
+  .DogeAndPenguin {
+    width: 200px;
+    height: 200px;
+    grid-column: 1/2;
+    padding-right: 10px;
+  }
+
+  .ModificationTittle{
+    text-decoration: underline;
   }
 </style>
