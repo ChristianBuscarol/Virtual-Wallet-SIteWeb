@@ -191,14 +191,14 @@
         this.openTransactionModificationModal();
       },
       searchOfPurchaseTransactionSelected(){
-        this.transactionInfo.id = this.userPurchasesHistory[this.transactionInfoIndex].id;
+        this.transactionInfo.id = this.userPurchasesHistory[this.transactionInfoIndex]._id;
         this.transactionInfo.action = this.userPurchasesHistory[this.transactionInfoIndex].action;
         this.transactionInfo.crypto_code = this.userPurchasesHistory[this.transactionInfoIndex].crypto_code;
         this.transactionInfo.crypto_amount += parseFloat(this.userPurchasesHistory[this.transactionInfoIndex].crypto_amount);
         this.transactionInfo.datetime = this.userPurchasesHistory[this.transactionInfoIndex].datetime;
       },
       searchOfSaleTransactionSelected(){
-        this.transactionInfo.id = this.userSalesHistory[this.transactionInfoIndex].id;
+        this.transactionInfo.id = this.userSalesHistory[this.transactionInfoIndex]._id;
         this.transactionInfo.action = this.userSalesHistory[this.transactionInfoIndex].action;
         this.transactionInfo.crypto_code = this.userSalesHistory[this.transactionInfoIndex].crypto_code;
         this.transactionInfo.crypto_amount += parseFloat(this.userSalesHistory[this.transactionInfoIndex].crypto_amount);
