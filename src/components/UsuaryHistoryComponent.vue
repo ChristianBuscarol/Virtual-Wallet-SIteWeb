@@ -3,8 +3,13 @@
     <div class="UsuaryHistoryTransactions">
       <!--En el 'Div' de acá abajo se renderizará el historial de compras de criptomonedas del usuario mediante el lado izquierdo de la pantalla.-->
       <div class="ShoppingHistoryBox">
-        <h3>Table of purchased CriptoCoins...</h3>
-        <div class="UnitPurchaseTransaction" v-for="(UserP, index) in userPurchasesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
+        <h3 id="PurchaseHistoryTittle">Table of purchased CriptoCoins...</h3>
+        <div v-if="this.userPurchasesHistory.length == 0" class="NoTransactionInfo">
+          <h3>There are no transaction to show here...</h3>
+          <h3>or...</h3>
+          <h3>the query to the Api is taking is taking a long time.</h3>
+        </div>
+        <div v-else class="UnitPurchaseTransaction" v-for="(UserP, index) in userPurchasesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
           <h4>CriptoCoin purchased: {{ UserP.crypto_code }}</h4>
           <h4>Money spent on the transaction: {{ UserP.money }}</h4>
           <h4>Amount of CriptoCoin purchased: {{ UserP.crypto_amount }}</h4>
@@ -17,7 +22,12 @@
 
       <!--En el 'Div' de acá abajo se renderizará el historial de ventas de criptomonedas del usuario mediante el lado derecho de la pantalla.-->
       <div class="SalesHistoryBox">
-        <h3>Table of CriptoCoins sold...</h3>
+        <h3 id="SaleHistoryTittle">Table of CriptoCoins sold...</h3>
+        <div v-if="this.userPurchasesHistory.length == 0" class="NoTransactionInfo">
+          <h3>There are no transaction to show here...</h3>
+          <h3>or...</h3>
+          <h3>the query to the Api is taking is taking a long time.</h3>
+        </div>
         <div class="UnitSaleTransaction" v-for="(UserS, index) in userSalesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
           <h4>CriptoCoin sold: {{ UserS.crypto_code }}</h4>
           <h4>Money earned on the transaction: {{ UserS.money }}</h4>
@@ -92,7 +102,7 @@
           if(this.userTransactionHistory[i].action == 'purchase'){
             this.userPurchasesHistory.push(this.userTransactionHistory[i]);
           }
-          else if(this.userTransactionHistory[i].action == 'sell'){
+          else if(this.userTransactionHistory[i].action == 'sale'){
             this.userSalesHistory.push(this.userTransactionHistory[i]);
           }
         }
@@ -191,14 +201,14 @@
         this.openTransactionModificationModal();
       },
       searchOfPurchaseTransactionSelected(){
-        this.transactionInfo.id = this.userPurchasesHistory[this.transactionInfoIndex].id;
+        this.transactionInfo.id = this.userPurchasesHistory[this.transactionInfoIndex]._id;
         this.transactionInfo.action = this.userPurchasesHistory[this.transactionInfoIndex].action;
         this.transactionInfo.crypto_code = this.userPurchasesHistory[this.transactionInfoIndex].crypto_code;
         this.transactionInfo.crypto_amount += parseFloat(this.userPurchasesHistory[this.transactionInfoIndex].crypto_amount);
         this.transactionInfo.datetime = this.userPurchasesHistory[this.transactionInfoIndex].datetime;
       },
       searchOfSaleTransactionSelected(){
-        this.transactionInfo.id = this.userSalesHistory[this.transactionInfoIndex].id;
+        this.transactionInfo.id = this.userSalesHistory[this.transactionInfoIndex]._id;
         this.transactionInfo.action = this.userSalesHistory[this.transactionInfoIndex].action;
         this.transactionInfo.crypto_code = this.userSalesHistory[this.transactionInfoIndex].crypto_code;
         this.transactionInfo.crypto_amount += parseFloat(this.userSalesHistory[this.transactionInfoIndex].crypto_amount);
@@ -270,17 +280,85 @@
     text-align: center;
   }
 
-  .UnitSaleTransaction{
-    background-color: lightgray;
+  #PurchaseHistoryTittle{
+    text-decoration: underline;
+  }
+
+  #SaleHistoryTittle{
+    text-decoration: underline;
+  }
+
+  .NoTransactionInfo{
     border: 1px solid black;
+    font-weight: bold;
+    background-color: lightsalmon;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del div */
+    border-radius: 10%;
+    padding: 10px;
+    margin: 5px;
+  }
+
+  .UnitSaleTransaction{
+    border: 1px solid red;
+    color: red;
+    border-radius: 10%;
+    font-weight: bold; 
     padding: 10px;
     margin: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del div */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .UnitSaleTransaction:hover{
+    background-color: lightsalmon;
+    border: 1px solid black;
+    color: black;
+    box-shadow: 4px 6px 8px rgb(221, 29, 29); /* Sombra del div */
   }
 
   .UnitPurchaseTransaction{
-    background-color: lightgray;
-    border: 1px solid black;
+    border: 1px solid blue;
+    color: blue;
+    border-radius: 10%;
+    font-weight: bold; 
     padding: 10px;
     margin: 10px;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del div */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .UnitPurchaseTransaction:hover{
+    background-color: lightblue;
+    border: 1px solid black;
+    color: black;
+    box-shadow: 4px 6px 8px rgb(81, 84, 240); /* Sombra del div */
+  }
+
+  #btnEditPurchasedCoin, #btnDeletePurchasedCoin, #btnEditCoinSold, #btnDeleteCoinSold{
+    width: 90px;
+    height: 40px;
+    margin: 5px;
+    font-weight: bold; 
+    cursor: pointer;
+    border-radius: 10px;  /* Bordes redondeados */
+    border: 1px solid black;
+    background-color: white;
+    color: black;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #btnEditPurchasedCoin:hover, #btnDeletePurchasedCoin:hover{
+    border: 1px solid black;
+    background-color: rgb(59, 245, 235);
+    color: black;
+    box-shadow: 2px 6px 8px rgb(255, 255, 255); /* Sombra del botón */
+  }
+
+  #btnEditCoinSold:hover, #btnDeleteCoinSold:hover{
+    border: 1px solid black;
+    background-color: rgba(239, 241, 97, 0.774);
+    color: black;
+    box-shadow: 2px 6px 8px rgb(255, 255, 255); /* Sombra del botón */
   }
 </style>

@@ -1,28 +1,28 @@
 <template>
-  <div class="EntryForm">
-    <body>
+  <body>
+    <div class="EntryFormInteraction">
       <!--Sector de ingreso de Datos (Nombre y ID) aquí abajo-->
-      <div class="Loggin-Inputs-Box">
-        <label for="ingresoNombre">Nombre: </label>
+      <div class="LogginInputsBox">
+        <label for="ingresoNombre"><strong>Nombre: </strong></label><br>
         <input type="text" v-model="userName" id="registroNombre" name="ingresoNombre" placeholder="Ingresar Nombre aquí..."><br><br>
-        <label for="ingresoID">'ID': </label>
-        <input type="text" v-model="userId" id="registroId" name="ingresoID" placeholder="Ingresar ID aquí..."><br><br>
-      </div>
-      
-      <!--Sector de botones aquí abajo-->
-      <div class="Loggin-Buttons-Box">
-        <button type="button" @click="btnDateValidation()" v-show="vShowButton" :disabled="!dateValidation" id="btnValidarIngreso">Validar Datos...</button><br><br>
-        <button type="button" @click="btnEntryValidation()" v-show="!vShowButton" :disabled="dateValidation" id="btnValidarIngreso">Puede continuar por aquí...</button>
+        <label for="ingresoID"><strong>'ID': </strong></label><br>
+        <input type="text" v-model="userId" id="registroId" name="ingresoID" placeholder="Ingresar ID aquí...">
       </div>
 
       <!--Sector de información para el usuario aquí abajo-->
-      <div class="Info-Box">
-        <h3>Estado de entrada: '{{ stateMessage }}'</h3><br><br>
-        <p>Intentos realizados: °{{ this.entryAttempts }} --- Cantidad máxima de intentos: °3</p>
-        <p v-show="vShowMessage">Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</p>
+      <div class="InfoBox">
+        <h3>'{{ stateMessage }}'</h3><br>
+        <h3>Intentos realizados: <strong>°{{ this.entryAttempts }}</strong> --- Cantidad máxima de intentos: °3</h3>
+        <p v-show="vShowMessage"><strong>Se ha realizado todos los intentos disponibles para poder continuar por el sitio, recargue la página para volver a intentar...</strong></p>
       </div>
-    </body>
-  </div>
+    </div>
+
+    <!--Sector de botones aquí abajo-->
+    <div class="LogginButtonsBox">
+      <button type="button" @click="btnDateValidation()" v-show="vShowButton" :disabled="!dateValidation" id="btnValidarIngreso">Validar Datos</button><br><br>
+      <button type="button" @click="btnEntryValidation()" v-show="validatedStep" :disabled="!validatedStep" id="btnValidarIngreso">Puede continuar</button>
+    </div>
+  </body>
 </template>
 
 <script>
@@ -30,7 +30,7 @@
     name: 'EntryFormComponent',
     data() {
       return{
-        stateMessage: "Se requiere del formulario completo para continuar por el sitio web...",
+        stateMessage: "'Nombre' y 'ID' deben ser ingresados para poder continuar...",
         idLetters: 0,
         idNumbers: 0,
         nameLetters: 0,
@@ -38,6 +38,7 @@
         userId: "",
         userName: "",
         dateValidation: true,
+        validatedStep: false,
         entryAttempts: 0,
         userData: {
           userNameRegister: "",
@@ -84,10 +85,11 @@
             this.stateMessage= "Uno o ambos datos ingresados ha sido de manera icorrecta, intente de nuevo...";
           }
           else{
-            this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato solicitado ha sido ingresado correctamente, así que sea bienvenido/a a continuar por el sitio web y también lo invito a no asustarse por el precio de las Criptos...",
+            this.stateMessage= "Felicitaciones!!!... Supongo...Cada dato ingresado es correcto y sea bienvenido/a a continuar por la aplicación...",
             this.attemptIncrement();
             this.userRegisterValidation();
             this.dateValidation = false,
+            this.validatedStep = true,
             this.userId = "",
             this.userName = ""
           }
@@ -146,5 +148,68 @@
 </script>
 
 <style scoped>
+  body {
+    background-color: #a39b9bd3; /* Color de fondo de toda la página */
+    color: #070707;
+  }
 
+  .EntryFormInteraction {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-content: space-around;
+    padding: 20px;
+  }
+
+  .LogginInputsBox {
+    grid-column: 1/2;
+    text-align: left;
+    align-items: center;
+    width: 200px;
+    height: 100px;
+    padding: 15px;
+    margin-top: 25px;
+  }
+
+  .InfoBox {
+    grid-column: 2/2;
+    text-align: center;
+    align-items: center;
+    padding: 15px;
+    margin: 15px;
+  }
+
+  .LogginButtonsBox {
+    padding: 10px;
+    text-align: center;
+  }
+
+  #btnValidarIngreso{
+    cursor: pointer;
+    width: 90px;  /* Ancho del botón */
+    height: 50px; /* Alto del botón */
+    border: 1px solid gold;  /* Borde dorado.*/
+    border-radius: 10px;  /* Bordes redondeados */
+    background-color: black;  /* Color de fondo */
+    color: #fff;  /* Color de texto */
+    text-transform: uppercase; /* Convierte el texto a mayúsculas */
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; /* Fuente */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #btnValidarIngreso:hover{
+    border: 1px solid #007bff;  /* Borde sólido azul */
+    background-color: white;  /* Color de fondo */
+    color: #000000;  /* Color de texto */
+    font-weight: bold;     /* Negrita */
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; /* Fuente */
+    cursor: pointer; /* Cambia el cursor a una mano al pasar */
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5); /* Sombra más intensa al pasar el cursor */
+  }
+
+  #registroNombre, #registroId {
+    width: 200px;
+    height: 30px;
+    border: 1px solid black;
+  }
 </style>

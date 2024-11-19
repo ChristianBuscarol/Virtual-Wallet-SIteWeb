@@ -1,26 +1,23 @@
 <template>
   <header class="IndexHeaderBox">
-    <div class="Header-Box">
-      <h1>Trinance Interactive Corp.</h1>
-      <UserProfileComponent :receivedData="emitUserDataReceived"/>
-    </div>
+    <img src="../assets/PenguinWihtBitcoin.webp" alt="A penguin whit a bit CriptoCoin" class="HeaderImage" id="HeaderImageGif">
+    <h1 class="HeaderTittle">Trinance Interactive Corp.</h1>
+    <UserProfileComponent :receivedData="emitUserDataReceived" class="HeaderUserInfo"/>
   </header>
   <div class="EntryForm">
     <EntryFormComponent @user-register="userCheck"/>
   </div>
   <footer class="IndexFooterBox">
-      <div class="Footer-Box">
-        <img src="../assets/CoinRainGif.gif" alt="Coin Rain..." id="EntryFormGifs">
-        <ul>
-          <li>Ingrese los 2 únicos Datos necesarios para poder continuar por la plataforma...</li>
-          <li>Una vez ingresado evalúe las pocas pero diferentes monedas virtuales en busca del mejor precio...</li>
-          <li>Compre y venda en el momento adecuado para generar ganancias...</li>
-          <li>Analice, interactúe y disfruta del proceso...</li>
-        </ul>
-        <img src="../assets/PenguinCheckingMoney.webp" alt="A cute penguin checking and counting his money" id="EntryFormGifs">
-        <p>For educational purpose i made this proyect for a university final... So, i deserve the rights to eat onions while you travel whit a racoon...</p>
-      </div>
-    </footer>
+    <div class="CoinRain">
+      <img src="../assets/CoinRainGif.gif" alt="Coin rain..." id="EntryFormGifs">
+    </div>
+    <div class="FooterCredits">
+      <h3>For educational purpose i made this proyect for a university test... So, i deserve the rights to eat onions while you travel whit a racoon...</h3>
+    </div>
+    <div class="RainCoin">
+      <img src="../assets/RainCoinGif.gif" alt="Another coin rain" id="EntryFormGifs">
+    </div>
+  </footer>
 </template>
 
 <script>
@@ -48,9 +45,56 @@
 </script>
 
 <style scoped>
+  .IndexFooterBox{
+    display: flex;
+    justify-content: space-between; /* Distribuye los contenedores */
+    align-items: center;  /* Alinea verticalmente */
+    padding: 10px;
+  }
+
+  .CoinRain {
+    text-align: left;
+  }
+
+  .FooterCredits {
+    text-align: center;
+  }
+
+  .RainCoin {
+    text-align: right;
+  }
+
   #EntryFormGifs{
     width: 125px;
     height: 125px;
   }
-  
+
+  #HeaderImageGif{
+    width: 150px;
+    height: 150px;
+  }
+
+  .IndexHeaderBox {
+    background-color: lightskyblue;
+    padding: 10px;
+    margin: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;  /* Alinea verticalmente */
+  }
+
+  .HeaderImage {
+    text-align: left;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  .HeaderTittle {
+    width: 250px;
+    text-align: center;
+    text-decoration: underline;
+  }
+
+  .HeaderUserInfo {
+    text-align: right;
+  }
 </style>

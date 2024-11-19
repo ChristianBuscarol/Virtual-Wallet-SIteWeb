@@ -1,10 +1,7 @@
 <template>
-  <div class="UserProfile">
-    <header>
-      <h4>Actual usuary acount:</h4>
-      <p><strong>Name: {{ vShowUserName }}</strong></p>
-      <p><strong>Available money: {{ vShowMoneyUser }}</strong></p>
-    </header>
+  <div class="HeaderContent">
+    <p class="UserInfoText"><strong>Name: {{ vShowUserName }}</strong></p>  <p class="UserInfoText"><strong>Money: {{ vShowMoneyUser }}</strong></p>
+    <button @click="btnCloseSession()" class="btnCloseSession">Log Out.</button>
   </div>
 </template>
 
@@ -45,6 +42,7 @@
     },
     methods: {
       receiverEventData(newVal){
+        // Una vez validado y recibido los datos del formulario de entrada se los asigna al perfil de usuario para su identificación y uso.
         this.dataUserProfile.userName = newVal.userNameRegister;
         this.dataUserProfile.userId = newVal.userIdRegister;
         this.consultingApiForUserMovements();
@@ -52,24 +50,18 @@
       async consultingApiForUserMovements(){
         // Esta función llamará a la Api para pedir la información del usuario requerida según el Id que le pasamos como parámetro y después, llamamos a otra función para analizar la información que conseguimos y a la vez le pasamos como parámetro también.
         await ApiCallService.getUserTransactionsInfo(this.dataUserProfile.userId).then(response => {
-          if(response.data != null || response.data != undefined){
-            console.log('La información del usuario que se tráe desde Axios es la siguiente:');
-            console.log(response.data);
+          if(response.data.length > 0){
             this.fillingUserHistoryArraySpace(response);
-          } else {
+          } 
+          else if (response.data.length == 0) {
             this.firstConnectionMoneyGift();
-          }
-        }).catch(error => {
-          if (error.response && error.response.status === '404'){
-            console.log('El error de conexión con la "url" que salió es el siguiente:');
-            console.log(error);
-            this.firstConnectionMoneyGift();
+            this.emitUserInfoToModal();
           }
         });
       },
       firstConnectionMoneyGift(){
         // Este va a ser un pequeño regalo para el usuario en caso de conectarse por °1 vez y no haber hecho transacciones aún.
-        this.dataUserProfile.userWallet = 1500000;
+        this.dataUserProfile.userWallet += 1500000;
       },
       fillingUserHistoryArraySpace(response){
         for(let i = 0; i < response.data.length; i++){
@@ -93,7 +85,13 @@
       calculateUserMoneyAvailable(){
         this.sumOfMoney();
         this.restOfMoney();
-        this.totalUserAvailableMoney();
+
+        if (this.historyOfSaleTransactions.length > 0){
+          this.totalUserAvailableMoney();
+        }
+        else if (this.historyOfSaleTransactions.length == 0){
+          this.userAvailableMoneyAfterPurchase()
+        }
       },
       sumOfMoney(){
         for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
@@ -111,6 +109,11 @@
       },
       totalUserAvailableMoney(){
         this.dataUserProfile.userWallet = this.dataUserProfile.totalMoneyEarned - this.dataUserProfile.totalMoneySpent;
+
+        this.calculateUserCoinsAvailable();
+      },
+      userAvailableMoneyAfterPurchase(){
+        this.dataUserProfile.userWallet = parseFloat(1500000 - this.dataUserProfile.totalMoneySpent);
 
         this.calculateUserCoinsAvailable();
       },
@@ -180,10 +183,40 @@
         }
       },
       emitUserInfoToModal(){
+        console.log('La info del usuario que se prepara para el catálogo de monedas antes de abrirse el Modal es el siguiente:');
+        console.log(this.dataUserProfile);
         this.$emit('emit-user-info-to-modal', this.dataUserProfile);
       },
       emitUserInfoForUserHistory(){
         this.$emit('emit-user-info-for-user-history', this.historyOfUserMovementsTransactions);
+      },
+      btnCloseSession(){
+        if(this.dataUserProfile.userName != '' && this.dataUserProfile.userId != ''){
+          this.emptyTheUserInfo();
+          this.removeLocalStorageItems();
+          this.changeTheView();
+        }
+      },
+      emptyTheUserInfo(){
+        this.dataUserProfile.userName = null;
+        this.dataUserProfile.userId = null;
+        this.dataUserProfile.userWallet = 0;
+        this.dataUserProfile.totalMoneySpent = 0;
+        this.dataUserProfile.totalMoneyEarned = 0;
+        this.dataUserProfile.totalCoinsPurchased = 0;
+        this.dataUserProfile.totalCoinsSold = 0;
+        this.dataUserProfile.unitCoinAmount.bitcoinAmount = 0;
+        this.dataUserProfile.unitCoinAmount.dogecoinAmount = 0;
+        this.dataUserProfile.unitCoinAmount.ethereumAmount = 0;
+        this.dataUserProfile.unitCoinAmount.litecoinAmount = 0;
+        this.dataUserProfile.unitCoinAmount.solanaAmount = 0;
+        this.dataUserProfile.unitCoinAmount.usdcAmount = 0;
+      },
+      removeLocalStorageItems(){
+        localStorage.removeItem('userData');
+      },
+      changeTheView(){
+        window.location.href = '/';
       }
     },
     computed: {
@@ -191,14 +224,14 @@
         if(this.dataUserProfile.userName != ''){
           return this.dataUserProfile.userName;
         } else {
-          return 'Esperando el ingreso de Datos para verificación...';
+          return '(°o°)';
         }
       },
       vShowMoneyUser(){
         if(this.dataUserProfile.userWallet != 0){
-          return this.dataUserProfile.userWallet;
+          return this.dataUserProfile.userWallet.toFixed(2);
         } else {
-          return 'Esperando el ingreso de Datos para consultar a la Api...';
+          return '(°¬°)';
         }
       }
     },
@@ -216,5 +249,39 @@
 </script>
 
 <style scoped>
+ .HeaderContent{
+  width: 200px;
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  margin-right: 10px;
+ }
 
+ .UserInfoText{
+  text-align: left;
+  margin: 10px;
+ }
+
+ .btnCloseSession{
+  text-align: right;
+  align-items: center;
+  width: 45px;
+  height: 50px;
+  margin: 5px;
+  border-radius: 15%;
+  font-weight: bold;     /* Negrita */
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  box-shadow: 4px 6px 8px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+ }
+
+ .btnCloseSession:hover{
+  border: 1px solid white;
+  background-color: black;
+  color: white;
+  box-shadow: 4px 6px 8px white(0, 0, 0, 0.3); /* Sombra del botón */
+  text-transform: uppercase; /* Convierte el texto a mayúsculas */
+ }
 </style>

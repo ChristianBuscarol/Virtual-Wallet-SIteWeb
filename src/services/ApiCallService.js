@@ -9,11 +9,16 @@ import axios from "axios";
     return apiClient.get(`q={"user_id": "${userId}"}`);
   },
   -----------------------------------------------------------------
-  .catch(error => {
-      if (error.response && error.response.status === '404'){
-        error404Manipulation();
+  getUserTransactionsInfo(userId){
+    const apiInfoClient = axios.create({
+      baseURL: 'https://laboratorio3-f36a.restdb.io/rest/transactions?q={"user_id":"' + userId + '"}',
+      headers: {
+        'x-apikey': '60eb09146661365596af552f'
       }
     });
+
+    return apiInfoClient.get();
+  },
   -----------------------------------------------------------------
   -------------------- (Url base de Emiliano) --------------------
   baseURL: 'http://localhost:8080/rest/transactions',

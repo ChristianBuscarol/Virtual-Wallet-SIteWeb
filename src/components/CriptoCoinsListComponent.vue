@@ -1,32 +1,31 @@
 <template>
-  <div class="CriptoCoinsList">
-    <body>
-      <div class="CriptoInfoBox">
-        <!--Sector de muestra de información sobre la moneda seleccionada en la lista de miniaturas aquí abajo-->
-        <div class="SelectedCoinBox">
-          <div class="InfoSelectedCoinBox">
-            <h3>Selected Coin: <p><strong>{{ showCoinTitleSelected }}</strong></p></h3>
-            <h3>Image of the Coin:</h3>
-            <img :src="showCoinImageSelected" alt="GifSelectedCoin" class="Coin-Circle">
-            <h3>Price: </h3><p><strong>{{ this.Coins[selectedCoin].price }}</strong></p>
-          </div>
-          <!--Sector de botones para la compra y venta de monedas aquí abajo-->
-          <div class="TransactionsButtonsBox">
-            <button type="button" @click="openTransactionModal(this.functionParameterEvent = 1)" id="btnValidatePurchase">Buy...</button><br><br>
-            <button type="button" @click="openTransactionModal(this.functionParameterEvent = 2)" id="btnValidateSale">Sell...</button><br><br>
-            <button type="button" @click="btnHistoryEntry()" id="btnGoToTransactionHistory">Trasaction History...</button>
-          </div>
+  <body>
+    <div class="CriptoInfoBox">
+      <!--Sector de muestra de información sobre la moneda seleccionada en la lista de miniaturas aquí abajo-->
+      <div class="SelectedCoinBox">
+        <div class="InfoSelectedCoinBox">
+          <h3 id="textDecoration">Selected Coin: </h3><h3><strong>{{ showCoinTitleSelected }}</strong></h3>
+          <h3 id="textDecoration">Image of the Coin:</h3>
+          <img :src="showCoinImageSelected" alt="GifSelectedCoin" class="Coin-Circle">
+          <h3 id="textDecoration">Price: </h3><p><strong>{{ this.Coins[selectedCoin].price }}</strong></p>
         </div>
 
-        <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
-        <div class="ListDisplayBox">
-          <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)">
-            <img :src="Coin.image" class="Coin-Circle" alt="GifCoinListPart">
-          </div>
+        <!--Sector de botones para la compra y venta de monedas aquí abajo-->
+        <div class="TransactionsButtonsBox">
+          <button type="button" @click="openTransactionModal(this.functionParameterEvent = 1)" class="interactionButton" id="btnValidatePurchase">Buy</button><br><br>
+          <button type="button" @click="openTransactionModal(this.functionParameterEvent = 2)" class="interactionButton" id="btnValidateSale">Sell</button><br><br>
+          <button type="button" @click="btnHistoryEntry()" class="interactionButton" id="btnGoToTransactionHistory">Trasaction History</button>
         </div>
       </div>
-    </body>
-  </div>
+
+      <!--Sector de la lista de imagenes en miniatura sobre las monedas disponibles aquí abajo-->
+      <div class="ListDisplayBox">
+        <div v-for="(Coin, index) in Coins" :key="Coin.id"  @mouseover="actualCoinSelected(index)" id="GifCoinListPart">
+          <img :src="Coin.image" class="Coin-Circle" alt="A gif of the Coin list part">
+        </div>
+      </div>
+    </div>
+  </body>
 </template>
 
 <script>
@@ -130,7 +129,7 @@
         if(this.functionParameterEvent == 1){
           this.infoSelectedCoin.typeTransaction = 'purchase'
         } else if (this.functionParameterEvent == 2){
-          this.infoSelectedCoin.typeTransaction = 'sell'
+          this.infoSelectedCoin.typeTransaction = 'sale'
         }
       },
       coinAmountLoading(){
@@ -215,13 +214,7 @@
     border: 2px;
     border-style: groove;
     border-color: black;
-  }
-
-  body{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: lightgreen;
+    margin: 10px;
   }
 
   .CriptoInfoBox{
@@ -231,35 +224,83 @@
     justify-content: space-around;
   }
 
-  .InfoSelectedCoinBox{
+  .SelectedCoinBox{
+    display: flex;
     grid-column: 1/2;
+    padding: 5px;
+    margin-left: 100px;
+  }
+
+  .InfoSelectedCoinBox{
+    text-align: center;
+    border: 1px dashed black;
+    padding: 10px;
   }
 
   .TransactionsButtonsBox{
-    grid-column: 2/2;
-    width: 100px;
-    height: 100px;
     text-align: center;
+    margin: 10px;
+    margin-left: 20px;
   }
 
-  .SelectedCoinBox{
-    display: grid;
-    grid-template-columns: auto auto;
-    max-width: 250px;
-    max-height: 250px;
-    grid-column: 1/2;
-    width: 90%;
-    border: 2px solid black;
+  #GifCoinListPart{
+    border: 1px dotted black;
+    padding: 5px;
+    margin: 10px;
+    margin-bottom: 10px;
   }
 
   .ListDisplayBox{
     grid-column: 2/2;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    max-width: 300px;
-    max-height: 300px;
-    margin: 0 auto;
-    width: 90%;
-    border: 2px solid black;
+    width: 400px;
+    height: 250px;
+    margin-right: 100px;
+    margin-top: 30px;
+  }
+
+  .interactionButton{
+    width: 80px;
+    height: 40px;
+    cursor: pointer;
+    border-radius: 10px;  /* Bordes redondeados */
+    border: 1px solid blue;
+    background-color: white;
+    color: blue;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif; /* Fuente */
+    text-transform: uppercase; /* Convierte el texto a mayúsculas */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del botón */
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  #btnGoToTransactionHistory{
+    width: 100px;
+    height: 50px;
+  }
+
+  #btnGoToTransactionHistory:hover{
+    border: 1px solid white;
+    background-color: blue;
+    color: white;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5); /* Sombra más intensa al pasar el cursor */
+  }
+
+  #btnValidatePurchase:hover{
+    border: 1px solid white;
+    background-color: lawngreen;
+    color: black;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5); /* Sombra más intensa al pasar el cursor */
+  }
+
+  #btnValidateSale:hover{
+    border: 1px solid white;
+    background-color: rgb(151, 16, 106);
+    color: white;
+    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.5); /* Sombra más intensa al pasar el cursor */
+  }
+
+  #textDecoration{
+    text-decoration: underline;
   }
 </style>
