@@ -4,7 +4,12 @@
       <!--En el 'Div' de acá abajo se renderizará el historial de compras de criptomonedas del usuario mediante el lado izquierdo de la pantalla.-->
       <div class="ShoppingHistoryBox">
         <h3 id="PurchaseHistoryTittle">Table of purchased CriptoCoins...</h3>
-        <div class="UnitPurchaseTransaction" v-for="(UserP, index) in userPurchasesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
+        <div v-if="this.userPurchasesHistory.length == 0" class="NoTransactionInfo">
+          <h3>There are no transaction to show here...</h3>
+          <h3>or...</h3>
+          <h3>the query to the Api is taking is taking a long time.</h3>
+        </div>
+        <div v-else class="UnitPurchaseTransaction" v-for="(UserP, index) in userPurchasesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
           <h4>CriptoCoin purchased: {{ UserP.crypto_code }}</h4>
           <h4>Money spent on the transaction: {{ UserP.money }}</h4>
           <h4>Amount of CriptoCoin purchased: {{ UserP.crypto_amount }}</h4>
@@ -18,6 +23,11 @@
       <!--En el 'Div' de acá abajo se renderizará el historial de ventas de criptomonedas del usuario mediante el lado derecho de la pantalla.-->
       <div class="SalesHistoryBox">
         <h3 id="SaleHistoryTittle">Table of CriptoCoins sold...</h3>
+        <div v-if="this.userPurchasesHistory.length == 0" class="NoTransactionInfo">
+          <h3>There are no transaction to show here...</h3>
+          <h3>or...</h3>
+          <h3>the query to the Api is taking is taking a long time.</h3>
+        </div>
         <div class="UnitSaleTransaction" v-for="(UserS, index) in userSalesHistory" :key="index" @mouseover="captureTransactionInfoIndex(index)">
           <h4>CriptoCoin sold: {{ UserS.crypto_code }}</h4>
           <h4>Money earned on the transaction: {{ UserS.money }}</h4>
@@ -276,6 +286,16 @@
 
   #SaleHistoryTittle{
     text-decoration: underline;
+  }
+
+  .NoTransactionInfo{
+    border: 1px solid black;
+    font-weight: bold;
+    background-color: lightsalmon;
+    box-shadow: 2px 4px 6px rgba(0, 0, 0, 0.3); /* Sombra del div */
+    border-radius: 10%;
+    padding: 10px;
+    margin: 5px;
   }
 
   .UnitSaleTransaction{
