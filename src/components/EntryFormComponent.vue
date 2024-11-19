@@ -97,16 +97,12 @@
       },
       userRegisterValidation(){
         this.userObjectConstructor();
-        this.localStorageSetUserItems();
         this.userRegister();
       },
       userObjectConstructor(){
         // Se llenará el objeto 'userData' con el Nombre y ID recién ingresados por el usuario una vez todo esté en orden para continuar.
         this.userData.userNameRegister = this.userName;
         this.userData.userIdRegister = this.userId;
-      },
-      localStorageSetUserItems(){
-        localStorage.setItem('userData', JSON.stringify(this.userData))
       },
       userRegister(){
         // Se emite el evento 'user-register' para que la vista Index lo escuche y realice las operaciones necesarias.
