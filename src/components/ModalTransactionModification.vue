@@ -165,7 +165,7 @@
         this.localStorageItems = JSON.parse(localStorage.getItem('userData'));
       },
       putUserIdInModificationObject(){
-        if(this.transactionInfoLevel == 1 || this.transactionInfoLevel == 2){
+        if(this.transactionInfoLevel == 1 || this.transactionInfoLevel == 3){
           this.transactionModification.user_id = this.localStorageItems.userIdRegister;
         }
       },
@@ -319,7 +319,7 @@
       },
       moneyCalculationFromCoinSelected(){
         let totalCost = this.transactionModification.crypto_amount * this.unitCoinPrice;
-        this.transactionModification.money = totalCost;
+        this.transactionModification.money = totalCost.toFixed(2);
       },
       prepareDateTimeSelectedForTransactionMod(){
         let prepareDateTime = new Date(this.dateSelected + ' ' + this.timeSelected).toISOString();
