@@ -187,12 +187,12 @@
         }
       },
       loadingLastTwoResourcesPurchaseTransaction(totalCost){
-        this.requestBody.money = totalCost;
+        this.requestBody.money = totalCost.toFixed(2);
         this.requestBody.crypto_amount = this.coinPartToTrade;
         console.log(this.requestBody);
       },
       loadingLastTwoResourcesSaleTransaction(moneyEarned){
-        this.requestBody.money = moneyEarned;
+        this.requestBody.money = moneyEarned.toFixed(2);
         this.requestBody.crypto_amount = this.coinPartToTrade;
         console.log(this.requestBody);
       },
@@ -250,7 +250,7 @@
         return false;
       },
       showCoinLimit(){
-        return this.infoSelectedCoinReceived.userMoneyAvailable / this.infoSelectedCoinReceived.coinPrice;
+        return parseFloat(this.infoSelectedCoinReceived.userMoneyAvailable / this.infoSelectedCoinReceived.coinPrice).toFixed(5);
       },
       showEarningFromSale(){
         if (this.coinPartToTrade <= this.infoSelectedCoinReceived.userCoinPartAvailable){
