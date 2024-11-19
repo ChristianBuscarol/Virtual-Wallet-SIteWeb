@@ -217,7 +217,7 @@
       },
       vShowMoneyUser(){
         if(this.dataUserProfile.userWallet != 0){
-          return this.dataUserProfile.userWallet;
+          return this.dataUserProfile.userWallet.toFixed(2);
         } else {
           return '(°¬°)';
         }
@@ -242,6 +242,7 @@
   display: flex;
   padding: 10px;
   justify-content: center;
+  margin-right: 10px;
  }
 
  .UserInfoText{
