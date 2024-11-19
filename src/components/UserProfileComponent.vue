@@ -42,6 +42,7 @@
     },
     methods: {
       receiverEventData(newVal){
+        // Una vez validado y recibido los datos del formulario de entrada se los asigna al perfil de usuario para su identificación y uso.
         this.dataUserProfile.userName = newVal.userNameRegister;
         this.dataUserProfile.userId = newVal.userIdRegister;
         this.consultingApiForUserMovements();
@@ -54,10 +55,8 @@
           } 
           else if (response.data.length == 0) {
             this.firstConnectionMoneyGift();
+            this.emitUserInfoToModal();
           }
-
-          console.log('La información del usuario que se obtuvo de la llamada a la Api es la siguiente:');
-          console.log(response);
         });
       },
       firstConnectionMoneyGift(){
@@ -86,7 +85,13 @@
       calculateUserMoneyAvailable(){
         this.sumOfMoney();
         this.restOfMoney();
-        this.totalUserAvailableMoney();
+
+        if (this.historyOfSaleTransactions.length > 0){
+          this.totalUserAvailableMoney();
+        }
+        else if (this.historyOfSaleTransactions.length == 0){
+          this.userAvailableMoneyAfterPurchase()
+        }
       },
       sumOfMoney(){
         for(let i = 0; i < this.historyOfSaleTransactions.length; i++){
@@ -104,6 +109,11 @@
       },
       totalUserAvailableMoney(){
         this.dataUserProfile.userWallet = this.dataUserProfile.totalMoneyEarned - this.dataUserProfile.totalMoneySpent;
+
+        this.calculateUserCoinsAvailable();
+      },
+      userAvailableMoneyAfterPurchase(){
+        this.dataUserProfile.userWallet = parseFloat(1500000 - this.dataUserProfile.totalMoneySpent);
 
         this.calculateUserCoinsAvailable();
       },
@@ -173,6 +183,8 @@
         }
       },
       emitUserInfoToModal(){
+        console.log('La info del usuario que se prepara para el catálogo de monedas antes de abrirse el Modal es el siguiente:');
+        console.log(this.dataUserProfile);
         this.$emit('emit-user-info-to-modal', this.dataUserProfile);
       },
       emitUserInfoForUserHistory(){
